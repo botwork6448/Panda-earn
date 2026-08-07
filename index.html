@@ -1,260 +1,500 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
-    <title>Panda Earn - User Test</title>
+<title>Panda Earn - Function Test</title>
 
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-    <style>
-        body {
-            margin: 0;
-            padding: 25px;
-            background: #0b0d11;
-            color: white;
-            font-family: Arial;
-        }
+<style>
+*{
+    box-sizing:border-box;
+}
 
-        .box {
-            max-width: 450px;
-            margin: 30px auto;
-            padding: 22px;
-            background: #151922;
-            border-radius: 18px;
-        }
+body{
+    margin:0;
+    min-height:100vh;
+    background:#090b0f;
+    color:#fff;
+    font-family:Arial,sans-serif;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
 
-        pre {
-            margin-top: 20px;
-            padding: 15px;
-            background: #090b0f;
-            border-radius: 12px;
-            white-space: pre-wrap;
-            word-break: break-word;
-        }
-    </style>
+.card{
+    width:100%;
+    max-width:430px;
+    background:#151920;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:22px;
+    padding:24px;
+    box-shadow:0 20px 50px rgba(0,0,0,.5);
+}
+
+.logo{
+    text-align:center;
+    font-size:42px;
+    margin-bottom:5px;
+}
+
+h1{
+    text-align:center;
+    margin:0;
+    font-size:24px;
+}
+
+.sub{
+    text-align:center;
+    color:#8993a3;
+    font-size:12px;
+    margin-top:7px;
+    margin-bottom:22px;
+}
+
+.status{
+    padding:14px;
+    border-radius:13px;
+    background:#0c1015;
+    border:1px solid rgba(255,255,255,.06);
+    margin-bottom:10px;
+    font-size:13px;
+}
+
+.ok{
+    color:#2ecc71;
+}
+
+.error{
+    color:#ff5c5c;
+}
+
+.loading{
+    color:#f3ba2f;
+}
+
+pre{
+    margin:15px 0 0;
+    padding:14px;
+    min-height:150px;
+    max-height:350px;
+    overflow:auto;
+    white-space:pre-wrap;
+    word-break:break-word;
+    border-radius:13px;
+    background:#080a0e;
+    border:1px solid rgba(255,255,255,.06);
+    color:#cfd7e3;
+    font-size:11px;
+    line-height:1.5;
+}
+
+button{
+    width:100%;
+    margin-top:15px;
+    padding:13px;
+    border:0;
+    border-radius:12px;
+    background:linear-gradient(
+        135deg,
+        #ffe88a,
+        #f3ba2f,
+        #c88a14
+    );
+    color:#111;
+    font-weight:800;
+    cursor:pointer;
+}
+</style>
 </head>
 
 <body>
 
-<div class="box">
+<div class="card">
 
-    <h2>🐼 Panda Earn</h2>
+    <div class="logo">🐼</div>
 
-    <div id="status">
-        Loading account...
+    <h1>Panda Earn</h1>
+
+    <div class="sub">
+        Secure Telegram + Supabase Connection Test
     </div>
 
-    <pre id="result"></pre>
+    <div id="telegramStatus"
+         class="status loading">
+        ⏳ Checking Telegram...
+    </div>
+
+    <div id="functionStatus"
+         class="status loading">
+        ⏳ Waiting for Telegram...
+    </div>
+
+    <div id="databaseStatus"
+         class="status loading">
+        ⏳ Waiting for database...
+    </div>
+
+    <pre id="result">Starting...</pre>
+
+    <button id="retryBtn"
+            onclick="startTest()">
+        TEST AGAIN
+    </button>
 
 </div>
 
+
 <script>
 
-/* =========================================
-   SUPABASE
-========================================= */
+/* ==========================================
+   CONFIG
+========================================== */
 
-const SUPABASE_URL =
-    "https://myzsqddvwvoaiainktdh.supabase.co";
+const FUNCTION_URL =
+"https://myzsqddvwvoaiainktdh.supabase.co/functions/v1/rapid-task";
 
-const SUPABASE_KEY =
-    "sb_publishable_JN2sZWzesbmhI2ivloEZlA_jP6s324f";
 
-const client =
-    window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
+/* ==========================================
+   TELEGRAM
+========================================== */
+
+const tg = window.Telegram.WebApp;
+
+try{
+    tg.ready();
+    tg.expand();
+}catch(e){
+    console.log("Telegram WebApp error:",e);
+}
+
+
+/* ==========================================
+   ELEMENTS
+========================================== */
+
+const telegramStatus =
+document.getElementById("telegramStatus");
+
+const functionStatus =
+document.getElementById("functionStatus");
+
+const databaseStatus =
+document.getElementById("databaseStatus");
+
+const result =
+document.getElementById("result");
+
+const retryBtn =
+document.getElementById("retryBtn");
+
+
+/* ==========================================
+   HELPERS
+========================================== */
+
+function setStatus(element,text,type){
+
+    element.textContent = text;
+
+    element.className =
+        "status " + type;
+}
+
+
+/* ==========================================
+   MAIN TEST
+========================================== */
+
+async function startTest(){
+
+    retryBtn.disabled = true;
+    retryBtn.textContent = "TESTING...";
+
+    result.textContent =
+        "Starting secure connection...\n\n";
+
+    setStatus(
+        telegramStatus,
+        "⏳ Checking Telegram...",
+        "loading"
+    );
+
+    setStatus(
+        functionStatus,
+        "⏳ Waiting...",
+        "loading"
+    );
+
+    setStatus(
+        databaseStatus,
+        "⏳ Waiting...",
+        "loading"
     );
 
 
-/* =========================================
-   TELEGRAM
-========================================= */
+    /* ======================================
+       CHECK TELEGRAM
+    ====================================== */
 
-const tg =
-    window.Telegram.WebApp;
+    const initData =
+        tg.initData;
 
-tg.ready();
-tg.expand();
-
-
-/* =========================================
-   LOAD / CREATE USER
-========================================= */
-
-async function loadUser() {
-
-    const status =
-        document.getElementById("status");
-
-    const result =
-        document.getElementById("result");
-
-    try {
-
-        const tgUser =
-            tg.initDataUnsafe &&
-            tg.initDataUnsafe.user;
+    const telegramUser =
+        tg.initDataUnsafe &&
+        tg.initDataUnsafe.user;
 
 
-        /* Telegram check */
+    if(!initData){
 
-        if (!tgUser) {
+        setStatus(
+            telegramStatus,
+            "❌ Telegram initData missing",
+            "error"
+        );
 
-            status.textContent =
-                "❌ Open this page inside Telegram.";
+        result.textContent =
+            "This page must be opened inside the Telegram Mini App.\n\n" +
+            "Open @Pandaearnoffical_bot in Telegram and launch the Mini App.";
 
-            return;
+        retryBtn.disabled = false;
+        retryBtn.textContent = "TRY AGAIN";
+
+        return;
+    }
+
+
+    if(!telegramUser){
+
+        setStatus(
+            telegramStatus,
+            "❌ Telegram user missing",
+            "error"
+        );
+
+        result.textContent =
+            "Telegram opened the page, but user information was not available.";
+
+        retryBtn.disabled = false;
+        retryBtn.textContent = "TRY AGAIN";
+
+        return;
+    }
+
+
+    setStatus(
+        telegramStatus,
+        "✅ Telegram: OK",
+        "ok"
+    );
+
+
+    result.textContent =
+        "Telegram User detected:\n\n" +
+        JSON.stringify(
+            telegramUser,
+            null,
+            2
+        ) +
+        "\n\nCalling secure Edge Function...";
+
+
+    /* ======================================
+       CALL EDGE FUNCTION
+    ====================================== */
+
+    try{
+
+        const response =
+            await fetch(
+                FUNCTION_URL,
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:JSON.stringify({
+
+                        action:"account",
+
+                        initData:initData
+
+                    })
+                }
+            );
+
+
+        const text =
+            await response.text();
+
+
+        let data;
+
+        try{
+            data =
+                JSON.parse(text);
+        }catch(e){
+
+            data = {
+                raw:text
+            };
+
         }
 
 
-        const telegramId =
-            tgUser.id;
+        /* ==================================
+           FUNCTION ERROR
+        ================================== */
 
+        if(!response.ok){
 
-        status.textContent =
-            "Checking your Panda Earn account...";
+            setStatus(
+                functionStatus,
+                "❌ Edge Function failed",
+                "error"
+            );
 
-
-        /* =====================================
-           FIND USER
-        ===================================== */
-
-        const existing =
-            await client
-                .from("panda_users")
-                .select("*")
-                .eq(
-                    "telegram_id",
-                    telegramId
-                )
-                .maybeSingle();
-
-
-        if (existing.error) {
-
-            throw existing.error;
-
-        }
-
-
-        /* =====================================
-           USER EXISTS
-        ===================================== */
-
-        if (existing.data) {
-
-            status.textContent =
-                "✅ Account found";
+            setStatus(
+                databaseStatus,
+                "❌ Database not confirmed",
+                "error"
+            );
 
             result.textContent =
+                "HTTP STATUS: " +
+                response.status +
+                "\n\n" +
                 JSON.stringify(
-                    existing.data,
+                    data,
                     null,
                     2
                 );
 
+            retryBtn.disabled = false;
+            retryBtn.textContent = "TEST AGAIN";
+
             return;
         }
 
 
-        /* =====================================
-           CREATE NEW USER
-        ===================================== */
-
-        status.textContent =
-            "Creating your Panda Earn account...";
-
-
-        const newUser =
-            await client
-                .from("panda_users")
-                .insert({
-
-                    telegram_id:
-                        telegramId,
-
-                    username:
-                        tgUser.username ||
-                        "",
-
-                    first_name:
-                        tgUser.first_name ||
-                        "",
-
-                    balance:
-                        0,
-
-                    total_earned:
-                        0,
-
-                    referrals:
-                        0,
-
-                    tasks_completed:
-                        0
-
-                })
-                .select()
-                .single();
+        setStatus(
+            functionStatus,
+            "✅ Edge Function: OK",
+            "ok"
+        );
 
 
-        if (newUser.error) {
+        /* ==================================
+           DATABASE RESULT
+        ================================== */
 
-            throw newUser.error;
+        if(
+            data &&
+            data.success === true &&
+            data.user
+        ){
 
+            setStatus(
+                databaseStatus,
+                "✅ Database: OK",
+                "ok"
+            );
+
+
+            result.textContent =
+                "🎉 EVERYTHING WORKING\n\n" +
+
+                "Telegram:\n" +
+                "ID: " +
+                (data.telegram_user?.id || "N/A") +
+                "\nUsername: @" +
+                (
+                    data.telegram_user?.username ||
+                    "none"
+                ) +
+
+                "\n\nPanda User:\n" +
+
+                JSON.stringify(
+                    data.user,
+                    null,
+                    2
+                ) +
+
+                "\n\nCompleted Tasks:\n" +
+
+                JSON.stringify(
+                    data.completed_task_ids || [],
+                    null,
+                    2
+                );
+
+            retryBtn.textContent =
+                "TEST SUCCESSFUL";
+
+            retryBtn.disabled = false;
+
+        }else{
+
+            setStatus(
+                databaseStatus,
+                "❌ User data missing",
+                "error"
+            );
+
+            result.textContent =
+                "Function responded, but user data was not returned.\n\n" +
+                JSON.stringify(
+                    data,
+                    null,
+                    2
+                );
+
+            retryBtn.disabled = false;
+            retryBtn.textContent = "TEST AGAIN";
         }
 
 
-        status.textContent =
-            "🎉 Account created successfully!";
+    }catch(error){
+
+        setStatus(
+            functionStatus,
+            "❌ Request failed",
+            "error"
+        );
+
+        setStatus(
+            databaseStatus,
+            "❌ Database not reached",
+            "error"
+        );
 
         result.textContent =
-            JSON.stringify(
-                newUser.data,
-                null,
-                2
+            "REQUEST ERROR\n\n" +
+            String(
+                error.message ||
+                error
             );
 
-
-    } catch (error) {
-
-        console.error(error);
-
-        status.textContent =
-            "❌ Account error";
-
-        result.textContent =
-            JSON.stringify(
-                {
-                    message:
-                        error.message,
-
-                    code:
-                        error.code,
-
-                    details:
-                        error.details,
-
-                    hint:
-                        error.hint
-                },
-                null,
-                2
-            );
-
+        retryBtn.disabled = false;
+        retryBtn.textContent = "TEST AGAIN";
     }
+
 }
 
 
-/* =========================================
+/* ==========================================
    START
-========================================= */
+========================================== */
 
-loadUser();
+startTest();
 
 </script>
 
