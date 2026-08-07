@@ -1,1 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panda Earn</title>
 
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #080b09;
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 480px;
+      min-height: 100vh;
+      margin: auto;
+      padding-bottom: 90px;
+    }
+
+    /* HEADER */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 18px 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 15px;
+      background: linear-gradient(145deg, #caff45, #72a900);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      box-shadow: 0 7px 25px rgba(170, 255, 50, .16);
+    }
+
+    .brand-text h1 {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -.4px;
+    }
+
+    .brand-text p {
+      color: #8e9891;
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    .profile {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #151b17;
+      border: 1px solid #28312b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 19px;
+    }
+
+    /* BALANCE CARD */
+    .balance-card {
+      margin: 10px 16px 20px;
+      padding: 24px 21px;
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 90% 10%, rgba(182,255,65,.13), transparent 30%),
+        linear-gradient(145deg, #172018, #0d120f);
+      border: 1px solid #263327;
+      box-shadow: 0 15px 40px rgba(0,0,0,.25);
+    }
+
+    .balance-label {
+      color: #9ca69f;
+      font-size: 13px;
+      margin-bottom: 7px;
+    }
+
+    .balance {
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+    }
+
+    .balance span {
+      color: #c8ff4a;
+    }
+
+    .balance-note {
+      margin-top: 8px;
+      color: #79847c;
+      font-size: 12px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .action-btn {
+      flex: 1;
+      height: 45px;
+      border: none;
+      border-radius: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .withdraw {
+      background: #c5ff48;
+      color: #11170d;
+    }
+
+    .history {
+      background: #1c251e;
+      border: 1px solid #303b31;
+      color: #fff;
+    }
+
+    /* SECTION */
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 17px 12px;
+    }
+
+    .section-title h2 {
+      font-size: 17px;
+    }
+
+    .section-title span {
+      font-size: 11px;
+      color: #7e897f;
+    }
+
+    /* STATS */
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 11px;
+      padding: 0 16px;
+    }
+
+    .stat-card {
+      background: #111612;
+      border: 1px solid #222c24;
+      border-radius: 18px;
+      padding: 17px;
+      min-height: 105px;
+    }
+
+    .stat-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 11px;
+      background: #1c281b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .stat-value {
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .stat-name {
+      color: #7f8981;
+      font-size: 11px;
+      margin-top: 4px;
+    }
+
+    /* QUICK CARD */
+    .quick-card {
+      margin: 20px 16px 0;
+      background: linear-gradient(135deg, #151d16, #0e130f);
+      border: 1px solid #263027;
+      border-radius: 19px;
+      padding: 17px;
+    }
+
+    .quick-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .quick-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      background: #c5ff48;
+      color: #15200e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 21px;
+    }
+
+    .quick-text h3 {
+      font-size: 14px;
+    }
+
+    .quick-text p {
+      font-size: 11px;
+      color: #7f8981;
+      margin-top: 4px;
+    }
+
+    .task-btn {
+      width: 100%;
+      height: 42px;
+      border: none;
+      border-radius: 12px;
+      margin-top: 14px;
+      background: #1d271f;
+      color: #c7ff51;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* BOTTOM NAV */
+    .bottom-nav {
+      position: fixed;
+      z-index: 50;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 24px);
+      max-width: 456px;
+      height: 67px;
+      background: rgba(18,23,19,.96);
+      backdrop-filter: blur(15px);
+      border: 1px solid #283229;
+      border-radius: 20px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      padding: 5px;
+      box-shadow: 0 10px 35px rgba(0,0,0,.5);
+    }
+
+    .nav-btn {
+      border: none;
+      background: transparent;
+      color: #707b73;
+      border-radius: 15px;
+      font-size: 11px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .nav-btn .nav-icon {
+      display: block;
+      font-size: 20px;
+      margin-bottom: 3px;
+    }
+
+    .nav-btn.active {
+      background: #202b21;
+      color: #c8ff4b;
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 94px;
+      transform: translate(-50%, 20px);
+      background: #eaffc9;
+      color: #111;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      opacity: 0;
+      pointer-events: none;
+      transition: .3s;
+      z-index: 100;
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    @media (min-width: 481px) {
+      body {
+        background: #050705;
+      }
+
+      .app {
+        border-left: 1px solid #151a16;
+        border-right: 1px solid #151a16;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="app">
+
+    <!-- HEADER -->
+    <header class="header">
+
+      <div class="brand">
+        <div class="logo">🐼</div>
+
+        <div class="brand-text">
+          <h1>Panda Earn</h1>
+          <p>Earn • Complete • Grow</p>
+        </div>
+      </div>
+
+      <div class="profile">👤</div>
+
+    </header>
+
+
+    <!-- BALANCE -->
+    <section class="balance-card">
+
+      <div class="balance-label">
+        TOTAL BALANCE
+      </div>
+
+      <div class="balance">
+        <span>$</span>0.00
+      </div>
+
+      <div class="balance-note">
+        Available balance for withdrawal
+      </div>
+
+      <div class="actions">
+
+        <button class="action-btn withdraw" onclick="showToast('Withdrawal system coming soon')">
+          ⬆ Withdraw
+        </button>
+
+        <button class="action-btn history" onclick="showToast('No transactions yet')">
+          ◷ History
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- OVERVIEW -->
+    <div class="section-title">
+
+      <h2>Overview</h2>
+
+      <span>Panda Earn</span>
+
+    </div>
+
+
+    <!-- STATS -->
+    <section class="stats">
+
+      <div class="stat-card">
+
+        <div class="stat-icon">💰</div>
+
+        <div class="stat-value">
+          $0.00
+        </div>
+
+        <div class="stat-name">
+          Total Earned
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-icon">👥</div>
+
+        <div class="stat-value">
+          0
+        </div>
+
+        <div class="stat-name">
+          Referrals
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-icon">✅</div>
+
+        <div class="stat-value">
+          0
+        </div>
+
+        <div class="stat-name">
+          Tasks Completed
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-icon">💳</div>
+
+        <div class="stat-value">
+          $0.00
+        </div>
+
+        <div class="stat-name">
+          Available
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- QUICK TASK -->
+    <section class="quick-card">
+
+      <div class="quick-top">
+
+        <div class="quick-icon">
+          ⚡
+        </div>
+
+        <div class="quick-text">
+
+          <h3>Start Earning</h3>
+
+          <p>
+            Complete simple tasks and earn rewards.
+          </p>
+
+        </div>
+
+      </div>
+
+      <button class="task-btn" onclick="openTasks()">
+        ☑ View Available Tasks
+      </button>
+
+    </section>
+
+  </div>
+
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+
+    <button class="nav-btn active" onclick="setNav(this, 'Home')">
+
+      <span class="nav-icon">⌂</span>
+      Home
+
+    </button>
+
+
+    <button class="nav-btn" onclick="setNav(this, 'Tasks')">
+
+      <span class="nav-icon">☑</span>
+      Tasks
+
+    </button>
+
+
+    <button class="nav-btn" onclick="setNav(this, 'Referrals')">
+
+      <span class="nav-icon">♧</span>
+      Referrals
+
+    </button>
+
+  </nav>
+
+
+  <div class="toast" id="toast"></div>
+
+
+  <script>
+
+    function showToast(message) {
+
+      const toast = document.getElementById("toast");
+
+      toast.textContent = message;
+
+      toast.classList.add("show");
+
+      setTimeout(() => {
+
+        toast.classList.remove("show");
+
+      }, 2200);
+
+    }
+
+
+    function setNav(button, page) {
+
+      document.querySelectorAll(".nav-btn")
+        .forEach(btn => btn.classList.remove("active"));
+
+      button.classList.add("active");
+
+      if (page !== "Home") {
+
+        showToast(page + " section coming soon");
+
+      }
+
+    }
+
+
+    function openTasks() {
+
+      showToast("Tasks section coming soon");
+
+    }
+
+  </script>
+
+</body>
+</html>
