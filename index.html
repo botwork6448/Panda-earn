@@ -2,90 +2,76 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0,
+               maximum-scale=1.0, user-scalable=no">
 
 <title>Panda Earn</title>
 
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 *{
+    box-sizing:border-box;
     margin:0;
     padding:0;
-    box-sizing:border-box;
     -webkit-tap-highlight-color:transparent;
 }
 
 :root{
     --bg:#080a0e;
-    --card:#12161d;
-    --card2:#171c24;
+    --card:#13171e;
     --border:rgba(255,255,255,.08);
     --gold:#f3ba2f;
-    --gold2:#ffe58a;
     --green:#2dde7b;
-    --muted:#8e99aa;
-    --white:#fff;
-}
-
-html,body{
-    min-height:100%;
+    --muted:#8d98a9;
 }
 
 body{
     background:
-        radial-gradient(circle at 15% 0%,rgba(243,186,47,.08),transparent 30%),
-        radial-gradient(circle at 90% 40%,rgba(45,222,123,.05),transparent 30%),
-        var(--bg);
-    color:var(--white);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    radial-gradient(circle at 15% 0%,rgba(243,186,47,.08),transparent 30%),
+    radial-gradient(circle at 90% 40%,rgba(45,222,123,.05),transparent 30%),
+    var(--bg);
+    color:white;
+    font-family:-apple-system,BlinkMacSystemFont,
+    "Segoe UI",Roboto,Arial,sans-serif;
     padding:14px 13px 100px;
-    overflow-x:hidden;
-}
-
-button{
-    font:inherit;
-    color:inherit;
-    border:0;
-    cursor:pointer;
-    -webkit-appearance:none;
 }
 
 .app{
-    width:100%;
     max-width:520px;
     margin:auto;
 }
 
-/* =========================
-   LOADING
-========================= */
+.hidden{
+    display:none!important;
+}
 
-#loadingScreen{
+/* LOADING */
+
+#loading{
     min-height:85vh;
     display:flex;
     flex-direction:column;
-    align-items:center;
     justify-content:center;
+    align-items:center;
     text-align:center;
-    color:var(--muted);
 }
 
 .loading-logo{
-    width:72px;
-    height:72px;
+    width:75px;
+    height:75px;
     border-radius:22px;
+    background:linear-gradient(145deg,#252b34,#0d1015);
     display:flex;
     align-items:center;
     justify-content:center;
     font-size:45px;
-    background:linear-gradient(145deg,#242a33,#0d1015);
-    border:1px solid var(--border);
     margin-bottom:18px;
-    box-shadow:0 15px 35px rgba(0,0,0,.4);
 }
 
-.loader{
+.spinner{
     width:30px;
     height:30px;
     border-radius:50%;
@@ -100,38 +86,37 @@ button{
 }
 
 .loading-title{
-    color:#fff;
-    font-weight:700;
-    margin-bottom:5px;
+    font-size:17px;
+    font-weight:800;
 }
 
-.loading-message{
+.loading-text{
+    margin-top:6px;
+    color:var(--muted);
     font-size:11px;
     max-width:280px;
     line-height:1.5;
 }
 
-.error-box{
+#error{
     display:none;
-    margin-top:18px;
-    max-width:310px;
+    margin-top:16px;
+    max-width:320px;
     padding:13px;
     border-radius:13px;
-    background:rgba(255,70,70,.08);
-    border:1px solid rgba(255,70,70,.2);
+    background:rgba(255,60,60,.08);
+    border:1px solid rgba(255,60,60,.2);
     color:#ff9b9b;
     font-size:11px;
     line-height:1.5;
 }
 
-/* =========================
-   HEADER
-========================= */
+/* HEADER */
 
 .header{
     display:flex;
-    align-items:center;
     justify-content:space-between;
+    align-items:center;
     margin-bottom:16px;
 }
 
@@ -141,7 +126,7 @@ button{
     gap:10px;
 }
 
-.panda-logo{
+.logo{
     width:43px;
     height:43px;
     border-radius:14px;
@@ -150,20 +135,18 @@ button{
     justify-content:center;
     font-size:28px;
     background:linear-gradient(145deg,#252b35,#0c0f14);
-    border:1px solid var(--border);
-    box-shadow:0 9px 22px rgba(0,0,0,.35);
 }
 
 .brand-name{
     font-size:21px;
-    font-weight:850;
+    font-weight:900;
 }
 
 .brand-name span{
     color:var(--gold);
 }
 
-.profile{
+.avatar{
     width:43px;
     height:43px;
     border-radius:50%;
@@ -172,11 +155,9 @@ button{
     background:#20252d;
 }
 
-/* =========================
-   BALANCE
-========================= */
+/* BALANCE */
 
-.balance-card{
+.balance{
     position:relative;
     overflow:hidden;
     min-height:190px;
@@ -188,37 +169,24 @@ button{
     box-shadow:0 15px 35px rgba(0,0,0,.4);
 }
 
-.balance-card:after{
-    content:"";
-    position:absolute;
-    width:200px;
-    height:200px;
-    right:-90px;
-    top:-90px;
-    border-radius:50%;
-    background:rgba(243,186,47,.08);
-}
-
-.balance-label{
+.label{
     color:var(--muted);
     font-size:11px;
-    letter-spacing:1.5px;
     text-transform:uppercase;
+    letter-spacing:1.5px;
     font-weight:700;
 }
 
-.balance-value{
-    margin-top:5px;
+.amount{
+    margin-top:6px;
     font-size:35px;
-    line-height:1.1;
     font-weight:900;
     background:linear-gradient(135deg,#fff1a9,#f3ba2f,#bd7e0d);
     -webkit-background-clip:text;
-    background-clip:text;
     color:transparent;
 }
 
-.wallet-btn{
+.wallet{
     margin-top:14px;
     padding:9px 14px;
     border-radius:11px;
@@ -228,32 +196,9 @@ button{
     font-weight:700;
 }
 
-.balance-money{
-    position:absolute;
-    right:5px;
-    bottom:2px;
-    font-size:70px;
-    transform:rotate(-5deg);
-}
-
-.coin{
-    position:absolute;
-    font-size:29px;
-}
-
-.coin1{
-    right:83px;
-    bottom:18px;
-}
-
-.coin2{
-    right:42px;
-    bottom:52px;
-}
-
 .progress{
     position:absolute;
-    right:14px;
+    right:15px;
     top:17px;
     width:61px;
     height:61px;
@@ -264,7 +209,6 @@ button{
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    z-index:2;
 }
 
 .progress strong{
@@ -272,23 +216,42 @@ button{
 }
 
 .progress small{
-    color:var(--muted);
     font-size:7px;
-    text-transform:uppercase;
+    color:var(--muted);
 }
 
-/* =========================
-   WELCOME
-========================= */
+.money{
+    position:absolute;
+    right:3px;
+    bottom:0;
+    font-size:72px;
+}
+
+.coin{
+    position:absolute;
+    font-size:28px;
+}
+
+.c1{
+    right:85px;
+    bottom:18px;
+}
+
+.c2{
+    right:43px;
+    bottom:55px;
+}
+
+/* WELCOME */
 
 .welcome{
     display:flex;
-    align-items:center;
     justify-content:space-between;
+    align-items:center;
     gap:10px;
     padding:18px;
-    margin-bottom:21px;
     border-radius:21px;
+    margin-bottom:21px;
     background:linear-gradient(135deg,#1b2517,#10170f,#151108);
     border:1px solid rgba(243,186,47,.17);
 }
@@ -306,43 +269,38 @@ button{
     line-height:1.4;
 }
 
-.claim-btn{
+.claim{
     padding:9px 13px;
     border-radius:11px;
-    color:#15110a;
     background:linear-gradient(135deg,#ffe98e,#f3ba2f,#c88a13);
+    color:#15110a;
     font-size:11px;
     font-weight:900;
-    box-shadow:0 7px 18px rgba(243,186,47,.2);
 }
 
 .gift{
-    font-size:58px;
+    font-size:56px;
 }
 
-/* =========================
-   SECTION
-========================= */
+/* SECTION */
 
-.section-title{
+.section{
     display:flex;
-    align-items:center;
     justify-content:space-between;
+    align-items:center;
     margin:0 2px 10px;
 }
 
-.section-title h2{
+.section h2{
     font-size:17px;
 }
 
-.section-title span{
+.section span{
     color:var(--muted);
     font-size:11px;
 }
 
-/* =========================
-   OVERVIEW
-========================= */
+/* OVERVIEW */
 
 .overview{
     display:grid;
@@ -353,7 +311,6 @@ button{
 
 .metric{
     position:relative;
-    overflow:hidden;
     min-height:105px;
     padding:14px;
     border-radius:17px;
@@ -380,12 +337,10 @@ button{
 }
 
 .green{
-    color:var(--green)!important;
+    color:var(--green);
 }
 
-/* =========================
-   QUICK ACTIONS
-========================= */
+/* ACTIONS */
 
 .actions{
     display:grid;
@@ -401,15 +356,6 @@ button{
     border-radius:16px;
     background:linear-gradient(145deg,#181d25,#0e1218);
     border:1px solid var(--border);
-    transition:.15s;
-}
-
-.action:active,
-.wallet-btn:active,
-.claim-btn:active,
-.tasks-btn:active,
-.nav-btn:active{
-    transform:scale(.96);
 }
 
 .action-icon{
@@ -426,19 +372,17 @@ button{
 
 .action-name{
     font-size:10px;
-    line-height:1.25;
     font-weight:700;
+    line-height:1.25;
 }
 
-/* =========================
-   START
-========================= */
+/* START */
 
 .start{
     display:flex;
-    align-items:center;
     justify-content:space-between;
-    gap:9px;
+    align-items:center;
+    gap:10px;
     padding:15px;
     border-radius:19px;
     background:linear-gradient(135deg,#102518,#0b1510);
@@ -466,7 +410,7 @@ button{
     font-size:10px;
 }
 
-.tasks-btn{
+.tasks{
     padding:9px 12px;
     border-radius:10px;
     background:rgba(0,0,0,.3);
@@ -475,76 +419,46 @@ button{
     font-weight:800;
 }
 
-/* =========================
-   BOTTOM NAV
-========================= */
+/* NAV */
 
-.bottom-nav{
+.bottom{
     position:fixed;
     left:0;
     right:0;
     bottom:0;
     z-index:100;
     padding:9px 10px 14px;
-    background:rgba(10,12,16,.96);
+    background:rgba(10,12,16,.97);
     backdrop-filter:blur(18px);
     border-top:1px solid var(--border);
 }
 
-.nav-inner{
-    width:100%;
+.nav{
     max-width:520px;
     margin:auto;
     display:grid;
     grid-template-columns:repeat(3,1fr);
 }
 
-.nav-btn{
-    padding:3px 0;
+.nav button{
     background:none;
     color:var(--muted);
     font-size:10px;
 }
 
-.nav-btn div{
-    margin-bottom:3px;
+.nav button div{
     font-size:19px;
+    margin-bottom:3px;
 }
 
-.nav-btn.active{
+.nav button.active{
     color:var(--green);
 }
 
-/* =========================
-   HIDDEN
-========================= */
-
-.hidden{
-    display:none!important;
-}
-
-@media(max-width:350px){
-
-    body{
-        padding-left:9px;
-        padding-right:9px;
-    }
-
-    .balance-value{
-        font-size:30px;
-    }
-
-    .actions{
-        gap:6px;
-    }
-
-    .action{
-        padding:10px 7px;
-    }
-
-    .action-name{
-        font-size:9px;
-    }
+button{
+    cursor:pointer;
+    color:inherit;
+    font-family:inherit;
 }
 </style>
 </head>
@@ -553,811 +467,662 @@ button{
 
 <div class="app">
 
-    <!-- LOADING -->
-    <div id="loadingScreen">
+<!-- LOADING -->
+<div id="loading">
 
-        <div class="loading-logo">🐼</div>
+    <div class="loading-logo">🐼</div>
 
-        <div class="loader"></div>
+    <div class="spinner"></div>
 
-        <div class="loading-title">
-            Panda Earn
+    <div class="loading-title">
+        Panda Earn
+    </div>
+
+    <div class="loading-text" id="loadingText">
+        Connecting to your account...
+    </div>
+
+    <div id="error"></div>
+
+</div>
+
+
+<!-- APP -->
+<div id="appContent" class="hidden">
+
+    <!-- HEADER -->
+    <div class="header">
+
+        <div class="brand">
+
+            <div class="logo">
+                🐼
+            </div>
+
+            <div class="brand-name">
+                Panda <span>Earn</span>
+            </div>
+
         </div>
 
-        <div class="loading-message" id="loadingMessage">
-            Loading your account...
-        </div>
-
-        <div class="error-box" id="errorBox"></div>
+        <img
+            id="avatar"
+            class="avatar"
+            src="https://api.iconify.design/fluent-emoji-flat:panda.svg"
+        >
 
     </div>
 
 
-    <!-- MAIN APP -->
-    <div id="mainApp" class="hidden">
+    <!-- BALANCE -->
+    <div class="balance">
 
-        <!-- HEADER -->
-        <header class="header">
+        <div class="label">
+            Total Balance
+        </div>
 
-            <div class="brand">
+        <div class="amount" id="balance">
+            $0.00
+        </div>
 
-                <div class="panda-logo">
-                    🐼
-                </div>
+        <button class="wallet" id="walletBtn">
+            💳 Wallet ›
+        </button>
 
-                <div class="brand-name">
-                    Panda <span>Earn</span>
-                </div>
+        <div class="progress">
+            <strong id="progress">0%</strong>
+            <small>Progress</small>
+        </div>
 
-            </div>
+        <div class="money">💵</div>
 
-            <img
-                id="profileAvatar"
-                class="profile"
-                src="https://api.iconify.design/fluent-emoji-flat:panda.svg"
-                alt="Profile"
-            >
+        <div class="coin c1">🪙</div>
+        <div class="coin c2">🪙</div>
 
-        </header>
+    </div>
 
 
-        <!-- BALANCE -->
-        <section class="balance-card">
+    <!-- WELCOME -->
+    <div class="welcome">
 
-            <div class="balance-label">
-                Total Balance
-            </div>
+        <div>
 
-            <div class="balance-value" id="balance">
-                $0.00
-            </div>
+            <h2>
+                WELCOME BONUS<br>
+                UNLOCKED!
+            </h2>
 
-            <button class="wallet-btn" id="walletBtn">
-                💳 Wallet&nbsp; ›
+            <p>
+                Welcome to Panda Earn.
+                Complete tasks and start earning rewards.
+            </p>
+
+            <button class="claim" id="claimBtn">
+                🎁 Claim Welcome Bonus
             </button>
 
-            <div class="progress">
+        </div>
 
-                <strong id="progress">
-                    0%
-                </strong>
+        <div class="gift">
+            🎁
+        </div>
 
-                <small>
-                    Progress
-                </small>
+    </div>
 
+
+    <!-- OVERVIEW -->
+    <div class="section">
+
+        <h2>Overview</h2>
+
+        <span id="greeting">
+            Welcome
+        </span>
+
+    </div>
+
+
+    <div class="overview">
+
+        <div class="metric">
+
+            <small>Total Earned</small>
+
+            <strong class="green" id="totalEarned">
+                $0.00
+            </strong>
+
+            <div class="metric-icon">
+                💰
             </div>
 
-            <div class="balance-money">
-                💵
+        </div>
+
+
+        <div class="metric">
+
+            <small>Referrals</small>
+
+            <strong id="referrals">
+                0
+            </strong>
+
+            <div class="metric-icon">
+                👥
             </div>
 
-            <div class="coin coin1">
-                🪙
+        </div>
+
+
+        <div class="metric">
+
+            <small>Tasks Completed</small>
+
+            <strong id="tasksCompleted">
+                0
+            </strong>
+
+            <div class="metric-icon">
+                📋
             </div>
 
-            <div class="coin coin2">
-                🪙
+        </div>
+
+
+        <div class="metric">
+
+            <small>Available in wallet</small>
+
+            <strong id="walletBalance">
+                $0.00
+            </strong>
+
+            <div class="metric-icon">
+                👝
             </div>
 
-        </section>
+        </div>
+
+    </div>
 
 
-        <!-- WELCOME -->
-        <section class="welcome">
+    <!-- QUICK ACTIONS -->
+    <div class="section">
+        <h2>Quick Actions</h2>
+    </div>
+
+
+    <div class="actions">
+
+        <button class="action" id="partnersBtn">
+
+            <div class="action-icon">
+                🤝
+            </div>
+
+            <div class="action-name">
+                Partners & Affiliates
+            </div>
+
+        </button>
+
+
+        <button class="action" id="cardBtn">
+
+            <div class="action-icon">
+                💳
+            </div>
+
+            <div class="action-name">
+                Card Management
+            </div>
+
+        </button>
+
+
+        <button class="action" id="boostBtn">
+
+            <div class="action-icon">
+                🚀
+            </div>
+
+            <div class="action-name">
+                Launchpad & Boost
+            </div>
+
+        </button>
+
+    </div>
+
+
+    <!-- START EARNING -->
+    <div class="start">
+
+        <div class="start-left">
+
+            <div class="target">
+                🎯
+            </div>
 
             <div>
 
-                <h2>
-                    WELCOME BONUS<br>
-                    UNLOCKED!
-                </h2>
+                <h3>Start Earning</h3>
 
-                <p id="welcomeMessage">
-                    Welcome to Panda Earn. Start completing tasks and earn rewards.
+                <p>
+                    Complete tasks and unlock exciting rewards.
                 </p>
 
-                <button class="claim-btn" id="claimBtn">
-                    🎁 Claim Welcome Bonus
-                </button>
-
             </div>
-
-            <div class="gift">
-                🎁
-            </div>
-
-        </section>
-
-
-        <!-- OVERVIEW -->
-        <div class="section-title">
-
-            <h2>
-                Overview
-            </h2>
-
-            <span id="userGreeting">
-                Welcome
-            </span>
 
         </div>
 
-
-        <section class="overview">
-
-            <div class="metric">
-
-                <small>
-                    Total Earned
-                </small>
-
-                <strong class="green" id="totalEarned">
-                    $0.00
-                </strong>
-
-                <div class="metric-icon">
-                    💰
-                </div>
-
-            </div>
-
-
-            <div class="metric">
-
-                <small>
-                    Referrals
-                </small>
-
-                <strong id="referrals">
-                    0
-                </strong>
-
-                <div class="metric-icon">
-                    👥
-                </div>
-
-            </div>
-
-
-            <div class="metric">
-
-                <small>
-                    Tasks Completed
-                </small>
-
-                <strong id="tasksCompleted">
-                    0
-                </strong>
-
-                <div class="metric-icon">
-                    📋
-                </div>
-
-            </div>
-
-
-            <div class="metric">
-
-                <small>
-                    Available in wallet
-                </small>
-
-                <strong id="walletBalance">
-                    $0.00
-                </strong>
-
-                <div class="metric-icon">
-                    👝
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- QUICK ACTIONS -->
-        <div class="section-title">
-
-            <h2>
-                Quick Actions
-            </h2>
-
-        </div>
-
-
-        <section class="actions">
-
-            <button class="action" id="partnersBtn">
-
-                <div class="action-icon">
-                    🤝
-                </div>
-
-                <div class="action-name">
-                    Partners & Affiliates
-                </div>
-
-            </button>
-
-
-            <button class="action" id="cardBtn">
-
-                <div class="action-icon">
-                    💳
-                </div>
-
-                <div class="action-name">
-                    Card Management
-                </div>
-
-            </button>
-
-
-            <button class="action" id="boostBtn">
-
-                <div class="action-icon">
-                    🚀
-                </div>
-
-                <div class="action-name">
-                    Launchpad & Boost
-                </div>
-
-            </button>
-
-        </section>
-
-
-        <!-- START EARNING -->
-        <section class="start">
-
-            <div class="start-left">
-
-                <div class="target">
-                    🎯
-                </div>
-
-                <div>
-
-                    <h3>
-                        Start Earning
-                    </h3>
-
-                    <p>
-                        Complete tasks and unlock exciting rewards.
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <button class="tasks-btn" id="viewTasksBtn">
-                View Tasks ›
-            </button>
-
-        </section>
+        <button class="tasks" id="tasksBtn">
+            View Tasks ›
+        </button>
 
     </div>
 
 </div>
 
+</div>
+
 
 <!-- BOTTOM NAV -->
-<nav class="bottom-nav">
+<div class="bottom">
 
-    <div class="nav-inner">
+    <div class="nav">
 
-        <button class="nav-btn active" id="homeNav">
+        <button class="active" id="homeNav">
             <div>⌂</div>
             Home
         </button>
 
-        <button class="nav-btn" id="tasksNav">
+        <button id="tasksNav">
             <div>☑</div>
             Tasks
         </button>
 
-        <button class="nav-btn" id="referralsNav">
+        <button id="referralsNav">
             <div>♟</div>
             Referrals
         </button>
 
     </div>
 
-</nav>
+</div>
 
 
 <script>
 
-/* =========================================================
-   PANDA EARN CONFIG
-========================================================= */
+/* =====================================================
+   SUPABASE
+===================================================== */
 
 const SUPABASE_URL =
     "https://myzsqddvwvoaiainktdh.supabase.co";
 
-const SUPABASE_KEY =
-    "sb_publishable_gtJi6JW9YD4u4YvIvehXBK";
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_gtJi6JW9YD4u4YvIvehXBQ_ItHdGXBK";
 
 
-/* =========================================================
+const { createClient } =
+    supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
+
+/* =====================================================
    TELEGRAM
-========================================================= */
+===================================================== */
 
-const tg = window.Telegram.WebApp;
+const tg =
+    window.Telegram.WebApp;
 
 tg.ready();
 tg.expand();
 
 
-/* =========================================================
-   VARIABLES
-========================================================= */
+/* =====================================================
+   STATE
+===================================================== */
 
-let currentUser = null;
-
-
-/* =========================================================
-   ELEMENT HELPER
-========================================================= */
-
-function $(id){
-    return document.getElementById(id);
-}
+let account = null;
+let telegramUser = null;
 
 
-/* =========================================================
-   MONEY
-========================================================= */
+/* =====================================================
+   HELPERS
+===================================================== */
 
 function money(value){
 
-    const n = Number(value);
-
-    if(!Number.isFinite(n)){
-        return "$0.00";
-    }
+    const n = Number(value || 0);
 
     return "$" + n.toFixed(2);
-}
-
-
-/* =========================================================
-   LOADING MESSAGE
-========================================================= */
-
-function setLoading(message){
-
-    $("loadingMessage").textContent = message;
 
 }
 
 
-/* =========================================================
-   ERROR
-========================================================= */
+function loading(text){
+
+    document.getElementById(
+        "loadingText"
+    ).textContent = text;
+
+}
+
 
 function showError(message){
 
-    $("loadingScreen").querySelector(".loader").style.display = "none";
+    document.querySelector(
+        ".spinner"
+    ).style.display = "none";
 
-    setLoading("Unable to load your account");
+    loading(
+        "Unable to load your account"
+    );
 
-    $("errorBox").style.display = "block";
+    const box =
+        document.getElementById("error");
 
-    $("errorBox").innerHTML = message;
+    box.style.display = "block";
 
-}
-
-
-/* =========================================================
-   SUPABASE REQUEST
-========================================================= */
-
-async function supabaseRequest(
-    endpoint,
-    options = {},
-    timeout = 10000
-){
-
-    const controller =
-        new AbortController();
-
-    const timer =
-        setTimeout(
-            () => controller.abort(),
-            timeout
-        );
-
-    try{
-
-        const response =
-            await fetch(
-                SUPABASE_URL + "/rest/v1/" + endpoint,
-                {
-                    ...options,
-
-                    signal:
-                        controller.signal,
-
-                    headers:{
-                        "apikey":
-                            SUPABASE_KEY,
-
-                        "Authorization":
-                            "Bearer " + SUPABASE_KEY,
-
-                        "Content-Type":
-                            "application/json",
-
-                        "Accept":
-                            "application/json",
-
-                        ...(options.headers || {})
-                    }
-                }
-            );
-
-
-        const text =
-            await response.text();
-
-
-        if(!response.ok){
-
-            throw new Error(
-                "Supabase " +
-                response.status +
-                ": " +
-                text
-            );
-
-        }
-
-
-        if(!text){
-            return null;
-        }
-
-
-        return JSON.parse(text);
-
-    }finally{
-
-        clearTimeout(timer);
-
-    }
+    box.innerHTML =
+        message;
 
 }
 
 
-/* =========================================================
-   TELEGRAM USER
-========================================================= */
+/* =====================================================
+   GET TELEGRAM USER
+===================================================== */
 
 function getTelegramUser(){
-
-    if(
-        !window.Telegram ||
-        !window.Telegram.WebApp
-    ){
-        return null;
-    }
 
     return tg.initDataUnsafe &&
            tg.initDataUnsafe.user
         ? tg.initDataUnsafe.user
         : null;
+
 }
 
 
-/* =========================================================
-   LOAD ACCOUNT
-========================================================= */
+/* =====================================================
+   LOAD USER
+===================================================== */
 
-async function loadAccount(){
+async function loadUser(){
 
     try{
 
-        const telegramUser =
+        telegramUser =
             getTelegramUser();
 
-
-        /*
-         * Mini App must be opened from Telegram.
-         */
 
         if(!telegramUser){
 
             showError(
-                "Please open Panda Earn from the Telegram Mini App."
+                "Please open Panda Earn from inside Telegram."
             );
 
             return;
         }
 
 
-        const telegramId =
-            telegramUser.id;
-
-
-        setLoading(
-            "Connecting to your Panda Earn account..."
+        loading(
+            "Finding your Panda Earn account..."
         );
 
 
         /*
-         * Find user.
+         * SELECT USER
          */
 
-        let users =
-            await supabaseRequest(
-                "panda_users" +
-                "?telegram_id=eq." +
-                encodeURIComponent(telegramId) +
-                "&select=*"
-            );
+        const {
+            data,
+            error
+        } =
+            await supabase
+            .from("panda_users")
+            .select("*")
+            .eq(
+                "telegram_id",
+                telegramUser.id
+            )
+            .limit(1);
+
+
+        if(error){
+
+            throw error;
+
+        }
 
 
         /*
-         * User doesn't exist:
-         * create account automatically.
+         * CREATE USER IF NOT FOUND
          */
 
-        if(
-            !Array.isArray(users) ||
-            users.length === 0
-        ){
+        if(!data || data.length === 0){
 
-            setLoading(
+            loading(
                 "Creating your Panda Earn account..."
             );
 
 
-            const newUser = {
+            const {
+                data:newData,
+                error:createError
+            } =
+                await supabase
+                .from("panda_users")
+                .insert({
 
-                telegram_id:
-                    telegramId,
+                    telegram_id:
+                        telegramUser.id,
+
+                    username:
+                        telegramUser.username || null,
+
+                    first_name:
+                        telegramUser.first_name || "User",
+
+                    balance:0,
+
+                    total_earned:0,
+
+                    referrals:0,
+
+                    tasks_completed:0
+
+                })
+                .select()
+                .single();
+
+
+            if(createError){
+
+                throw createError;
+
+            }
+
+
+            account =
+                newData;
+
+        }else{
+
+            account =
+                data[0];
+
+        }
+
+
+        /*
+         * UPDATE BASIC TELEGRAM DATA
+         */
+
+        await supabase
+            .from("panda_users")
+            .update({
 
                 username:
                     telegramUser.username || null,
 
                 first_name:
-                    telegramUser.first_name || "User",
+                    telegramUser.first_name || "User"
 
-                balance:0,
-
-                total_earned:0,
-
-                referrals:0,
-
-                tasks_completed:0
-
-            };
-
-
-            users =
-                await supabaseRequest(
-                    "panda_users",
-                    {
-                        method:"POST",
-
-                        headers:{
-                            "Prefer":
-                                "return=representation"
-                        },
-
-                        body:
-                            JSON.stringify(newUser)
-                    }
-                );
-
-        }
-
-
-        if(
-            !Array.isArray(users) ||
-            users.length === 0
-        ){
-
-            throw new Error(
-                "Unable to create/find user."
+            })
+            .eq(
+                "telegram_id",
+                telegramUser.id
             );
 
-        }
 
-
-        currentUser =
-            users[0];
-
-
-        /*
-         * Keep Telegram username/name updated.
-         */
-
-        try{
-
-            await supabaseRequest(
-                "panda_users" +
-                "?telegram_id=eq." +
-                encodeURIComponent(telegramId),
-
-                {
-                    method:"PATCH",
-
-                    headers:{
-                        "Prefer":
-                            "return=minimal"
-                    },
-
-                    body:
-                        JSON.stringify({
-
-                            username:
-                                telegramUser.username || null,
-
-                            first_name:
-                                telegramUser.first_name || "User"
-
-                        })
-                }
-            );
-
-        }catch(updateError){
-
-            console.warn(
-                "Profile update skipped:",
-                updateError
-            );
-
-        }
-
-
-        renderAccount(
-            telegramUser
-        );
-
-
-        $("loadingScreen").classList.add(
-            "hidden"
-        );
-
-        $("mainApp").classList.remove(
-            "hidden"
-        );
+        render();
 
 
     }catch(error){
 
         console.error(
-            "Panda Earn Error:",
+            "Panda Earn:",
             error
         );
 
 
-        if(
-            error.name === "AbortError"
-        ){
-
-            showError(
-                "Supabase request timed out.<br><br>" +
-                "Please check your internet connection and try again."
-            );
-
-        }else{
-
-            showError(
-                "Database connection failed.<br><br>" +
-                "<small>" +
-                String(error.message)
-                .replace(/</g,"&lt;")
-                .replace(/>/g,"&gt;") +
-                "</small>"
-            );
-
-        }
+        showError(
+            "Database connection failed.<br><br>" +
+            "<b>" +
+            String(
+                error.message ||
+                error
+            )
+            .replace(/</g,"&lt;")
+            .replace(/>/g,"&gt;") +
+            "</b>"
+        );
 
     }
 
 }
 
 
-/* =========================================================
-   RENDER ACCOUNT
-========================================================= */
+/* =====================================================
+   RENDER
+===================================================== */
 
-function renderAccount(telegramUser){
+function render(){
 
     const balance =
-        Number(currentUser.balance || 0);
+        Number(account.balance || 0);
 
-    const totalEarned =
-        Number(currentUser.total_earned || 0);
+    const total =
+        Number(account.total_earned || 0);
 
     const referrals =
-        Number(currentUser.referrals || 0);
+        Number(account.referrals || 0);
 
-    const tasksCompleted =
+    const completed =
         Number(
-            currentUser.tasks_completed || 0
+            account.tasks_completed || 0
         );
 
 
-    $("balance").textContent =
+    document.getElementById(
+        "balance"
+    ).textContent =
         money(balance);
 
 
-    $("walletBalance").textContent =
+    document.getElementById(
+        "walletBalance"
+    ).textContent =
         money(balance);
 
 
-    $("totalEarned").textContent =
-        money(totalEarned);
+    document.getElementById(
+        "totalEarned"
+    ).textContent =
+        money(total);
 
 
-    $("referrals").textContent =
+    document.getElementById(
+        "referrals"
+    ).textContent =
         referrals;
 
 
-    $("tasksCompleted").textContent =
-        tasksCompleted;
+    document.getElementById(
+        "tasksCompleted"
+    ).textContent =
+        completed;
 
 
-    const firstName =
-        currentUser.first_name ||
-        telegramUser.first_name ||
-        "User";
+    document.getElementById(
+        "greeting"
+    ).textContent =
+        "Hi, " +
+        (
+            account.first_name ||
+            telegramUser.first_name ||
+            "User"
+        );
 
-
-    $("userGreeting").textContent =
-        "Hi, " + firstName;
-
-
-    /*
-     * Progress:
-     * 10 completed tasks = 100%
-     */
 
     const progress =
         Math.min(
             100,
             Math.round(
-                (tasksCompleted / 10) * 100
+                completed / 10 * 100
             )
         );
 
 
-    $("progress").textContent =
+    document.getElementById(
+        "progress"
+    ).textContent =
         progress + "%";
 
 
-    /*
-     * Telegram photo if available.
-     */
+    if(
+        telegramUser.photo_url
+    ){
 
-    if(telegramUser.photo_url){
-
-        $("profileAvatar").src =
+        document.getElementById(
+            "avatar"
+        ).src =
             telegramUser.photo_url;
 
     }
 
+
+    document.getElementById(
+        "loading"
+    ).classList.add(
+        "hidden"
+    );
+
+
+    document.getElementById(
+        "appContent"
+    ).classList.remove(
+        "hidden"
+    );
+
 }
 
 
-/* =========================================================
-   NAV
-========================================================= */
+/* =====================================================
+   NAVIGATION
+===================================================== */
 
-function setActiveNav(button){
+function active(button){
 
     document
-        .querySelectorAll(".nav-btn")
+        .querySelectorAll(".nav button")
         .forEach(
-            btn =>
-                btn.classList.remove("active")
+            b => b.classList.remove("active")
         );
 
     button.classList.add("active");
@@ -1365,13 +1130,11 @@ function setActiveNav(button){
 }
 
 
-/* =========================================================
-   HOME
-========================================================= */
+document.getElementById(
+    "homeNav"
+).onclick = function(){
 
-$("homeNav").onclick = function(){
-
-    setActiveNav(this);
+    active(this);
 
     window.scrollTo({
         top:0,
@@ -1381,97 +1144,74 @@ $("homeNav").onclick = function(){
 };
 
 
-/* =========================================================
-   TASKS
-========================================================= */
+document.getElementById(
+    "tasksNav"
+).onclick =
+document.getElementById(
+    "tasksBtn"
+).onclick = function(){
 
-function openTasks(){
-
-    setActiveNav(
-        $("tasksNav")
+    active(
+        document.getElementById(
+            "tasksNav"
+        )
     );
 
     tg.showAlert(
         "🎯 Tasks\n\n" +
-        "Task system is ready to connect with panda_tasks."
+        "Task page is ready to connect."
     );
 
-}
-
-$("tasksNav").onclick =
-    openTasks;
-
-$("viewTasksBtn").onclick =
-    openTasks;
+};
 
 
-/* =========================================================
-   REFERRALS
-========================================================= */
+document.getElementById(
+    "referralsNav"
+).onclick = function(){
 
-$("referralsNav").onclick =
-function(){
-
-    setActiveNav(
-        $("referralsNav")
-    );
-
-    const count =
-        Number(
-            currentUser?.referrals || 0
-        );
+    active(this);
 
     tg.showAlert(
         "👥 Referrals\n\n" +
         "Your referrals: " +
-        count
+        Number(account?.referrals || 0)
     );
 
 };
 
 
-/* =========================================================
-   WALLET
-========================================================= */
+/* =====================================================
+   BUTTONS
+===================================================== */
 
-$("walletBtn").onclick =
-function(){
-
-    const balance =
-        Number(
-            currentUser?.balance || 0
-        );
+document.getElementById(
+    "walletBtn"
+).onclick = function(){
 
     tg.showAlert(
         "💳 Wallet\n\n" +
         "Available balance: " +
-        money(balance)
+        money(account?.balance)
     );
 
 };
 
 
-/* =========================================================
-   WELCOME BONUS
-========================================================= */
-
-$("claimBtn").onclick =
-function(){
+document.getElementById(
+    "claimBtn"
+).onclick = function(){
 
     tg.showAlert(
         "🎁 Welcome Bonus\n\n" +
-        "Welcome bonus system will be connected to your account next."
+        "Welcome bonus system is ready to be connected."
     );
 
 };
 
 
-/* =========================================================
-   QUICK ACTIONS
-========================================================= */
-
-$("partnersBtn").onclick =
-function(){
+document.getElementById(
+    "partnersBtn"
+).onclick = function(){
 
     tg.showAlert(
         "🤝 Partners & Affiliates\n\nComing soon."
@@ -1480,8 +1220,9 @@ function(){
 };
 
 
-$("cardBtn").onclick =
-function(){
+document.getElementById(
+    "cardBtn"
+).onclick = function(){
 
     tg.showAlert(
         "💳 Card Management\n\nComing soon."
@@ -1490,8 +1231,9 @@ function(){
 };
 
 
-$("boostBtn").onclick =
-function(){
+document.getElementById(
+    "boostBtn"
+).onclick = function(){
 
     tg.showAlert(
         "🚀 Launchpad & Boost\n\nComing soon."
@@ -1500,11 +1242,11 @@ function(){
 };
 
 
-/* =========================================================
+/* =====================================================
    START
-========================================================= */
+===================================================== */
 
-loadAccount();
+loadUser();
 
 </script>
 
