@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 
 <title>Panda Earn</title>
 
@@ -15,53 +14,26 @@
     -webkit-tap-highlight-color:transparent;
 }
 
-:root{
-    --bg:#020304;
-    --card:#0b0e12;
-    --card2:#101419;
-    --border:#292d33;
-    --gold:#ffc52f;
-    --gold2:#ff9f19;
-    --white:#f4f5f7;
-    --muted:#a8adb5;
-    --green:#45f26b;
-    --blue:#2997ff;
-    --purple:#b26cff;
-}
-
-html,body{
-    width:100%;
-    min-height:100%;
-    background:#020304;
-    color:white;
-    font-family:Arial,Helvetica,sans-serif;
-}
-
 body{
+    background:#020303;
+    color:#fff;
+    font-family:Arial,Helvetica,sans-serif;
     overflow-x:hidden;
 }
 
-/* =====================================
-   MAIN APP
-===================================== */
-
 .app{
-    width:100%;
     min-height:100vh;
-    padding-bottom:95px;
+    padding-bottom:100px;
     background:
-      radial-gradient(circle at 80% 8%,rgba(255,190,30,.08),transparent 28%),
-      radial-gradient(circle at 10% 40%,rgba(0,100,255,.045),transparent 30%),
-      #020304;
+    radial-gradient(circle at 85% 5%,rgba(255,190,30,.09),transparent 25%),
+    radial-gradient(circle at 5% 45%,rgba(0,100,255,.05),transparent 30%),
+    #020303;
 }
 
-/* =====================================
-   HEADER
-===================================== */
+/* ================= HEADER ================= */
 
 .header{
-    height:125px;
-    padding:20px 30px 10px;
+    padding:18px 25px 15px;
     display:flex;
     align-items:center;
     justify-content:space-between;
@@ -70,49 +42,58 @@ body{
 .brand{
     display:flex;
     align-items:center;
-    gap:14px;
+    gap:10px;
 }
 
-.panda-logo{
-    width:92px;
-    height:92px;
+.panda{
+    width:65px;
+    height:65px;
     display:flex;
-    justify-content:center;
     align-items:center;
-    font-size:65px;
-    filter:drop-shadow(0 8px 12px rgba(0,0,0,.7));
+    justify-content:center;
+    font-size:48px;
+    filter:drop-shadow(0 5px 12px #000);
+}
+
+.brand-info{
+    display:flex;
+    flex-direction:column;
 }
 
 .brand-name{
-    font-size:32px;
+    font-size:28px;
     font-weight:800;
     font-style:italic;
-    letter-spacing:-1.5px;
 }
 
 .brand-name span{
-    color:var(--gold);
+    color:#ffc52f;
+}
+
+.username{
+    margin-top:4px;
+    color:#92979e;
+    font-size:13px;
+    font-weight:500;
 }
 
 .header-right{
     display:flex;
     align-items:center;
-    gap:25px;
+    gap:13px;
 }
 
 .profile{
-    width:82px;
-    height:82px;
+    width:57px;
+    height:57px;
     border-radius:50%;
-    border:3px solid var(--gold);
-    background:
-      linear-gradient(135deg,#5c3821,#151515);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:45px;
+    border:2px solid #e5a91d;
     overflow:hidden;
-    box-shadow:0 0 20px rgba(255,190,30,.15);
+    background:#171b20;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:32px;
 }
 
 .profile img{
@@ -122,581 +103,516 @@ body{
     display:none;
 }
 
-.menu-btn{
-    width:58px;
-    height:58px;
+.menu{
     border:0;
-    background:transparent;
-    color:white;
-    font-size:38px;
+    background:none;
+    color:#fff;
+    font-size:31px;
     cursor:pointer;
 }
 
-/* =====================================
-   CONTENT
-===================================== */
+/* ================= MAIN ================= */
 
 .container{
-    width:calc(100% - 60px);
+    width:calc(100% - 30px);
     max-width:900px;
     margin:auto;
 }
 
-/* =====================================
-   BALANCE CARD
-===================================== */
+/* ================= WELCOME ================= */
+
+.welcome{
+    margin:5px 5px 18px;
+}
+
+.welcome h2{
+    font-size:23px;
+}
+
+.welcome h2 span{
+    color:#ffc52f;
+}
+
+.welcome p{
+    color:#8f959c;
+    margin-top:5px;
+    font-size:14px;
+}
+
+/* ================= BALANCE ================= */
 
 .balance-card{
+    height:255px;
     position:relative;
-    height:265px;
-    border:1px solid #3a3d42;
-    border-radius:25px;
     overflow:hidden;
+    border:1px solid #373c43;
+    border-radius:24px;
     background:
-      radial-gradient(circle at 90% 30%,rgba(255,190,40,.16),transparent 30%),
-      linear-gradient(135deg,#0c1117,#07090c);
-    box-shadow:0 15px 45px rgba(0,0,0,.35);
-    margin-bottom:22px;
+    radial-gradient(circle at 90% 20%,rgba(255,193,30,.15),transparent 30%),
+    linear-gradient(135deg,#10151b,#06080b);
+    margin-bottom:20px;
 }
 
 .balance-card:before{
     content:"";
     position:absolute;
     inset:0;
-    opacity:.18;
-    background-image:
-      linear-gradient(120deg,transparent 48%,#3c4248 49%,transparent 50%),
-      linear-gradient(30deg,transparent 48%,#252b30 49%,transparent 50%);
-    background-size:90px 90px;
+    opacity:.12;
+    background:
+    linear-gradient(45deg,transparent 48%,#aaa 49%,transparent 50%),
+    linear-gradient(-45deg,transparent 48%,#aaa 49%,transparent 50%);
+    background-size:80px 80px;
 }
 
 .balance-info{
     position:absolute;
-    left:40px;
-    top:38px;
-    z-index:2;
+    left:25px;
+    top:25px;
+    z-index:3;
 }
 
 .balance-label{
-    color:#aeb2b8;
-    font-size:19px;
+    color:#aeb3ba;
+    font-size:14px;
     letter-spacing:1px;
-    margin-bottom:10px;
 }
 
 .balance{
-    font-size:72px;
+    margin-top:5px;
+    color:#ffd348;
+    font-size:55px;
     font-weight:800;
-    color:#ffd34b;
-    letter-spacing:-3px;
-    text-shadow:
-      0 0 10px rgba(255,195,40,.35),
-      0 5px 20px rgba(0,0,0,.7);
+    letter-spacing:-2px;
+    text-shadow:0 0 15px rgba(255,195,50,.3);
 }
 
-.wallet-btn{
-    margin-top:18px;
-    height:54px;
-    padding:0 27px;
-    border-radius:16px;
-    border:1px solid #b98523;
-    color:#ffc839;
-    background:rgba(20,20,20,.75);
-    font-size:19px;
-    font-weight:600;
+.wallet{
+    margin-top:14px;
+    padding:12px 21px;
+    border:1px solid #bd8b26;
+    border-radius:13px;
+    background:#111315;
+    color:#ffc83c;
+    font-size:15px;
     cursor:pointer;
 }
 
-/* money illustration */
-
-.money{
-    position:absolute;
-    right:90px;
-    bottom:10px;
-    width:270px;
-    height:190px;
-}
-
-.money-stack{
-    position:absolute;
-    width:145px;
-    height:80px;
-    background:linear-gradient(#71813d,#35451c);
-    border:3px solid #89994e;
-    transform:skewY(-7deg);
-    box-shadow:0 15px 20px rgba(0,0,0,.5);
-}
-
-.money-stack:after{
-    content:"$";
-    position:absolute;
-    inset:0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:#d8d996;
-    font-size:38px;
-    font-weight:bold;
-}
-
-.stack1{
-    right:55px;
-    bottom:45px;
-}
-
-.stack2{
-    right:95px;
-    bottom:82px;
-    transform:skewY(-7deg) rotate(-5deg);
-}
-
-.stack3{
-    right:20px;
-    bottom:75px;
-    transform:skewY(-7deg) rotate(8deg);
-}
-
-.coin{
-    position:absolute;
-    width:50px;
-    height:50px;
-    border-radius:50%;
-    background:
-      radial-gradient(circle,#ffe27b 0 35%,#c98712 37% 55%,#8b5a0a 57%);
-    border:2px solid #e8af25;
-    box-shadow:0 8px 12px #000;
-}
-
-.coin1{
-    right:15px;
-    bottom:5px;
-}
-
-.coin2{
-    right:75px;
-    bottom:2px;
-    width:42px;
-    height:42px;
-}
-
-.coin3{
-    right:120px;
-    bottom:15px;
-    width:38px;
-    height:38px;
-}
-
-/* progress ring */
+/* progress */
 
 .progress{
     position:absolute;
-    right:22px;
-    top:18px;
-    width:150px;
-    height:150px;
+    right:20px;
+    top:20px;
+    width:112px;
+    height:112px;
     border-radius:50%;
-    background:
-      conic-gradient(var(--gold) 0deg,#35383c 0deg 360deg);
-    z-index:1;
+    background:conic-gradient(#ffc52f 0deg,#383c41 0deg);
 }
 
 .progress:after{
     content:"";
     position:absolute;
-    inset:11px;
+    inset:9px;
     border-radius:50%;
     background:#0b0e12;
 }
 
 .progress-text{
     position:absolute;
-    z-index:3;
-    right:49px;
-    top:55px;
+    right:43px;
+    top:48px;
     text-align:center;
+    z-index:2;
 }
 
-.progress-text strong{
+.progress-text b{
     display:block;
-    font-size:39px;
+    font-size:27px;
 }
 
-.progress-text span{
-    color:#999ea5;
-    font-size:17px;
+.progress-text small{
+    color:#989da4;
 }
 
-/* =====================================
-   BONUS
-===================================== */
+/* money */
+
+.money{
+    position:absolute;
+    right:20px;
+    bottom:5px;
+    width:220px;
+    height:145px;
+}
+
+.stack{
+    position:absolute;
+    width:125px;
+    height:62px;
+    border:2px solid #899449;
+    background:linear-gradient(#697b39,#34431c);
+    transform:skewY(-7deg);
+    box-shadow:0 10px 18px #000;
+}
+
+.stack:after{
+    content:"$";
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#d5db8e;
+    font-size:30px;
+    font-weight:bold;
+}
+
+.s1{
+    right:25px;
+    bottom:35px;
+}
+
+.s2{
+    right:65px;
+    bottom:68px;
+}
+
+.s3{
+    right:-5px;
+    bottom:65px;
+    transform:skewY(-7deg) rotate(7deg);
+}
+
+.coin{
+    position:absolute;
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:radial-gradient(circle,#ffe477,#c78610 55%,#7a5008);
+    border:2px solid #e7af28;
+}
+
+.c1{
+    right:5px;
+    bottom:0;
+}
+
+.c2{
+    right:58px;
+    bottom:3px;
+}
+
+.c3{
+    right:100px;
+    bottom:15px;
+    width:34px;
+    height:34px;
+}
+
+/* ================= BONUS ================= */
 
 .bonus{
-    height:240px;
-    border:1px solid #5d4517;
-    border-radius:25px;
-    overflow:hidden;
+    height:215px;
+    border-radius:23px;
+    border:1px solid #674d1a;
     position:relative;
-    margin-bottom:28px;
+    overflow:hidden;
+    margin-bottom:25px;
     background:
-      radial-gradient(circle at 90% 50%,rgba(255,176,20,.2),transparent 30%),
-      linear-gradient(110deg,#16230b,#11100a 50%,#171008);
-}
-
-.bamboo{
-    position:absolute;
-    left:-5px;
-    bottom:-30px;
-    font-size:160px;
-    opacity:.45;
+    radial-gradient(circle at 90% 50%,rgba(255,175,20,.22),transparent 30%),
+    linear-gradient(110deg,#142008,#111008,#171006);
 }
 
 .bonus-content{
     position:absolute;
-    left:24%;
-    top:28px;
+    left:20%;
+    top:25px;
     z-index:2;
 }
 
 .bonus-small{
-    font-size:22px;
+    font-size:15px;
     font-weight:bold;
-    letter-spacing:1px;
 }
 
 .bonus-title{
-    font-size:35px;
+    color:#ffd45a;
+    font-size:28px;
     font-weight:900;
-    color:#ffd35c;
-    margin:3px 0 8px;
+    margin:3px 0;
 }
 
-.bonus-desc{
-    color:#d1d1d1;
-    font-size:16px;
+.bonus-text{
+    color:#c5c8c9;
+    font-size:13px;
     line-height:1.4;
-    max-width:330px;
+    max-width:230px;
 }
 
 .claim{
-    margin-top:14px;
-    background:linear-gradient(#ffd75b,#ffae1e);
+    margin-top:12px;
+    padding:12px 17px;
     border:0;
-    border-radius:14px;
-    padding:15px 28px;
-    font-size:18px;
+    border-radius:13px;
+    background:linear-gradient(#ffd65a,#ffae1e);
     font-weight:700;
-    cursor:pointer;
-    box-shadow:0 5px 20px rgba(255,175,20,.3);
+    font-size:14px;
 }
 
 .gift{
     position:absolute;
-    right:55px;
-    bottom:30px;
-    font-size:105px;
-    filter:drop-shadow(0 8px 12px #000);
+    right:15px;
+    bottom:22px;
+    font-size:70px;
 }
 
-/* =====================================
-   SECTION TITLE
-===================================== */
+/* ================= TITLES ================= */
 
 .section-title{
     display:flex;
-    justify-content:space-between;
     align-items:center;
-    margin:20px 10px 14px;
+    justify-content:space-between;
+    margin:15px 5px 12px;
 }
 
 .section-title h2{
-    font-size:26px;
+    font-size:23px;
 }
 
 .view{
-    color:#d5d7da;
-    font-size:17px;
+    color:#aaa;
+    font-size:14px;
 }
 
-/* =====================================
-   OVERVIEW
-===================================== */
+/* ================= OVERVIEW ================= */
 
 .overview{
     display:grid;
     grid-template-columns:1fr 1fr;
-    gap:12px;
+    gap:9px;
 }
 
 .stat{
-    min-height:135px;
-    border:1px solid #30343a;
-    border-radius:21px;
-    background:
-      linear-gradient(145deg,#11151a,#080a0d);
-    padding:22px 25px;
+    min-height:125px;
+    border:1px solid #30353b;
+    border-radius:19px;
+    padding:18px;
+    background:linear-gradient(145deg,#11151a,#080a0d);
     position:relative;
     overflow:hidden;
 }
 
 .stat-title{
     color:#aeb3ba;
-    font-size:18px;
-    margin-bottom:8px;
+    font-size:14px;
 }
 
 .stat-value{
-    font-size:34px;
+    margin-top:8px;
+    font-size:28px;
     font-weight:700;
 }
 
-.green{
-    color:#53e66c;
-}
-
-.blue{
-    color:#3c9cff;
-}
-
-.purple{
-    color:#b06cff;
-}
-
-.orange{
-    color:#ffad2c;
-}
+.green{color:#4be96a}
+.blue{color:#389cff}
+.purple{color:#b26cff}
+.orange{color:#ffad2c}
 
 .stat-icon{
     position:absolute;
-    right:18px;
-    bottom:5px;
-    font-size:67px;
-    opacity:.85;
+    right:10px;
+    bottom:7px;
+    font-size:48px;
 }
 
-/* =====================================
-   QUICK ACTIONS
-===================================== */
+/* ================= QUICK ================= */
 
 .quick-grid{
     display:grid;
     grid-template-columns:repeat(3,1fr);
-    gap:15px;
+    gap:8px;
 }
 
 .quick{
-    min-height:175px;
+    min-height:150px;
+    padding:14px;
     border:1px solid #353a40;
-    border-radius:21px;
-    padding:20px;
-    background:
-      linear-gradient(145deg,#12171c,#090b0e);
-    cursor:pointer;
+    border-radius:18px;
+    background:linear-gradient(145deg,#12171c,#080a0d);
     position:relative;
-    overflow:hidden;
 }
 
 .quick:first-child{
-    border-color:#c69525;
+    border-color:#c39427;
 }
 
 .quick-icon{
-    font-size:67px;
+    font-size:48px;
     display:block;
-    margin-bottom:12px;
+    margin-bottom:13px;
 }
 
 .quick-name{
-    font-size:18px;
-    line-height:1.25;
-    color:#eee;
+    font-size:13px;
+    line-height:1.3;
 }
 
 .arrow{
     position:absolute;
-    right:17px;
-    bottom:22px;
-    font-size:25px;
-    color:#bbb;
+    right:10px;
+    bottom:12px;
+    color:#aaa;
+    font-size:20px;
 }
 
-/* =====================================
-   START EARNING
-===================================== */
+/* ================= START ================= */
 
 .start{
-    margin-top:18px;
-    min-height:150px;
-    border-radius:22px;
-    border:2px solid #43ef67;
-    background:
-      radial-gradient(circle at 15% 50%,rgba(70,255,90,.18),transparent 25%),
-      linear-gradient(100deg,#0c1710,#08100b);
-    box-shadow:
-      0 0 20px rgba(50,255,80,.15),
-      inset 0 0 30px rgba(50,255,80,.04);
+    min-height:130px;
+    margin-top:17px;
+    border:2px solid #47f66a;
+    border-radius:20px;
+    background:linear-gradient(100deg,#0b1710,#07100a);
+    box-shadow:0 0 20px rgba(50,255,80,.12);
     display:flex;
     align-items:center;
-    padding:20px 30px;
-    position:relative;
-    overflow:hidden;
+    padding:16px;
 }
 
 .target{
-    font-size:80px;
-    margin-right:25px;
+    font-size:54px;
+    margin-right:12px;
 }
 
 .start-text h2{
-    color:#4cff68;
-    font-size:28px;
-    margin-bottom:8px;
+    color:#4df46b;
+    font-size:21px;
 }
 
 .start-text p{
-    color:#b6b9bd;
-    font-size:17px;
+    color:#aeb5b0;
+    font-size:13px;
+    margin-top:6px;
 }
 
-.tasks-btn{
+.tasks{
     margin-left:auto;
-    min-width:170px;
-    height:60px;
-    border:2px solid #51ff70;
-    border-radius:15px;
-    background:rgba(30,70,35,.35);
-    color:#d8ffe0;
-    font-size:18px;
-    cursor:pointer;
+    height:48px;
+    padding:0 13px;
+    border:2px solid #50f56c;
+    border-radius:13px;
+    color:#d5ffdc;
+    background:#102117;
+    font-size:13px;
 }
 
-/* =====================================
-   BOTTOM NAV
-===================================== */
+/* ================= BOTTOM NAV ================= */
 
-.bottom-nav{
+.bottom{
     position:fixed;
+    bottom:8px;
     left:50%;
-    bottom:12px;
     transform:translateX(-50%);
-    width:calc(100% - 60px);
+    width:calc(100% - 30px);
     max-width:900px;
-    height:88px;
-    border:1px solid #30353c;
-    border-radius:23px;
-    background:rgba(12,15,19,.95);
+    height:73px;
+    border:1px solid #30363d;
+    border-radius:20px;
+    background:rgba(12,15,19,.96);
     backdrop-filter:blur(15px);
     display:grid;
     grid-template-columns:repeat(3,1fr);
     z-index:50;
 }
 
-.nav-item{
+.nav{
     display:flex;
-    flex-direction:column;
-    justify-content:center;
     align-items:center;
-    gap:5px;
-    color:#c2c6cb;
-    cursor:pointer;
-    font-size:17px;
+    justify-content:center;
+    flex-direction:column;
+    gap:3px;
+    color:#b7bcc1;
+    font-size:12px;
 }
 
 .nav-icon{
-    font-size:31px;
+    font-size:26px;
 }
 
-.nav-item.active{
-    color:#50f66d;
+.nav.active{
+    color:#4cf46a;
 }
 
-/* =====================================
-   SIDE MENU
-===================================== */
+/* ================= SIDE MENU ================= */
 
 .overlay{
+    display:none;
     position:fixed;
     inset:0;
-    background:rgba(0,0,0,.65);
-    z-index:100;
-    display:none;
+    background:rgba(0,0,0,.7);
+    z-index:90;
 }
 
 .overlay.show{
     display:block;
 }
 
-.side-menu{
+.side{
     position:fixed;
     right:0;
     top:0;
-    width:310px;
+    width:290px;
     height:100vh;
     background:#0a0d11;
-    border-left:1px solid #292e34;
-    z-index:101;
+    border-left:1px solid #30353b;
+    z-index:100;
+    padding:22px;
     transform:translateX(100%);
     transition:.3s;
-    padding:30px 22px;
 }
 
-.side-menu.show{
+.side.show{
     transform:translateX(0);
 }
 
 .close{
     text-align:right;
     font-size:32px;
-    cursor:pointer;
 }
 
-.menu-profile{
+.side-logo{
     text-align:center;
-    margin:25px 0;
+    margin:30px 0;
 }
 
-.menu-profile .avatar{
-    width:90px;
-    height:90px;
-    margin:auto;
-    border-radius:50%;
-    background:#1b2026;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:50px;
-    border:2px solid var(--gold);
+.side-logo .icon{
+    font-size:65px;
 }
 
-.menu-profile h3{
-    margin-top:12px;
-}
-
-.menu-link{
-    width:100%;
-    padding:17px;
+.side-logo h2{
     margin-top:10px;
-    border:1px solid #292f35;
-    border-radius:14px;
-    background:#101419;
-    color:white;
-    font-size:17px;
-    text-align:left;
-    cursor:pointer;
 }
 
-/* =====================================
-   MODAL
-===================================== */
+.side-btn{
+    width:100%;
+    padding:15px;
+    margin-top:10px;
+    border:1px solid #30363d;
+    border-radius:13px;
+    background:#11161b;
+    color:#fff;
+    text-align:left;
+    font-size:15px;
+}
+
+/* ================= MODAL ================= */
 
 .modal-bg{
+    display:none;
     position:fixed;
     inset:0;
     background:rgba(0,0,0,.75);
-    backdrop-filter:blur(5px);
-    display:none;
-    align-items:flex-end;
-    justify-content:center;
     z-index:200;
+    align-items:flex-end;
 }
 
 .modal-bg.show{
@@ -705,316 +621,68 @@ body{
 
 .modal{
     width:100%;
-    max-width:600px;
-    background:#0d1116;
-    border:1px solid #30363d;
-    border-radius:27px 27px 0 0;
     padding:25px;
-    animation:slideUp .25s ease;
-}
-
-@keyframes slideUp{
-    from{transform:translateY(100%);}
-    to{transform:translateY(0);}
-}
-
-.modal h2{
-    margin-bottom:12px;
+    background:#0d1116;
+    border-radius:25px 25px 0 0;
+    border-top:1px solid #343a41;
 }
 
 .modal p{
-    color:#aeb4bb;
+    color:#aeb4ba;
+    margin-top:10px;
     line-height:1.5;
 }
 
-.modal-close{
-    margin-top:20px;
+.modal button{
     width:100%;
-    height:52px;
+    height:50px;
+    margin-top:20px;
     border:0;
-    border-radius:14px;
-    background:#1d232a;
-    color:white;
-    font-size:17px;
-}
-
-/* =====================================
-   TOAST
-===================================== */
-
-.toast{
-    position:fixed;
-    left:50%;
-    bottom:115px;
-    transform:translate(-50%,20px);
-    background:#171c22;
-    border:1px solid #3c444c;
-    padding:13px 22px;
     border-radius:13px;
-    opacity:0;
-    pointer-events:none;
-    transition:.3s;
-    z-index:300;
-    white-space:nowrap;
+    background:#1b2229;
+    color:#fff;
 }
 
-.toast.show{
-    opacity:1;
-    transform:translate(-50%,0);
-}
+/* ================= DESKTOP ================= */
 
-/* =====================================
-   MOBILE
-===================================== */
-
-@media(max-width:700px){
+@media(min-width:701px){
 
     .header{
-        height:105px;
-        padding:12px 18px;
+        max-width:900px;
+        margin:auto;
     }
 
-    .panda-logo{
-        width:58px;
-        height:65px;
-        font-size:48px;
-    }
-
-    .brand{
-        gap:5px;
-    }
-
-    .brand-name{
-        font-size:25px;
-    }
-
-    .header-right{
-        gap:10px;
-    }
-
-    .profile{
-        width:55px;
-        height:55px;
-        font-size:32px;
-    }
-
-    .menu-btn{
-        width:42px;
-        font-size:30px;
-    }
-
-    .container{
-        width:calc(100% - 30px);
-    }
-
-    .balance-card{
-        height:265px;
-        border-radius:22px;
-    }
-
-    .balance-info{
-        left:25px;
-        top:28px;
-    }
-
-    .balance-label{
-        font-size:15px;
-    }
-
-    .balance{
-        font-size:50px;
-        letter-spacing:-2px;
-    }
-
-    .wallet-btn{
-        height:48px;
-        padding:0 20px;
-        font-size:16px;
-    }
-
-    .progress{
-        width:110px;
-        height:110px;
-        right:15px;
-        top:16px;
-    }
-
-    .progress-text{
-        right:35px;
-        top:43px;
-    }
-
-    .progress-text strong{
-        font-size:29px;
-    }
-
-    .progress-text span{
-        font-size:13px;
-    }
-
-    .money{
-        transform:scale(.72);
-        transform-origin:right bottom;
-        right:-5px;
-        bottom:-3px;
-    }
-
-    .bonus{
-        height:220px;
-    }
-
-    .bonus-content{
-        left:21%;
-        top:25px;
-    }
-
-    .bonus-small{
-        font-size:16px;
-    }
-
-    .bonus-title{
-        font-size:26px;
-    }
-
-    .bonus-desc{
-        font-size:13px;
-        max-width:230px;
-    }
-
-    .claim{
-        font-size:14px;
-        padding:12px 17px;
-    }
-
-    .gift{
-        right:-10px;
-        bottom:15px;
-        font-size:75px;
-    }
-
-    .bamboo{
-        font-size:110px;
-    }
-
-    .section-title{
-        margin-left:5px;
-        margin-right:5px;
-    }
-
-    .section-title h2{
-        font-size:23px;
-    }
-
-    .overview{
-        gap:9px;
-    }
-
-    .stat{
-        min-height:125px;
-        padding:18px 17px;
-        border-radius:18px;
-    }
-
-    .stat-title{
-        font-size:14px;
-    }
-
-    .stat-value{
-        font-size:28px;
-    }
-
-    .stat-icon{
-        font-size:53px;
-        right:8px;
-    }
-
-    .quick-grid{
-        gap:8px;
-    }
-
-    .quick{
-        min-height:155px;
-        padding:13px;
-        border-radius:18px;
-    }
-
-    .quick-icon{
-        font-size:48px;
-        margin-bottom:15px;
-    }
-
-    .quick-name{
-        font-size:14px;
-    }
-
-    .arrow{
-        font-size:20px;
-        right:10px;
-        bottom:12px;
-    }
-
-    .start{
-        min-height:130px;
-        padding:16px;
-    }
-
-    .target{
-        font-size:55px;
-        margin-right:10px;
-    }
-
-    .start-text h2{
-        font-size:21px;
-    }
-
-    .start-text p{
-        font-size:13px;
-    }
-
-    .tasks-btn{
-        min-width:105px;
-        height:47px;
-        font-size:13px;
-        padding:0 8px;
-    }
-
-    .bottom-nav{
-        width:calc(100% - 30px);
-        height:75px;
-        bottom:8px;
-        border-radius:20px;
-    }
-
-    .nav-icon{
-        font-size:27px;
-    }
-
-    .nav-item{
-        font-size:13px;
-    }
 }
+
+/* ================= SMALL MOBILE ================= */
 
 @media(max-width:380px){
 
     .brand-name{
-        font-size:22px;
+        font-size:23px;
+    }
+
+    .panda{
+        font-size:40px;
+        width:50px;
     }
 
     .balance{
-        font-size:45px;
+        font-size:47px;
+    }
+
+    .money{
+        transform:scale(.78);
+        transform-origin:right bottom;
+        right:-5px;
+    }
+
+    .bonus-content{
+        left:18%;
     }
 
     .quick-name{
         font-size:12px;
-    }
-
-    .start-text h2{
-        font-size:18px;
-    }
-
-    .tasks-btn{
-        min-width:90px;
-        font-size:11px;
     }
 }
 </style>
@@ -1024,28 +692,39 @@ body{
 
 <div class="app">
 
-<!-- =====================================
-     HEADER
-===================================== -->
+<!-- HEADER -->
 
 <header class="header">
 
     <div class="brand">
-        <div class="panda-logo">🐼</div>
 
-        <div class="brand-name">
-            Panda <span>Earn</span> ✦
+        <div class="panda">
+            🐼
         </div>
+
+        <div class="brand-info">
+
+            <div class="brand-name">
+                Panda <span>Earn</span> ✦
+            </div>
+
+            <div class="username" id="username">
+                @pandauser
+            </div>
+
+        </div>
+
     </div>
 
     <div class="header-right">
 
         <div class="profile" id="profile">
-            👨🏻
+            👤
             <img id="profileImg">
         </div>
 
-        <button class="menu-btn" onclick="openMenu()">
+        <button class="menu"
+                onclick="openMenu()">
             ☰
         </button>
 
@@ -1056,9 +735,23 @@ body{
 
 <div class="container">
 
-<!-- =====================================
-     BALANCE
-===================================== -->
+<!-- WELCOME -->
+
+<section class="welcome">
+
+    <h2>
+        Welcome back,
+        <span id="welcomeName">Panda User</span> 👋
+    </h2>
+
+    <p>
+        Complete tasks and start earning rewards.
+    </p>
+
+</section>
+
+
+<!-- BALANCE -->
 
 <section class="balance-card">
 
@@ -1072,49 +765,43 @@ body{
             $<span id="balance">0.00</span>
         </div>
 
-        <button class="wallet-btn" onclick="openModal(
-        'Wallet',
-        'Your Panda Earn wallet balance and withdrawal options will appear here.'
-        )">
+        <button class="wallet"
+                onclick="showModal(
+                'Wallet',
+                'Your wallet and withdrawal options will appear here.'
+                )">
             💳 &nbsp; Wallet ›
         </button>
 
     </div>
 
 
-    <div class="progress">
-    </div>
+    <div class="progress"></div>
 
     <div class="progress-text">
-        <strong>0%</strong>
-        <span>Progress</span>
+        <b>0%</b>
+        <small>Progress</small>
     </div>
 
 
     <div class="money">
 
-        <div class="money-stack stack1"></div>
-        <div class="money-stack stack2"></div>
-        <div class="money-stack stack3"></div>
+        <div class="stack s1"></div>
+        <div class="stack s2"></div>
+        <div class="stack s3"></div>
 
-        <div class="coin coin1"></div>
-        <div class="coin coin2"></div>
-        <div class="coin coin3"></div>
+        <div class="coin c1"></div>
+        <div class="coin c2"></div>
+        <div class="coin c3"></div>
 
     </div>
 
 </section>
 
 
-<!-- =====================================
-     WELCOME BONUS
-===================================== -->
+<!-- BONUS -->
 
 <section class="bonus">
-
-    <div class="bamboo">
-        🎋
-    </div>
 
     <div class="bonus-content">
 
@@ -1126,12 +813,13 @@ body{
             UNLOCKED!
         </div>
 
-        <div class="bonus-desc">
+        <div class="bonus-text">
             Claim your welcome bonus and
             start earning more.
         </div>
 
-        <button class="claim" onclick="claimBonus()">
+        <button class="claim"
+                onclick="claimBonus()">
             🎁 &nbsp; Claim Welcome Bonus
         </button>
 
@@ -1144,13 +832,16 @@ body{
 </section>
 
 
-<!-- =====================================
-     OVERVIEW
-===================================== -->
+<!-- OVERVIEW -->
 
 <div class="section-title">
+
     <h2>Overview</h2>
-    <span class="view">View All ›</span>
+
+    <span class="view">
+        View All ›
+    </span>
+
 </div>
 
 
@@ -1179,7 +870,8 @@ body{
             Referrals
         </div>
 
-        <div class="stat-value blue" id="referrals">
+        <div class="stat-value blue"
+             id="referrals">
             0
         </div>
 
@@ -1196,7 +888,8 @@ body{
             Tasks Completed
         </div>
 
-        <div class="stat-value purple" id="tasks">
+        <div class="stat-value purple"
+             id="tasks">
             0
         </div>
 
@@ -1221,4 +914,530 @@ body{
             👛
         </div>
 
-    
+    </div>
+
+</div>
+
+
+<!-- QUICK ACTIONS -->
+
+<div class="section-title"
+     style="margin-top:28px">
+
+    <h2>
+        Quick Actions
+    </h2>
+
+</div>
+
+
+<div class="quick-grid">
+
+    <div class="quick"
+         onclick="showModal(
+         'Partners & Affiliates',
+         'Partner and affiliate earning options will appear here.'
+         )">
+
+        <span class="quick-icon">
+            🤝
+        </span>
+
+        <div class="quick-name">
+            Partners &<br>
+            Affiliates
+        </div>
+
+        <span class="arrow">›</span>
+
+    </div>
+
+
+    <div class="quick"
+         onclick="showModal(
+         'Card Management',
+         'Your card management section will appear here.'
+         )">
+
+        <span class="quick-icon">
+            💳
+        </span>
+
+        <div class="quick-name">
+            Card<br>
+            Management
+        </div>
+
+        <span class="arrow">›</span>
+
+    </div>
+
+
+    <div class="quick"
+         onclick="showModal(
+         'Launchpad & Boost',
+         'Boost your earning activities here.'
+         )">
+
+        <span class="quick-icon">
+            🚀
+        </span>
+
+        <div class="quick-name">
+            Launchpad<br>
+            & Boost
+        </div>
+
+        <span class="arrow">›</span>
+
+    </div>
+
+</div>
+
+
+<!-- START EARNING -->
+
+<section class="start">
+
+    <div class="target">
+        🎯
+    </div>
+
+    <div class="start-text">
+
+        <h2>
+            Start Earning
+        </h2>
+
+        <p>
+            Complete tasks and unlock
+            exciting rewards.
+        </p>
+
+    </div>
+
+    <button class="tasks"
+            onclick="openTasks()">
+        View Tasks ›
+    </button>
+
+</section>
+
+</div>
+
+
+<!-- BOTTOM -->
+
+<nav class="bottom">
+
+    <div class="nav active"
+         onclick="home()">
+
+        <div class="nav-icon">
+            🏠
+        </div>
+
+        Home
+
+    </div>
+
+
+    <div class="nav"
+         onclick="openTasks()">
+
+        <div class="nav-icon">
+            📋
+        </div>
+
+        Tasks
+
+    </div>
+
+
+    <div class="nav"
+         onclick="showModal(
+         'Referrals',
+         'Invite friends and earn referral rewards.'
+         )">
+
+        <div class="nav-icon">
+            👥
+        </div>
+
+        Referrals
+
+    </div>
+
+</nav>
+
+
+<!-- SIDE MENU -->
+
+<div class="overlay"
+     id="overlay"
+     onclick="closeMenu()">
+</div>
+
+
+<div class="side"
+     id="side">
+
+    <div class="close"
+         onclick="closeMenu()">
+        ×
+    </div>
+
+
+    <div class="side-logo">
+
+        <div class="icon">
+            🐼
+        </div>
+
+        <h2>
+            Panda Earn
+        </h2>
+
+        <p style="color:#858b92;margin-top:5px">
+            Earn • Complete • Reward
+        </p>
+
+    </div>
+
+
+    <button class="side-btn"
+            onclick="closeMenu();openTasks()">
+        📋 &nbsp; Tasks
+    </button>
+
+
+    <button class="side-btn"
+            onclick="closeMenu();showModal(
+            'Wallet',
+            'Wallet and withdrawal section.'
+            )">
+        💳 &nbsp; Wallet
+    </button>
+
+
+    <button class="side-btn"
+            onclick="closeMenu();showModal(
+            'Referrals',
+            'Your referral section.'
+            )">
+        👥 &nbsp; Referrals
+    </button>
+
+
+    <button class="side-btn"
+            onclick="closeMenu();showModal(
+            'Settings',
+            'Panda Earn settings.'
+            )">
+        ⚙️ &nbsp; Settings
+    </button>
+
+</div>
+
+
+<!-- MODAL -->
+
+<div class="modal-bg"
+     id="modalBg">
+
+    <div class="modal">
+
+        <h2 id="modalTitle">
+            Panda Earn
+        </h2>
+
+        <p id="modalText">
+            Welcome to Panda Earn.
+        </p>
+
+        <button onclick="closeModal()">
+            Close
+        </button>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =========================================
+   TELEGRAM MINI APP
+========================================= */
+
+let tgUser = null;
+
+try{
+
+    if(
+        window.Telegram &&
+        Telegram.WebApp
+    ){
+
+        Telegram.WebApp.ready();
+        Telegram.WebApp.expand();
+
+        tgUser =
+        Telegram.WebApp
+        .initDataUnsafe
+        .user;
+
+    }
+
+}catch(error){
+
+    console.log(error);
+
+}
+
+
+/* =========================================
+   USER INFORMATION
+========================================= */
+
+function loadUser(){
+
+    if(!tgUser){
+
+        document.getElementById("username")
+        .textContent="@pandauser";
+
+        document.getElementById("welcomeName")
+        .textContent="Panda User";
+
+        return;
+    }
+
+
+    /* Username */
+
+    if(tgUser.username){
+
+        document.getElementById("username")
+        .textContent="@"+tgUser.username;
+
+    }else{
+
+        document.getElementById("username")
+        .textContent="Telegram User";
+
+    }
+
+
+    /* Name */
+
+    let first =
+        tgUser.first_name || "";
+
+    document.getElementById("welcomeName")
+        .textContent=first || "Panda User";
+
+
+    /* Profile photo */
+
+    if(tgUser.photo_url){
+
+        let img =
+            document.getElementById("profileImg");
+
+        img.src=tgUser.photo_url;
+        img.style.display="block";
+
+        document.getElementById("profile")
+        .childNodes[0]
+        .textContent="";
+
+    }
+
+}
+
+loadUser();
+
+
+/* =========================================
+   DATA
+========================================= */
+
+let data={
+
+    balance:0,
+    earned:0,
+    referrals:0,
+    tasks:0,
+    bonus:false
+
+};
+
+
+try{
+
+    let saved=
+        localStorage.getItem("pandaEarnData");
+
+    if(saved){
+
+        data={
+            ...data,
+            ...JSON.parse(saved)
+        };
+
+    }
+
+}catch(e){}
+
+
+/* =========================================
+   UPDATE
+========================================= */
+
+function update(){
+
+    document.getElementById("balance")
+    .textContent=
+    Number(data.balance).toFixed(2);
+
+    document.getElementById("earned")
+    .textContent=
+    Number(data.earned).toFixed(2);
+
+    document.getElementById("available")
+    .textContent=
+    Number(data.balance).toFixed(2);
+
+    document.getElementById("referrals")
+    .textContent=data.referrals;
+
+    document.getElementById("tasks")
+    .textContent=data.tasks;
+
+    localStorage.setItem(
+        "pandaEarnData",
+        JSON.stringify(data)
+    );
+
+}
+
+update();
+
+
+/* =========================================
+   BONUS
+========================================= */
+
+function claimBonus(){
+
+    if(data.bonus){
+
+        showModal(
+            "Welcome Bonus",
+            "Your welcome bonus has already been claimed."
+        );
+
+        return;
+
+    }
+
+    data.balance += 1;
+    data.earned += 1;
+    data.bonus=true;
+
+    update();
+
+    showModal(
+        "🎉 Bonus Claimed!",
+        "$1.00 welcome bonus has been added to your Panda Earn wallet."
+    );
+
+}
+
+
+/* =========================================
+   TASKS
+========================================= */
+
+function openTasks(){
+
+    showModal(
+        "📋 Tasks",
+        "Available earning tasks will appear here. Complete tasks to earn rewards."
+    );
+
+}
+
+
+/* =========================================
+   MODAL
+========================================= */
+
+function showModal(title,text){
+
+    document.getElementById("modalTitle")
+    .textContent=title;
+
+    document.getElementById("modalText")
+    .textContent=text;
+
+    document.getElementById("modalBg")
+    .classList.add("show");
+
+}
+
+
+function closeModal(){
+
+    document.getElementById("modalBg")
+    .classList.remove("show");
+
+}
+
+
+/* =========================================
+   MENU
+========================================= */
+
+function openMenu(){
+
+    document.getElementById("side")
+    .classList.add("show");
+
+    document.getElementById("overlay")
+    .classList.add("show");
+
+}
+
+
+function closeMenu(){
+
+    document.getElementById("side")
+    .classList.remove("show");
+
+    document.getElementById("overlay")
+    .classList.remove("show");
+
+}
+
+
+/* =========================================
+   HOME
+========================================= */
+
+function home(){
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+</script>
+
+</body>
+</html>
