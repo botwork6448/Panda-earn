@@ -1,1161 +1,907 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Panda Earn</title>
-    <!-- Telegram Web App Script -->
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --bg-color: #0c0d10;
-            --card-bg: #13161c;
-            --card-border: rgba(255, 255, 255, 0.08);
-            --gold-primary: #f3ba2f;
-            --gold-gradient: linear-gradient(135deg, #fce881 0%, #f3ba2f 50%, #c88a14 100%);
-            --text-main: #ffffff;
-            --text-secondary: #94a3b8;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
+<title>Panda Earn</title>
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            padding: 12px 12px 90px 12px;
-            overflow-x: hidden;
-        }
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-        /* Header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            padding: 4px 0;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .brand img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .brand h1 {
-            font-size: 20px;
-            font-weight: 700;
-            font-style: italic;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .brand h1 span {
-            color: var(--gold-primary);
-            font-style: italic;
-        }
-
-        .brand h1 i {
-            color: #fce881;
-            font-size: 14px;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .profile-avatar {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            border: 2px solid var(--gold-primary);
-            object-fit: cover;
-        }
-
-        .menu-btn {
-            background: none;
-            border: none;
-            color: var(--text-main);
-            font-size: 22px;
-            cursor: pointer;
-        }
-
-        /* Total Balance Card */
-        .balance-card {
-            background: linear-gradient(145deg, #181c24 0%, #0e1117 100%);
-            border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 20px;
-            position: relative;
-            margin-bottom: 14px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-            overflow: hidden;
-        }
-
-        .balance-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-
-        .balance-info h3 {
-            font-size: 11px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 6px;
-        }
-
-        .balance-info h2 {
-            font-size: 32px;
-            font-weight: 800;
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 14px;
-        }
-
-        .wallet-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--text-main);
-            padding: 8px 16px;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-        }
-
-        .wallet-btn i {
-            color: var(--gold-primary);
-        }
-
-        .progress-graphic {
-            position: absolute;
-            right: -10px;
-            bottom: 0;
-            display: flex;
-            align-items: flex-end;
-            gap: 10px;
-            pointer-events: none;
-        }
-
-        .progress-graphic img {
-            height: 90px;
-            object-fit: contain;
-        }
-
-        /* Welcome Bonus Card */
-        .welcome-card {
-            background: linear-gradient(135deg, #0d2315 0%, #111e14 50%, #0c120e 100%);
-            border: 1px solid rgba(46, 204, 113, 0.2);
-            border-radius: 20px;
-            padding: 18px;
-            position: relative;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        .welcome-content h3 {
-            font-size: 16px;
-            font-weight: 800;
-            color: #fff;
-            letter-spacing: 0.5px;
-            margin-bottom: 4px;
-        }
-
-        .welcome-content p {
-            font-size: 11px;
-            color: var(--text-secondary);
-            margin-bottom: 12px;
-            max-width: 190px;
-            line-height: 1.3;
-        }
-
-        .claim-btn {
-            background: var(--gold-gradient);
-            border: none;
-            color: #111;
-            padding: 8px 14px;
-            border-radius: 10px;
-            font-size: 12px;
-            font-weight: 700;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(243, 186, 47, 0.3);
-        }
-
-        .welcome-gift-img {
-            height: 85px;
-            object-fit: contain;
-        }
-
-        /* Section Header */
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            padding: 0 2px;
-        }
-
-        .section-header h2 {
-            font-size: 16px;
-            font-weight: 700;
-        }
-
-        .view-all {
-            font-size: 13px;
-            color: var(--text-secondary);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        /* Overview Grid (2x2) */
-        .overview-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .overview-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 14px;
-            position: relative;
-            min-height: 90px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .overview-card .card-title {
-            font-size: 12px;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        .overview-card .card-value {
-            font-size: 20px;
-            font-weight: 700;
-            color: #fff;
-        }
-
-        .overview-card .card-value.green {
-            color: #2ecc71;
-        }
-
-        .overview-card img {
-            position: absolute;
-            right: 10px;
-            bottom: 10px;
-            height: 45px;
-            object-fit: contain;
-        }
-
-        /* Quick Actions Grid (3 items) */
-        .quick-actions-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .action-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 12px 10px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            height: 105px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .action-card:active {
-            transform: scale(0.96);
-        }
-
-        .action-icon-container {
-            width: 36px;
-            height: 36px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .action-icon-container img {
-            width: 26px;
-            height: 26px;
-            object-fit: contain;
-        }
-
-        .action-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-        }
-
-        .action-card span {
-            font-size: 11px;
-            font-weight: 600;
-            line-height: 1.2;
-            color: #e2e8f0;
-        }
-
-        .action-card i {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        /* Start Earning Banner */
-        .start-earning-banner {
-            background: linear-gradient(135deg, #102414 0%, #152d19 100%);
-            border: 1px solid rgba(46, 204, 113, 0.3);
-            border-radius: 18px;
-            padding: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .earning-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .earning-left img {
-            width: 45px;
-            height: 45px;
-            object-fit: contain;
-        }
-
-        .earning-text h3 {
-            font-size: 15px;
-            font-weight: 700;
-            color: #2ecc71;
-            margin-bottom: 2px;
-        }
-
-        .earning-text p {
-            font-size: 11px;
-            color: var(--text-secondary);
-            max-width: 150px;
-            line-height: 1.2;
-        }
-
-        .view-tasks-btn {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(46, 204, 113, 0.4);
-            color: #fff;
-            padding: 8px 14px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-        }
-
-        /* Bottom Navigation Bar */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: #11141b;
-            border-top: 1px solid var(--card-border);
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0 16px 0;
-            z-index: 100;
-        }
-
-        .nav-item {
-            background: none;
-            border: none;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            color: var(--text-secondary);
-            font-size: 11px;
-            cursor: pointer;
-            width: 33.33%;
-        }
-
-        .nav-item i {
-            font-size: 18px;
-        }
-
-        .nav-item.active {
-            color: #2ecc71;
-        }
-    </style>
-</head>
-<body>
-
-    <!-- Header -->
-    <div class="header">
-        <div class="brand">
-            <img src="https://api.iconify.design/fluent-emoji-flat:panda.svg" alt="Panda">
-            <h1>Panda <span>Earn</span> <i class="fa-solid fa-sparkles"></i></h1>
-        </div>
-        <div class="header-right">
-            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces" alt="Profile" class="profile-avatar">
-            <button class="menu-btn"><i class="fa-solid fa-bars"></i></button>
-        </div>
-    </div>
-
-    <!-- Total Balance Card -->
-    <div class="balance-card">
-        <div class="balance-top">
-            <div class="balance-info">
-                <h3>Total Balance</h3>
-                <h2>$0.00</h2>
-                <button class="wallet-btn">
-                    <i class="fa-solid fa-wallet"></i> Wallet <i class="fa-solid fa-chevron-right" style="font-size: 10px;"></i>
-                </button>
-            </div>
-        </div>
-        <div class="progress-graphic">
-            <!-- Stack of money & Coins Graphic representation -->
-            <div style="position: relative; width: 130px; height: 80px;">
-                <div style="position: absolute; right: 0; bottom: 0; font-size: 65px; line-height: 1;">💵</div>
-                <div style="position: absolute; left: 10px; bottom: 0; font-size: 32px; line-height: 1;">🪙</div>
-                <div style="position: absolute; right: 35px; bottom: 5px; font-size: 26px; line-height: 1;">🪙</div>
-            </div>
-            <!-- Circular Progress Badge -->
-            <div style="background: #11141b; border: 3px solid #f3ba2f; border-radius: 50%; width: 55px; height: 55px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
-                <span style="font-size: 12px; font-weight: 800; color: #fff;">0%</span>
-                <span style="font-size: 7px; color: var(--text-secondary); text-transform: uppercase;">Progress</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Welcome Bonus Unlocked Banner -->
-    <div class="welcome-card">
-        <div class="welcome-content">
-            <h3>WELCOME BONUS<br>UNLOCKED!</h3>
-            <p>Claim your welcome bonus and start earning more.</p>
-            <button class="claim-btn">
-                <i class="fa-solid fa-gift"></i> Claim Welcome Bonus
-            </button>
-        </div>
-        <div style="font-size: 65px; margin-right: 5px;">🎁</div>
-    </div>
-
-    <!-- Overview Section -->
-    <div class="section-header">
-        <h2>Overview</h2>
-        <a href="#" class="view-all">View All <i class="fa-solid fa-chevron-right" style="font-size: 10px;"></i></a>
-    </div>
-
-    <div class="overview-grid">
-        <div class="overview-card">
-            <span class="card-title">Total Earned</span>
-            <span class="card-value green">$0.00</span>
-            <span style="position: absolute; right: 12px; bottom: 12px; font-size: 34px;">💰</span>
-        </div>
-        <div class="overview-card">
-            <span class="card-title">Referrals</span>
-            <span class="card-value">0</span>
-            <span style="position: absolute; right: 12px; bottom: 12px; font-size: 34px;">👥</span>
-        </div>
-        <div class="overview-card">
-            <span class="card-title">Tasks Completed</span>
-            <span class="card-value">0</span>
-            <span style="position: absolute; right: 12px; bottom: 12px; font-size: 34px;">📋</span>
-        </div>
-        <div class="overview-card">
-            <span class="card-title">Available in wallet</span>
-            <span class="card-value">$0.00</span>
-            <span style="position: absolute; right: 12px; bottom: 12px; font-size: 34px;">👝</span>
-        </div>
-    </div>
-
-    <!-- Quick Actions Section -->
-    <div class="section-header">
-        <h2>Quick Actions</h2>
-    </div>
-
-    <div class="quick-actions-grid">
-        <div class="action-card">
-            <div class="action-icon-container">
-                <span style="font-size: 20px;">🤝</span>
-            </div>
-            <div class="action-footer">
-                <span>Partners & Affiliates</span>
-                <i class="fa-solid fa-chevron-right"></i>
-            </div>
-        </div>
-        <div class="action-card">
-            <div class="action-icon-container">
-                <span style="font-size: 20px;">💳</span>
-            </div>
-            <div class="action-footer">
-                <span>Card Management</span>
-                <i class="fa-solid fa-chevron-right"></i>
-            </div>
-        </div>
-        <div class="action-card">
-            <div class="action-icon-container">
-                <span style="font-size: 20px;">🚀</span>
-            </div>
-            <div class="action-footer">
-                <span>Launchpad & Boost</span>
-                <i class="fa-solid fa-chevron-right"></i>
-            </div>
-        </div>
-    </div>
-
-    <!-- Start Earning Banner -->
-    <div class="start-earning-banner">
-        <div class="earning-left">
-            <span style="font-size: 38px;">🎯</span>
-            <div class="earning-text">
-                <h3>Start Earning</h3>
-                <p>Complete tasks and unlock exciting rewards.</p>
-            </div>
-        </div>
-        <button class="view-tasks-btn">
-            View Tasks <i class="fa-solid fa-chevron-right" style="font-size: 10px;"></i>
-        </button>
-    </div>
-
-    <!-- Bottom Navigation -->
-    <div class="bottom-nav">
-        <button class="nav-item active">
-            <i class="fa-solid fa-house"></i>
-            <span>Home</span>
-        </button>
-        <button class="nav-item">
-            <i class="fa-solid fa-clipboard-list"></i>
-            <span>Tasks</span>
-        </button>
-        <button class="nav-item">
-            <i class="fa-solid fa-users"></i>
-            <span>Referrals</span>
-        </button>
-    </div>
-
-    <script>
-        // Telegram Web App Initialization
-        let tg = window.Telegram.WebApp;
-        tg.expand();
-        
-        // Optional: Add basic interactivity
-        document.querySelector('.claim-btn').addEventListener('click', () => {
-            tg.showAlert('Welcome bonus feature coming soon!');
-        });
-    </script>
-</body>
-</html>
-    width:calc(100% - 30px);
-    max-width:900px;
-    margin:auto;
+<style>
+:root{
+    --bg:#080a0d;
+    --bg2:#0d1015;
+    --card:#12161d;
+    --card2:#171b23;
+    --border:rgba(255,255,255,.08);
+    --gold:#f3ba2f;
+    --gold2:#ffe78a;
+    --green:#2ee879;
+    --red:#ff5b65;
+    --text:#fff;
+    --muted:#8f9aaa;
+    --shadow:0 14px 40px rgba(0,0,0,.45);
 }
 
-/* ================= WELCOME ================= */
-
-.welcome{
-    margin:5px 5px 18px;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
 }
 
-.welcome h2{
-    font-size:23px;
+html{
+    background:#080a0d;
 }
 
-.welcome h2 span{
-    color:#ffc52f;
-}
-
-.welcome p{
-    color:#8f959c;
-    margin-top:5px;
-    font-size:14px;
-}
-
-/* ================= BALANCE ================= */
-
-.balance-card{
-    height:255px;
-    position:relative;
-    overflow:hidden;
-    border:1px solid #373c43;
-    border-radius:24px;
+body{
+    min-height:100vh;
     background:
-    radial-gradient(circle at 90% 20%,rgba(255,193,30,.15),transparent 30%),
-    linear-gradient(135deg,#10151b,#06080b);
-    margin-bottom:20px;
+        radial-gradient(circle at 15% 10%,rgba(243,186,47,.07),transparent 28%),
+        radial-gradient(circle at 90% 30%,rgba(46,232,121,.04),transparent 25%),
+        linear-gradient(145deg,#080a0d,#0b0e13 45%,#080a0d);
+    color:var(--text);
+    padding:12px 12px 100px;
+    overflow-x:hidden;
 }
 
-.balance-card:before{
+body:before{
     content:"";
-    position:absolute;
-    inset:0;
-    opacity:.12;
-    background:
-    linear-gradient(45deg,transparent 48%,#aaa 49%,transparent 50%),
-    linear-gradient(-45deg,transparent 48%,#aaa 49%,transparent 50%);
-    background-size:80px 80px;
-}
-
-.balance-info{
-    position:absolute;
-    left:25px;
-    top:25px;
-    z-index:3;
-}
-
-.balance-label{
-    color:#aeb3ba;
-    font-size:14px;
-    letter-spacing:1px;
-}
-
-.balance{
-    margin-top:5px;
-    color:#ffd348;
-    font-size:55px;
-    font-weight:800;
-    letter-spacing:-2px;
-    text-shadow:0 0 15px rgba(255,195,50,.3);
-}
-
-.wallet{
-    margin-top:14px;
-    padding:12px 21px;
-    border:1px solid #bd8b26;
-    border-radius:13px;
-    background:#111315;
-    color:#ffc83c;
-    font-size:15px;
-    cursor:pointer;
-}
-
-/* progress */
-
-.progress{
-    position:absolute;
-    right:20px;
-    top:20px;
-    width:112px;
-    height:112px;
-    border-radius:50%;
-    background:conic-gradient(#ffc52f 0deg,#383c41 0deg);
-}
-
-.progress:after{
-    content:"";
-    position:absolute;
-    inset:9px;
-    border-radius:50%;
-    background:#0b0e12;
-}
-
-.progress-text{
-    position:absolute;
-    right:43px;
-    top:48px;
-    text-align:center;
-    z-index:2;
-}
-
-.progress-text b{
-    display:block;
-    font-size:27px;
-}
-
-.progress-text small{
-    color:#989da4;
-}
-
-/* money */
-
-.money{
-    position:absolute;
-    right:20px;
-    bottom:5px;
-    width:220px;
-    height:145px;
-}
-
-.stack{
-    position:absolute;
-    width:125px;
-    height:62px;
-    border:2px solid #899449;
-    background:linear-gradient(#697b39,#34431c);
-    transform:skewY(-7deg);
-    box-shadow:0 10px 18px #000;
-}
-
-.stack:after{
-    content:"$";
-    position:absolute;
-    inset:0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:#d5db8e;
-    font-size:30px;
-    font-weight:bold;
-}
-
-.s1{
-    right:25px;
-    bottom:35px;
-}
-
-.s2{
-    right:65px;
-    bottom:68px;
-}
-
-.s3{
-    right:-5px;
-    bottom:65px;
-    transform:skewY(-7deg) rotate(7deg);
-}
-
-.coin{
-    position:absolute;
-    width:42px;
-    height:42px;
-    border-radius:50%;
-    background:radial-gradient(circle,#ffe477,#c78610 55%,#7a5008);
-    border:2px solid #e7af28;
-}
-
-.c1{
-    right:5px;
-    bottom:0;
-}
-
-.c2{
-    right:58px;
-    bottom:3px;
-}
-
-.c3{
-    right:100px;
-    bottom:15px;
-    width:34px;
-    height:34px;
-}
-
-/* ================= BONUS ================= */
-
-.bonus{
-    height:215px;
-    border-radius:23px;
-    border:1px solid #674d1a;
-    position:relative;
-    overflow:hidden;
-    margin-bottom:25px;
-    background:
-    radial-gradient(circle at 90% 50%,rgba(255,175,20,.22),transparent 30%),
-    linear-gradient(110deg,#142008,#111008,#171006);
-}
-
-.bonus-content{
-    position:absolute;
-    left:20%;
-    top:25px;
-    z-index:2;
-}
-
-.bonus-small{
-    font-size:15px;
-    font-weight:bold;
-}
-
-.bonus-title{
-    color:#ffd45a;
-    font-size:28px;
-    font-weight:900;
-    margin:3px 0;
-}
-
-.bonus-text{
-    color:#c5c8c9;
-    font-size:13px;
-    line-height:1.4;
-    max-width:230px;
-}
-
-.claim{
-    margin-top:12px;
-    padding:12px 17px;
-    border:0;
-    border-radius:13px;
-    background:linear-gradient(#ffd65a,#ffae1e);
-    font-weight:700;
-    font-size:14px;
-}
-
-.gift{
-    position:absolute;
-    right:15px;
-    bottom:22px;
-    font-size:70px;
-}
-
-/* ================= TITLES ================= */
-
-.section-title{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin:15px 5px 12px;
-}
-
-.section-title h2{
-    font-size:23px;
-}
-
-.view{
-    color:#aaa;
-    font-size:14px;
-}
-
-/* ================= OVERVIEW ================= */
-
-.overview{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:9px;
-}
-
-.stat{
-    min-height:125px;
-    border:1px solid #30353b;
-    border-radius:19px;
-    padding:18px;
-    background:linear-gradient(145deg,#11151a,#080a0d);
-    position:relative;
-    overflow:hidden;
-}
-
-.stat-title{
-    color:#aeb3ba;
-    font-size:14px;
-}
-
-.stat-value{
-    margin-top:8px;
-    font-size:28px;
-    font-weight:700;
-}
-
-.green{color:#4be96a}
-.blue{color:#389cff}
-.purple{color:#b26cff}
-.orange{color:#ffad2c}
-
-.stat-icon{
-    position:absolute;
-    right:10px;
-    bottom:7px;
-    font-size:48px;
-}
-
-/* ================= QUICK ================= */
-
-.quick-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:8px;
-}
-
-.quick{
-    min-height:150px;
-    padding:14px;
-    border:1px solid #353a40;
-    border-radius:18px;
-    background:linear-gradient(145deg,#12171c,#080a0d);
-    position:relative;
-}
-
-.quick:first-child{
-    border-color:#c39427;
-}
-
-.quick-icon{
-    font-size:48px;
-    display:block;
-    margin-bottom:13px;
-}
-
-.quick-name{
-    font-size:13px;
-    line-height:1.3;
-}
-
-.arrow{
-    position:absolute;
-    right:10px;
-    bottom:12px;
-    color:#aaa;
-    font-size:20px;
-}
-
-/* ================= START ================= */
-
-.start{
-    min-height:130px;
-    margin-top:17px;
-    border:2px solid #47f66a;
-    border-radius:20px;
-    background:linear-gradient(100deg,#0b1710,#07100a);
-    box-shadow:0 0 20px rgba(50,255,80,.12);
-    display:flex;
-    align-items:center;
-    padding:16px;
-}
-
-.target{
-    font-size:54px;
-    margin-right:12px;
-}
-
-.start-text h2{
-    color:#4df46b;
-    font-size:21px;
-}
-
-.start-text p{
-    color:#aeb5b0;
-    font-size:13px;
-    margin-top:6px;
-}
-
-.tasks{
-    margin-left:auto;
-    height:48px;
-    padding:0 13px;
-    border:2px solid #50f56c;
-    border-radius:13px;
-    color:#d5ffdc;
-    background:#102117;
-    font-size:13px;
-}
-
-/* ================= BOTTOM NAV ================= */
-
-.bottom{
     position:fixed;
-    bottom:8px;
-    left:50%;
-    transform:translateX(-50%);
-    width:calc(100% - 30px);
-    max-width:900px;
-    height:73px;
-    border:1px solid #30363d;
-    border-radius:20px;
-    background:rgba(12,15,19,.96);
-    backdrop-filter:blur(15px);
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    z-index:50;
+    inset:0;
+    pointer-events:none;
+    opacity:.035;
+    background-image:
+        linear-gradient(45deg,#fff 1px,transparent 1px),
+        linear-gradient(-45deg,#fff 1px,transparent 1px);
+    background-size:34px 34px;
+    z-index:-1;
 }
 
-.nav{
+button{
+    font-family:inherit;
+}
+
+.hidden{
+    display:none!important;
+}
+
+/* LOADER */
+
+#appLoader{
+    position:fixed;
+    inset:0;
+    background:#080a0d;
+    z-index:9999;
     display:flex;
     align-items:center;
     justify-content:center;
     flex-direction:column;
-    gap:3px;
-    color:#b7bcc1;
-    font-size:12px;
+    gap:14px;
 }
 
-.nav-icon{
-    font-size:26px;
+.loader-panda{
+    font-size:60px;
+    animation:pandaFloat 1.5s infinite ease-in-out;
 }
 
-.nav.active{
-    color:#4cf46a;
+.loader-text{
+    color:var(--muted);
+    font-size:13px;
 }
 
-/* ================= SIDE MENU ================= */
-
-.overlay{
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.7);
-    z-index:90;
+.spinner{
+    width:26px;
+    height:26px;
+    border:3px solid rgba(255,255,255,.12);
+    border-top-color:var(--gold);
+    border-radius:50%;
+    animation:spin .8s linear infinite;
 }
 
-.overlay.show{
+@keyframes spin{
+    to{transform:rotate(360deg)}
+}
+
+@keyframes pandaFloat{
+    50%{transform:translateY(-7px)}
+}
+
+/* HEADER */
+
+.header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:16px;
+    padding:4px 2px;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.brand-logo{
+    width:42px;
+    height:42px;
+    border-radius:14px;
+    background:linear-gradient(145deg,#252a32,#0f1217);
+    border:1px solid rgba(243,186,47,.3);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:27px;
+    box-shadow:0 7px 20px rgba(0,0,0,.4);
+}
+
+.brand h1{
+    font-size:20px;
+    font-weight:800;
+    letter-spacing:.2px;
+}
+
+.brand h1 span{
+    color:var(--gold);
+}
+
+.brand-sub{
     display:block;
+    color:#657080;
+    font-size:8px;
+    margin-top:1px;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
 }
 
-.side{
-    position:fixed;
-    right:0;
-    top:0;
-    width:290px;
-    height:100vh;
-    background:#0a0d11;
-    border-left:1px solid #30353b;
-    z-index:100;
-    padding:22px;
-    transform:translateX(100%);
-    transition:.3s;
+.header-right{
+    display:flex;
+    align-items:center;
+    gap:10px;
 }
 
-.side.show{
-    transform:translateX(0);
+.profile-avatar{
+    width:39px;
+    height:39px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid var(--gold);
+    background:#20242c;
 }
 
-.close{
-    text-align:right;
-    font-size:32px;
-}
-
-.side-logo{
-    text-align:center;
-    margin:30px 0;
-}
-
-.side-logo .icon{
-    font-size:65px;
-}
-
-.side-logo h2{
-    margin-top:10px;
-}
-
-.side-btn{
-    width:100%;
-    padding:15px;
-    margin-top:10px;
-    border:1px solid #30363d;
-    border-radius:13px;
-    background:#11161b;
+.menu-btn{
+    width:38px;
+    height:38px;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.035);
     color:#fff;
-    text-align:left;
-    font-size:15px;
+    border-radius:12px;
+    font-size:17px;
 }
 
-/* ================= MODAL ================= */
+/* BALANCE */
 
-.modal-bg{
+.balance-card{
+    position:relative;
+    overflow:hidden;
+    min-height:205px;
+    padding:21px;
+    margin-bottom:14px;
+    border-radius:23px;
+    border:1px solid rgba(255,255,255,.09);
+    background:
+        radial-gradient(circle at 100% 100%,rgba(243,186,47,.13),transparent 35%),
+        linear-gradient(145deg,#1b2029,#0d1015);
+    box-shadow:var(--shadow);
+}
+
+.balance-card:after{
+    content:"";
+    position:absolute;
+    width:180px;
+    height:180px;
+    right:-90px;
+    top:-90px;
+    border-radius:50%;
+    border:1px solid rgba(243,186,47,.1);
+    box-shadow:0 0 0 30px rgba(243,186,47,.02),
+               0 0 0 60px rgba(243,186,47,.015);
+}
+
+.balance-label{
+    color:#8c96a5;
+    font-size:10px;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    font-weight:700;
+}
+
+.balance-amount{
+    margin-top:5px;
+    font-size:34px;
+    font-weight:900;
+    letter-spacing:-1px;
+    background:linear-gradient(135deg,#fff4b4,#f3ba2f,#c9870d);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.wallet-btn{
+    margin-top:12px;
+    border:1px solid rgba(255,255,255,.1);
+    background:rgba(255,255,255,.045);
+    color:#fff;
+    padding:9px 14px;
+    border-radius:12px;
+    font-size:12px;
+    font-weight:700;
+}
+
+.wallet-btn i:first-child{
+    color:var(--gold);
+    margin-right:5px;
+}
+
+.balance-art{
+    position:absolute;
+    right:4px;
+    bottom:5px;
+    width:190px;
+    height:125px;
+    pointer-events:none;
+}
+
+.cash{
+    position:absolute;
+    right:5px;
+    bottom:4px;
+    font-size:69px;
+    transform:rotate(-5deg);
+    filter:drop-shadow(0 10px 8px rgba(0,0,0,.5));
+}
+
+.coin1,
+.coin2{
+    position:absolute;
+    font-size:31px;
+    filter:drop-shadow(0 7px 7px rgba(0,0,0,.6));
+}
+
+.coin1{
+    right:90px;
+    bottom:8px;
+}
+
+.coin2{
+    right:125px;
+    bottom:32px;
+    font-size:23px;
+}
+
+.progress-ring{
+    position:absolute;
+    right:17px;
+    top:19px;
+    width:57px;
+    height:57px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:
+        radial-gradient(circle,#11151b 58%,transparent 60%),
+        conic-gradient(var(--gold) var(--progress,0%),rgba(255,255,255,.08) 0);
+    box-shadow:0 5px 20px rgba(0,0,0,.35);
+}
+
+.progress-ring span{
+    font-size:10px;
+    font-weight:800;
+}
+
+.progress-label{
+    position:absolute;
+    right:21px;
+    top:77px;
+    color:#697383;
+    font-size:7px;
+    text-transform:uppercase;
+    letter-spacing:.8px;
+}
+
+/* BONUS */
+
+.welcome-card{
+    position:relative;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    min-height:126px;
+    padding:17px;
+    margin-bottom:21px;
+    border-radius:20px;
+    border:1px solid rgba(243,186,47,.22);
+    background:
+        radial-gradient(circle at 90% 40%,rgba(243,186,47,.18),transparent 32%),
+        linear-gradient(135deg,#241c0b,#16130d 55%,#0e100e);
+}
+
+.welcome-card:before{
+    content:"";
+    position:absolute;
+    inset:0;
+    opacity:.08;
+    background:repeating-linear-gradient(
+        65deg,
+        transparent 0 18px,
+        #d4a82e 19px 20px
+    );
+}
+
+.welcome-content{
+    position:relative;
+    z-index:2;
+}
+
+.welcome-content h3{
+    font-size:16px;
+    line-height:1.05;
+    font-weight:900;
+    letter-spacing:.4px;
+}
+
+.welcome-content p{
+    color:#9ba3ad;
+    font-size:10px;
+    max-width:200px;
+    margin:6px 0 11px;
+    line-height:1.35;
+}
+
+.claim-btn{
+    border:0;
+    background:linear-gradient(135deg,#ffe981,#f3ba2f,#c88a14);
+    color:#14110a;
+    border-radius:11px;
+    padding:9px 12px;
+    font-size:11px;
+    font-weight:900;
+    box-shadow:0 7px 18px rgba(243,186,47,.2);
+}
+
+.claim-btn:disabled{
+    opacity:.55;
+}
+
+.gift{
+    position:relative;
+    z-index:2;
+    font-size:67px;
+    filter:drop-shadow(0 12px 10px rgba(0,0,0,.55));
+}
+
+/* SECTIONS */
+
+.section-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:10px;
+    padding:0 2px;
+}
+
+.section-header h2{
+    font-size:16px;
+    font-weight:800;
+}
+
+.view-all{
+    border:0;
+    background:none;
+    color:#8c96a5;
+    font-size:11px;
+    font-weight:700;
+}
+
+/* OVERVIEW */
+
+.overview-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.overview-card{
+    min-height:94px;
+    position:relative;
+    overflow:hidden;
+    padding:14px;
+    border-radius:17px;
+    border:1px solid var(--border);
+    background:linear-gradient(145deg,#171b22,#101319);
+    box-shadow:0 7px 20px rgba(0,0,0,.22);
+}
+
+.card-title{
+    display:block;
+    color:#7f8998;
+    font-size:10px;
+    font-weight:600;
+}
+
+.card-value{
+    display:block;
+    margin-top:8px;
+    font-size:19px;
+    font-weight:850;
+}
+
+.card-value.green{
+    color:var(--green);
+}
+
+.metric-icon{
+    position:absolute;
+    right:9px;
+    bottom:7px;
+    font-size:34px;
+    filter:drop-shadow(0 7px 7px rgba(0,0,0,.4));
+}
+
+/* QUICK ACTIONS */
+
+.quick-actions-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:9px;
+    margin-bottom:20px;
+}
+
+.action-card{
+    min-height:104px;
+    padding:11px;
+    border-radius:16px;
+    border:1px solid var(--border);
+    background:linear-gradient(145deg,#191d25,#101319);
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    box-shadow:0 7px 18px rgba(0,0,0,.22);
+    cursor:pointer;
+    transition:.15s;
+}
+
+.action-card:active{
+    transform:scale(.96);
+}
+
+.action-icon{
+    width:36px;
+    height:36px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:11px;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.06);
+    font-size:20px;
+}
+
+.action-footer{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:4px;
+}
+
+.action-footer span{
+    font-size:9px;
+    line-height:1.2;
+    font-weight:700;
+    color:#dfe4eb;
+}
+
+.action-footer i{
+    color:#677181;
+    font-size:9px;
+}
+
+/* START EARNING */
+
+.start-earning-banner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:15px;
+    margin-bottom:20px;
+    border-radius:18px;
+    border:1px solid rgba(46,232,121,.25);
+    background:
+        radial-gradient(circle at 0% 50%,rgba(46,232,121,.12),transparent 40%),
+        linear-gradient(135deg,#102017,#111812);
+}
+
+.earning-left{
+    display:flex;
+    align-items:center;
+    gap:11px;
+}
+
+.target-icon{
+    font-size:36px;
+}
+
+.earning-text h3{
+    color:var(--green);
+    font-size:14px;
+}
+
+.earning-text p{
+    color:#7d8990;
+    font-size:9px;
+    margin-top:3px;
+    line-height:1.3;
+    max-width:145px;
+}
+
+.view-tasks-btn{
+    flex-shrink:0;
+    padding:9px 12px;
+    border-radius:11px;
+    border:1px solid rgba(46,232,121,.25);
+    background:rgba(0,0,0,.3);
+    color:#fff;
+    font-size:10px;
+    font-weight:800;
+}
+
+/* PAGES */
+
+.page{
     display:none;
+}
+
+.page.active{
+    display:block;
+    animation:pageIn .2s ease;
+}
+
+@keyframes pageIn{
+    from{opacity:0;transform:translateY(5px)}
+    to{opacity:1;transform:none}
+}
+
+/* TASKS */
+
+.task-list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.task-card{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:14px;
+    border-radius:17px;
+    border:1px solid var(--border);
+    background:linear-gradient(145deg,#171b22,#101319);
+}
+
+.task-icon{
+    width:44px;
+    height:44px;
+    border-radius:13px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+    background:rgba(243,186,47,.08);
+    border:1px solid rgba(243,186,47,.14);
+    color:var(--gold);
+    font-size:18px;
+}
+
+.task-info{
+    flex:1;
+    min-width:0;
+}
+
+.task-title{
+    font-size:13px;
+    font-weight:800;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.task-desc{
+    margin-top:3px;
+    color:#788292;
+    font-size:9px;
+    line-height:1.3;
+}
+
+.task-reward{
+    margin-top:5px;
+    color:var(--green);
+    font-size:11px;
+    font-weight:800;
+}
+
+.task-action{
+    flex-shrink:0;
+    border:0;
+    background:linear-gradient(135deg,#ffe981,#f3ba2f);
+    color:#17120a;
+    border-radius:10px;
+    padding:8px 10px;
+    font-size:10px;
+    font-weight:900;
+}
+
+.task-action.completed{
+    background:rgba(46,232,121,.12);
+    color:var(--green);
+    border:1px solid rgba(46,232,121,.2);
+}
+
+.empty-state{
+    text-align:center;
+    padding:45px 20px;
+    color:#687382;
+}
+
+.empty-state i{
+    font-size:35px;
+    margin-bottom:12px;
+    color:#3f4753;
+}
+
+.empty-state h3{
+    color:#aab2bd;
+    font-size:14px;
+    margin-bottom:5px;
+}
+
+.empty-state p{
+    font-size:10px;
+}
+
+/* REFERRALS */
+
+.referral-card{
+    padding:20px;
+    border-radius:20px;
+    background:linear-gradient(145deg,#181c24,#0f1217);
+    border:1px solid var(--border);
+    text-align:center;
+}
+
+.referral-icon{
+    font-size:48px;
+    margin-bottom:8px;
+}
+
+.referral-card h2{
+    font-size:18px;
+}
+
+.referral-card p{
+    color:#7d8795;
+    font-size:10px;
+    line-height:1.4;
+    margin:8px auto 15px;
+    max-width:280px;
+}
+
+.referral-box{
+    display:flex;
+    gap:7px;
+}
+
+.referral-input{
+    flex:1;
+    min-width:0;
+    border:1px solid var(--border);
+    background:#0a0d11;
+    color:#9fa8b4;
+    border-radius:11px;
+    padding:10px;
+    font-size:10px;
+    outline:none;
+}
+
+.copy-btn{
+    border:0;
+    background:var(--gold);
+    color:#111;
+    border-radius:11px;
+    padding:0 13px;
+    font-weight:900;
+    font-size:10px;
+}
+
+/* BOTTOM NAV */
+
+.bottom-nav{
+    position:fixed;
+    left:0;
+    right:0;
+    bottom:0;
+    z-index:1000;
+    display:flex;
+    justify-content:space-around;
+    padding:9px 0 15px;
+    background:rgba(13,16,21,.96);
+    backdrop-filter:blur(18px);
+    border-top:1px solid var(--border);
+}
+
+.nav-item{
+    width:33.333%;
+    border:0;
+    background:none;
+    color:#667181;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:4px;
+    font-size:9px;
+    font-weight:700;
+}
+
+.nav-item i{
+    font-size:18px;
+}
+
+.nav-item.active{
+    color:var(--green);
+}
+
+/* MODAL */
+
+.modal{
     position:fixed;
     inset:0;
-    background:rgba(0,0,0,.75);
-    z-index:200;
+    z-index:5000;
+    background:rgba(0,0,0,.65);
+    backdrop-filter:blur(8px);
+    display:none;
     align-items:flex-end;
+    justify-content:center;
 }
 
-.modal-bg.show{
+.modal.show{
     display:flex;
 }
 
-.modal{
+.modal-box{
     width:100%;
-    padding:25px;
-    background:#0d1116;
-    border-radius:25px 25px 0 0;
-    border-top:1px solid #343a41;
+    max-width:520px;
+    padding:20px;
+    border-radius:24px 24px 0 0;
+    background:#11151b;
+    border-top:1px solid var(--border);
+    box-shadow:0 -15px 50px rgba(0,0,0,.5);
+    animation:modalUp .2s ease;
 }
 
-.modal p{
-    color:#aeb4ba;
-    margin-top:10px;
-    line-height:1.5;
+@keyframes modalUp{
+    from{transform:translateY(100%)}
+    to{transform:none}
 }
 
-.modal button{
-    width:100%;
-    height:50px;
-    margin-top:20px;
+.modal-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:15px;
+}
+
+.modal-head h3{
+    font-size:16px;
+}
+
+.close-btn{
+    width:32px;
+    height:32px;
     border:0;
-    border-radius:13px;
-    background:#1b2229;
+    border-radius:10px;
+    background:rgba(255,255,255,.06);
     color:#fff;
 }
 
-/* ================= DESKTOP ================= */
-
-@media(min-width:701px){
-
-    .header{
-        max-width:900px;
-        margin:auto;
-    }
-
+.modal-content{
+    color:#8c96a5;
+    font-size:11px;
+    line-height:1.5;
 }
 
-/* ================= SMALL MOBILE ================= */
+.profile-modal{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px;
+    border-radius:15px;
+    background:rgba(255,255,255,.035);
+    margin-bottom:12px;
+}
 
-@media(max-width:380px){
+.profile-modal img{
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid var(--gold);
+}
 
-    .brand-name{
-        font-size:23px;
+.profile-name{
+    color:#fff;
+    font-size:14px;
+    font-weight:800;
+}
+
+.profile-username{
+    color:#7f8998;
+    font-size:10px;
+    margin-top:3px;
+}
+
+/* TOAST */
+
+#toast{
+    position:fixed;
+    left:50%;
+    bottom:83px;
+    transform:translate(-50%,20px);
+    z-index:9000;
+    background:#1b2028;
+    border:1px solid rgba(255,255,255,.1);
+    color:#fff;
+    border-radius:12px;
+    padding:10px 15px;
+    font-size:10px;
+    font-weight:700;
+    opacity:0;
+    pointer-events:none;
+    transition:.25s;
+    max-width:90%;
+    text-align:center;
+}
+
+#toast.show{
+    opacity:1;
+    transform:translate(-50%,0);
+}
+
+/* MOBILE */
+
+@media(max-width:360px){
+    .balance-amount{
+        font-size:29px;
     }
 
-    .panda{
-        font-size:40px;
-        width:50px;
-    }
-
-    .balance{
-        font-size:47px;
-    }
-
-    .money{
-        transform:scale(.78);
+    .balance-art{
+        transform:scale(.8);
         transform-origin:right bottom;
-        right:-5px;
     }
 
-    .bonus-content{
-        left:18%;
+    .action-footer span{
+        font-size:8px;
     }
 
-    .quick-name{
-        font-size:12px;
+    .task-action{
+        padding:7px 8px;
     }
 }
 </style>
@@ -1163,752 +909,1478 @@
 
 <body>
 
-<div class="app">
+<!-- LOADER -->
+<div id="appLoader">
+    <div class="loader-panda">🐼</div>
+    <div class="spinner"></div>
+    <div class="loader-text">Loading Panda Earn...</div>
+</div>
 
-<!-- HEADER -->
+<!-- HOME PAGE -->
+<div id="homePage" class="page active">
 
-<header class="header">
-
-    <div class="brand">
-
-        <div class="panda">
-            🐼
+    <header class="header">
+        <div class="brand">
+            <div class="brand-logo">🐼</div>
+            <div>
+                <h1>Panda <span>Earn</span> ✨</h1>
+                <span class="brand-sub">Earn • Complete • Grow</span>
+            </div>
         </div>
 
-        <div class="brand-info">
+        <div class="header-right">
+            <img id="profileAvatar"
+                 class="profile-avatar"
+                 src="https://api.iconify.design/fluent-emoji-flat:panda.svg"
+                 alt="Profile">
 
-            <div class="brand-name">
-                Panda <span>Earn</span> ✦
+            <button class="menu-btn" id="menuBtn">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- BALANCE -->
+    <section class="balance-card">
+
+        <div class="balance-label">Total Balance</div>
+        <div class="balance-amount" id="balanceAmount">$0.00</div>
+
+        <button class="wallet-btn" id="walletBtn">
+            <i class="fa-solid fa-wallet"></i>
+            Wallet
+            <i class="fa-solid fa-chevron-right" style="font-size:9px;margin-left:4px;"></i>
+        </button>
+
+        <div class="progress-ring" id="progressRing">
+            <span id="progressText">0%</span>
+        </div>
+
+        <div class="progress-label">Progress</div>
+
+        <div class="balance-art">
+            <div class="cash">💵</div>
+            <div class="coin1">🪙</div>
+            <div class="coin2">🪙</div>
+        </div>
+
+    </section>
+
+    <!-- BONUS -->
+    <section class="welcome-card">
+
+        <div class="welcome-content">
+
+            <h3>WELCOME BONUS<br>UNLOCKED!</h3>
+
+            <p>
+                Claim your welcome bonus and start your Panda Earn journey.
+            </p>
+
+            <button class="claim-btn" id="claimBonusBtn">
+                <i class="fa-solid fa-gift"></i>
+                <span id="bonusText">Claim Welcome Bonus</span>
+            </button>
+
+        </div>
+
+        <div class="gift">🎁</div>
+
+    </section>
+
+    <!-- OVERVIEW -->
+    <div class="section-header">
+        <h2>Overview</h2>
+
+        <button class="view-all" id="viewAllBtn">
+            View All
+            <i class="fa-solid fa-chevron-right" style="font-size:8px;"></i>
+        </button>
+    </div>
+
+    <div class="overview-grid">
+
+        <div class="overview-card">
+            <span class="card-title">Total Earned</span>
+            <span class="card-value green" id="totalEarned">$0.00</span>
+            <span class="metric-icon">💰</span>
+        </div>
+
+        <div class="overview-card">
+            <span class="card-title">Referrals</span>
+            <span class="card-value" id="referralsCount">0</span>
+            <span class="metric-icon">👥</span>
+        </div>
+
+        <div class="overview-card">
+            <span class="card-title">Tasks Completed</span>
+            <span class="card-value" id="tasksCompleted">0</span>
+            <span class="metric-icon">📋</span>
+        </div>
+
+        <div class="overview-card">
+            <span class="card-title">Available in wallet</span>
+            <span class="card-value" id="walletAmount">$0.00</span>
+            <span class="metric-icon">👝</span>
+        </div>
+
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="section-header">
+        <h2>Quick Actions</h2>
+    </div>
+
+    <div class="quick-actions-grid">
+
+        <div class="action-card" data-action="partners">
+            <div class="action-icon">🤝</div>
+
+            <div class="action-footer">
+                <span>Partners &<br>Affiliates</span>
+                <i class="fa-solid fa-chevron-right"></i>
+            </div>
+        </div>
+
+        <div class="action-card" data-action="card">
+            <div class="action-icon">💳</div>
+
+            <div class="action-footer">
+                <span>Card<br>Management</span>
+                <i class="fa-solid fa-chevron-right"></i>
+            </div>
+        </div>
+
+        <div class="action-card" data-action="boost">
+            <div class="action-icon">🚀</div>
+
+            <div class="action-footer">
+                <span>Launchpad<br>& Boost</span>
+                <i class="fa-solid fa-chevron-right"></i>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- START EARNING -->
+    <section class="start-earning-banner">
+
+        <div class="earning-left">
+
+            <div class="target-icon">🎯</div>
+
+            <div class="earning-text">
+                <h3>Start Earning</h3>
+                <p>Complete tasks and unlock exciting rewards.</p>
             </div>
 
-            <div class="username" id="username">
-                @pandauser
-            </div>
-
         </div>
 
-    </div>
-
-    <div class="header-right">
-
-        <div class="profile" id="profile">
-            👤
-            <img id="profileImg">
-        </div>
-
-        <button class="menu"
-                onclick="openMenu()">
-            ☰
+        <button class="view-tasks-btn" id="startEarningBtn">
+            View Tasks
+            <i class="fa-solid fa-chevron-right" style="font-size:8px;"></i>
         </button>
 
-    </div>
+    </section>
 
-</header>
-
-
-<div class="container">
-
-<!-- WELCOME -->
-
-<section class="welcome">
-
-    <h2>
-        Welcome back,
-        <span id="welcomeName">Panda User</span> 👋
-    </h2>
-
-    <p>
-        Complete tasks and start earning rewards.
-    </p>
-
-</section>
+</div>
 
 
-<!-- BALANCE -->
+<!-- TASK PAGE -->
+<div id="tasksPage" class="page">
 
-<section class="balance-card">
+    <div class="section-header">
+        <h2>Available Tasks</h2>
 
-    <div class="balance-info">
-
-        <div class="balance-label">
-            TOTAL BALANCE
-        </div>
-
-        <div class="balance">
-            $<span id="balance">0.00</span>
-        </div>
-
-        <button class="wallet"
-                onclick="showModal(
-                'Wallet',
-                'Your wallet and withdrawal options will appear here.'
-                )">
-            💳 &nbsp; Wallet ›
+        <button class="view-all" id="refreshTasksBtn">
+            <i class="fa-solid fa-rotate"></i>
+            Refresh
         </button>
-
     </div>
 
-
-    <div class="progress"></div>
-
-    <div class="progress-text">
-        <b>0%</b>
-        <small>Progress</small>
-    </div>
-
-
-    <div class="money">
-
-        <div class="stack s1"></div>
-        <div class="stack s2"></div>
-        <div class="stack s3"></div>
-
-        <div class="coin c1"></div>
-        <div class="coin c2"></div>
-        <div class="coin c3"></div>
-
-    </div>
-
-</section>
-
-
-<!-- BONUS -->
-
-<section class="bonus">
-
-    <div class="bonus-content">
-
-        <div class="bonus-small">
-            WELCOME BONUS
-        </div>
-
-        <div class="bonus-title">
-            UNLOCKED!
-        </div>
-
-        <div class="bonus-text">
-            Claim your welcome bonus and
-            start earning more.
-        </div>
-
-        <button class="claim"
-                onclick="claimBonus()">
-            🎁 &nbsp; Claim Welcome Bonus
-        </button>
-
-    </div>
-
-    <div class="gift">
-        🎁
-    </div>
-
-</section>
-
-
-<!-- OVERVIEW -->
-
-<div class="section-title">
-
-    <h2>Overview</h2>
-
-    <span class="view">
-        View All ›
-    </span>
+    <div id="taskList" class="task-list"></div>
 
 </div>
 
 
-<div class="overview">
+<!-- REFERRALS PAGE -->
+<div id="referralsPage" class="page">
 
-    <div class="stat">
-
-        <div class="stat-title">
-            Total Earned
-        </div>
-
-        <div class="stat-value green">
-            $<span id="earned">0.00</span>
-        </div>
-
-        <div class="stat-icon">
-            💰
-        </div>
-
+    <div class="section-header">
+        <h2>Referrals</h2>
     </div>
 
+    <div class="referral-card">
 
-    <div class="stat">
+        <div class="referral-icon">👥</div>
 
-        <div class="stat-title">
-            Referrals
-        </div>
-
-        <div class="stat-value blue"
-             id="referrals">
-            0
-        </div>
-
-        <div class="stat-icon">
-            👥
-        </div>
-
-    </div>
-
-
-    <div class="stat">
-
-        <div class="stat-title">
-            Tasks Completed
-        </div>
-
-        <div class="stat-value purple"
-             id="tasks">
-            0
-        </div>
-
-        <div class="stat-icon">
-            📋
-        </div>
-
-    </div>
-
-
-    <div class="stat">
-
-        <div class="stat-title">
-            Available in wallet
-        </div>
-
-        <div class="stat-value orange">
-            $<span id="available">0.00</span>
-        </div>
-
-        <div class="stat-icon">
-            👛
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- QUICK ACTIONS -->
-
-<div class="section-title"
-     style="margin-top:28px">
-
-    <h2>
-        Quick Actions
-    </h2>
-
-</div>
-
-
-<div class="quick-grid">
-
-    <div class="quick"
-         onclick="showModal(
-         'Partners & Affiliates',
-         'Partner and affiliate earning options will appear here.'
-         )">
-
-        <span class="quick-icon">
-            🤝
-        </span>
-
-        <div class="quick-name">
-            Partners &<br>
-            Affiliates
-        </div>
-
-        <span class="arrow">›</span>
-
-    </div>
-
-
-    <div class="quick"
-         onclick="showModal(
-         'Card Management',
-         'Your card management section will appear here.'
-         )">
-
-        <span class="quick-icon">
-            💳
-        </span>
-
-        <div class="quick-name">
-            Card<br>
-            Management
-        </div>
-
-        <span class="arrow">›</span>
-
-    </div>
-
-
-    <div class="quick"
-         onclick="showModal(
-         'Launchpad & Boost',
-         'Boost your earning activities here.'
-         )">
-
-        <span class="quick-icon">
-            🚀
-        </span>
-
-        <div class="quick-name">
-            Launchpad<br>
-            & Boost
-        </div>
-
-        <span class="arrow">›</span>
-
-    </div>
-
-</div>
-
-
-<!-- START EARNING -->
-
-<section class="start">
-
-    <div class="target">
-        🎯
-    </div>
-
-    <div class="start-text">
-
-        <h2>
-            Start Earning
-        </h2>
+        <h2>Invite & Earn</h2>
 
         <p>
-            Complete tasks and unlock
-            exciting rewards.
+            Invite friends to Panda Earn and grow your referral network.
+            Your referral count is connected to your Panda Earn account.
         </p>
 
+        <div class="referral-box">
+
+            <input
+                id="referralLink"
+                class="referral-input"
+                readonly
+                value="Loading..."
+            >
+
+            <button class="copy-btn" id="copyReferralBtn">
+                COPY
+            </button>
+
+        </div>
+
+        <div style="margin-top:15px;color:#7c8795;font-size:10px;">
+            Your Referrals:
+            <strong id="referralPageCount" style="color:#fff;">0</strong>
+        </div>
+
     </div>
-
-    <button class="tasks"
-            onclick="openTasks()">
-        View Tasks ›
-    </button>
-
-</section>
 
 </div>
 
 
-<!-- BOTTOM -->
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
 
-<nav class="bottom">
+    <button class="nav-item active" data-page="home">
+        <i class="fa-solid fa-house"></i>
+        <span>Home</span>
+    </button>
 
-    <div class="nav active"
-         onclick="home()">
+    <button class="nav-item" data-page="tasks">
+        <i class="fa-solid fa-clipboard-list"></i>
+        <span>Tasks</span>
+    </button>
 
-        <div class="nav-icon">
-            🏠
-        </div>
-
-        Home
-
-    </div>
-
-
-    <div class="nav"
-         onclick="openTasks()">
-
-        <div class="nav-icon">
-            📋
-        </div>
-
-        Tasks
-
-    </div>
-
-
-    <div class="nav"
-         onclick="showModal(
-         'Referrals',
-         'Invite friends and earn referral rewards.'
-         )">
-
-        <div class="nav-icon">
-            👥
-        </div>
-
-        Referrals
-
-    </div>
+    <button class="nav-item" data-page="referrals">
+        <i class="fa-solid fa-users"></i>
+        <span>Referrals</span>
+    </button>
 
 </nav>
 
 
-<!-- SIDE MENU -->
+<!-- MODAL -->
+<div class="modal" id="modal">
 
-<div class="overlay"
-     id="overlay"
-     onclick="closeMenu()">
-</div>
+    <div class="modal-box">
 
+        <div class="modal-head">
+            <h3 id="modalTitle">Panda Earn</h3>
 
-<div class="side"
-     id="side">
-
-    <div class="close"
-         onclick="closeMenu()">
-        ×
-    </div>
-
-
-    <div class="side-logo">
-
-        <div class="icon">
-            🐼
+            <button class="close-btn" id="closeModal">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
         </div>
 
-        <h2>
-            Panda Earn
-        </h2>
-
-        <p style="color:#858b92;margin-top:5px">
-            Earn • Complete • Reward
-        </p>
-
-    </div>
-
-
-    <button class="side-btn"
-            onclick="closeMenu();openTasks()">
-        📋 &nbsp; Tasks
-    </button>
-
-
-    <button class="side-btn"
-            onclick="closeMenu();showModal(
-            'Wallet',
-            'Wallet and withdrawal section.'
-            )">
-        💳 &nbsp; Wallet
-    </button>
-
-
-    <button class="side-btn"
-            onclick="closeMenu();showModal(
-            'Referrals',
-            'Your referral section.'
-            )">
-        👥 &nbsp; Referrals
-    </button>
-
-
-    <button class="side-btn"
-            onclick="closeMenu();showModal(
-            'Settings',
-            'Panda Earn settings.'
-            )">
-        ⚙️ &nbsp; Settings
-    </button>
-
-</div>
-
-
-<!-- MODAL -->
-
-<div class="modal-bg"
-     id="modalBg">
-
-    <div class="modal">
-
-        <h2 id="modalTitle">
-            Panda Earn
-        </h2>
-
-        <p id="modalText">
-            Welcome to Panda Earn.
-        </p>
-
-        <button onclick="closeModal()">
-            Close
-        </button>
+        <div id="modalContent" class="modal-content"></div>
 
     </div>
 
 </div>
 
-</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
 
 
 <script>
+/* ==========================================================
+   PANDA EARN
+   TELEGRAM + SUPABASE
+========================================================== */
 
-/* =========================================
-   TELEGRAM MINI APP
-========================================= */
+const SUPABASE_URL = "https://myzsqddvwvoaiainktdh.supabase.co";
 
-let tgUser = null;
+const SUPABASE_KEY =
+"sb_publishable_gtJi6JW9YD4u4YvIvehXBQ_ItHdGXBK";
 
-try{
+const { createClient } = window.supabase;
 
-    if(
-        window.Telegram &&
-        Telegram.WebApp
-    ){
+const supabase = createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
 
-        Telegram.WebApp.ready();
-        Telegram.WebApp.expand();
+const tg = window.Telegram.WebApp;
 
-        tgUser =
-        Telegram.WebApp
-        .initDataUnsafe
-        .user;
+tg.ready();
+tg.expand();
 
-    }
+try {
+    tg.setHeaderColor("#080a0d");
+    tg.setBackgroundColor("#080a0d");
+} catch(e){}
 
-}catch(error){
 
-    console.log(error);
+/* ==========================================================
+   GLOBAL STATE
+========================================================== */
 
+let telegramUser = null;
+let currentUser = null;
+let tasks = [];
+let completedTaskIds = new Set();
+
+
+/* ==========================================================
+   HELPERS
+========================================================== */
+
+function money(value){
+    const number = Number(value || 0);
+
+    return "$" + number.toLocaleString("en-US",{
+        minimumFractionDigits:2,
+        maximumFractionDigits:2
+    });
 }
 
-
-/* =========================================
-   USER INFORMATION
-========================================= */
-
-function loadUser(){
-
-    if(!tgUser){
-
-        document.getElementById("username")
-        .textContent="@pandauser";
-
-        document.getElementById("welcomeName")
-        .textContent="Panda User";
-
-        return;
-    }
-
-
-    /* Username */
-
-    if(tgUser.username){
-
-        document.getElementById("username")
-        .textContent="@"+tgUser.username;
-
-    }else{
-
-        document.getElementById("username")
-        .textContent="Telegram User";
-
-    }
-
-
-    /* Name */
-
-    let first =
-        tgUser.first_name || "";
-
-    document.getElementById("welcomeName")
-        .textContent=first || "Panda User";
-
-
-    /* Profile photo */
-
-    if(tgUser.photo_url){
-
-        let img =
-            document.getElementById("profileImg");
-
-        img.src=tgUser.photo_url;
-        img.style.display="block";
-
-        document.getElementById("profile")
-        .childNodes[0]
-        .textContent="";
-
-    }
-
+function escapeHtml(value){
+    return String(value ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
 }
 
-loadUser();
+function toast(message){
 
+    const el = document.getElementById("toast");
 
-/* =========================================
-   DATA
-========================================= */
+    el.textContent = message;
+    el.classList.add("show");
 
-let data={
+    clearTimeout(window.toastTimer);
 
-    balance:0,
-    earned:0,
-    referrals:0,
-    tasks:0,
-    bonus:false
-
-};
-
-
-try{
-
-    let saved=
-        localStorage.getItem("pandaEarnData");
-
-    if(saved){
-
-        data={
-            ...data,
-            ...JSON.parse(saved)
-        };
-
-    }
-
-}catch(e){}
-
-
-/* =========================================
-   UPDATE
-========================================= */
-
-function update(){
-
-    document.getElementById("balance")
-    .textContent=
-    Number(data.balance).toFixed(2);
-
-    document.getElementById("earned")
-    .textContent=
-    Number(data.earned).toFixed(2);
-
-    document.getElementById("available")
-    .textContent=
-    Number(data.balance).toFixed(2);
-
-    document.getElementById("referrals")
-    .textContent=data.referrals;
-
-    document.getElementById("tasks")
-    .textContent=data.tasks;
-
-    localStorage.setItem(
-        "pandaEarnData",
-        JSON.stringify(data)
-    );
-
+    window.toastTimer = setTimeout(()=>{
+        el.classList.remove("show");
+    },2600);
 }
 
-update();
+function openModal(title,content){
 
+    document.getElementById("modalTitle").textContent = title;
+    document.getElementById("modalContent").innerHTML = content;
 
-/* =========================================
-   BONUS
-========================================= */
-
-function claimBonus(){
-
-    if(data.bonus){
-
-        showModal(
-            "Welcome Bonus",
-            "Your welcome bonus has already been claimed."
-        );
-
-        return;
-
-    }
-
-    data.balance += 1;
-    data.earned += 1;
-    data.bonus=true;
-
-    update();
-
-    showModal(
-        "🎉 Bonus Claimed!",
-        "$1.00 welcome bonus has been added to your Panda Earn wallet."
-    );
-
+    document.getElementById("modal").classList.add("show");
 }
-
-
-/* =========================================
-   TASKS
-========================================= */
-
-function openTasks(){
-
-    showModal(
-        "📋 Tasks",
-        "Available earning tasks will appear here. Complete tasks to earn rewards."
-    );
-
-}
-
-
-/* =========================================
-   MODAL
-========================================= */
-
-function showModal(title,text){
-
-    document.getElementById("modalTitle")
-    .textContent=title;
-
-    document.getElementById("modalText")
-    .textContent=text;
-
-    document.getElementById("modalBg")
-    .classList.add("show");
-
-}
-
 
 function closeModal(){
 
-    document.getElementById("modalBg")
-    .classList.remove("show");
+    document.getElementById("modal").classList.remove("show");
+}
 
+document.getElementById("closeModal").addEventListener(
+    "click",
+    closeModal
+);
+
+document.getElementById("modal").addEventListener(
+    "click",
+    e=>{
+        if(e.target.id === "modal"){
+            closeModal();
+        }
+    }
+);
+
+
+/* ==========================================================
+   TELEGRAM USER
+========================================================== */
+
+function getTelegramUser(){
+
+    const user = tg?.initDataUnsafe?.user;
+
+    if(user && user.id){
+        return user;
+    }
+
+    /*
+       Browser preview fallback.
+       In real Telegram Mini App this will always use
+       the actual Telegram account.
+    */
+
+    return {
+        id: 999999999,
+        first_name: "Demo",
+        last_name: "",
+        username: "demo_user",
+        photo_url:
+        "https://api.iconify.design/fluent-emoji-flat:panda.svg"
+    };
 }
 
 
-/* =========================================
-   MENU
-========================================= */
+/* ==========================================================
+   LOAD / CREATE USER
+========================================================== */
 
-function openMenu(){
+async function loadUser(){
 
-    document.getElementById("side")
-    .classList.add("show");
+    telegramUser = getTelegramUser();
 
-    document.getElementById("overlay")
-    .classList.add("show");
+    const telegramId = Number(telegramUser.id);
 
+    if(!telegramId){
+        throw new Error("Telegram user ID not available.");
+    }
+
+    /*
+       First try existing user.
+    */
+
+    const { data: existing, error: selectError } =
+        await supabase
+        .from("panda_users")
+        .select("*")
+        .eq("telegram_id",telegramId)
+        .maybeSingle();
+
+    if(selectError){
+        throw selectError;
+    }
+
+    if(existing){
+
+        currentUser = existing;
+
+        return;
+    }
+
+    /*
+       New Telegram user.
+    */
+
+    const newUser = {
+
+        telegram_id:telegramId,
+
+        username:
+            telegramUser.username ||
+            null,
+
+        first_name:
+            telegramUser.first_name ||
+            "Panda User",
+
+        balance:0,
+
+        total_earned:0,
+
+        referrals:0,
+
+        tasks_completed:0
+    };
+
+    const { data, error } =
+        await supabase
+        .from("panda_users")
+        .insert(newUser)
+        .select("*")
+        .single();
+
+    if(error){
+        throw error;
+    }
+
+    currentUser = data;
 }
 
 
-function closeMenu(){
+/* ==========================================================
+   UPDATE PROFILE UI
+========================================================== */
 
-    document.getElementById("side")
-    .classList.remove("show");
+function updateProfile(){
 
-    document.getElementById("overlay")
-    .classList.remove("show");
+    if(!currentUser) return;
 
+    document.getElementById("balanceAmount")
+        .textContent =
+        money(currentUser.balance);
+
+    document.getElementById("walletAmount")
+        .textContent =
+        money(currentUser.balance);
+
+    document.getElementById("totalEarned")
+        .textContent =
+        money(currentUser.total_earned);
+
+    document.getElementById("referralsCount")
+        .textContent =
+        Number(currentUser.referrals || 0);
+
+    document.getElementById("referralPageCount")
+        .textContent =
+        Number(currentUser.referrals || 0);
+
+    document.getElementById("tasksCompleted")
+        .textContent =
+        Number(currentUser.tasks_completed || 0);
+
+    /*
+       Progress is a visual indicator.
+       100 tasks = 100%.
+    */
+
+    const completed =
+        Number(currentUser.tasks_completed || 0);
+
+    const progress =
+        Math.min(100,completed);
+
+    document.getElementById("progressText")
+        .textContent =
+        progress + "%";
+
+    document.getElementById("progressRing")
+        .style.setProperty(
+            "--progress",
+            progress + "%"
+        );
+
+    /*
+       Telegram profile.
+    */
+
+    const avatar =
+        telegramUser.photo_url ||
+        "https://api.iconify.design/fluent-emoji-flat:panda.svg";
+
+    document.getElementById("profileAvatar").src = avatar;
+
+    /*
+       Referral link.
+    */
+
+    const botUsername =
+        "Pandaearnoffical_bot";
+
+    const referralLink =
+        "https://t.me/" +
+        botUsername +
+        "?start=ref_" +
+        currentUser.telegram_id;
+
+    document.getElementById("referralLink")
+        .value = referralLink;
 }
 
 
-/* =========================================
-   HOME
-========================================= */
+/* ==========================================================
+   LOAD TASKS
+========================================================== */
 
-function home(){
+async function loadTasks(){
+
+    const list =
+        document.getElementById("taskList");
+
+    list.innerHTML = `
+        <div class="empty-state">
+            <div class="spinner" style="margin:0 auto 15px;"></div>
+            <p>Loading tasks...</p>
+        </div>
+    `;
+
+    const { data, error } =
+        await supabase
+        .from("panda_tasks")
+        .select("*")
+        .eq("is_active",true)
+        .order("created_at",{ascending:false});
+
+    if(error){
+
+        list.innerHTML = `
+            <div class="empty-state">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <h3>Unable to load tasks</h3>
+                <p>${escapeHtml(error.message)}</p>
+            </div>
+        `;
+
+        return;
+    }
+
+    tasks = data || [];
+
+    /*
+       Load user's existing completions.
+    */
+
+    completedTaskIds.clear();
+
+    if(currentUser){
+
+        const { data: completions } =
+            await supabase
+            .from("panda_task_completions")
+            .select("task_id")
+            .eq("user_id",currentUser.id);
+
+        if(completions){
+
+            completions.forEach(item=>{
+                completedTaskIds.add(item.task_id);
+            });
+
+        }
+    }
+
+    renderTasks();
+}
+
+
+/* ==========================================================
+   RENDER TASKS
+========================================================== */
+
+function renderTasks(){
+
+    const list =
+        document.getElementById("taskList");
+
+    if(!tasks.length){
+
+        list.innerHTML = `
+            <div class="empty-state">
+                <i class="fa-solid fa-clipboard-check"></i>
+                <h3>No tasks available</h3>
+                <p>New earning opportunities will appear here.</p>
+            </div>
+        `;
+
+        return;
+    }
+
+    list.innerHTML =
+        tasks.map(task=>{
+
+            const completed =
+                completedTaskIds.has(task.id);
+
+            return `
+                <div class="task-card">
+
+                    <div class="task-icon">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+
+                    <div class="task-info">
+
+                        <div class="task-title">
+                            ${escapeHtml(task.title)}
+                        </div>
+
+                        <div class="task-desc">
+                            ${escapeHtml(task.description || "Complete this task and earn your reward.")}
+                        </div>
+
+                        <div class="task-reward">
+                            +${money(task.reward)}
+                        </div>
+
+                    </div>
+
+                    <button
+                        class="task-action ${completed ? "completed":""}"
+                        data-task-id="${task.id}"
+                        ${completed ? "disabled":""}
+                    >
+                        ${
+                            completed
+                            ? "DONE"
+                            : "START"
+                        }
+                    </button>
+
+                </div>
+            `;
+
+        }).join("");
+
+    document
+        .querySelectorAll(".task-action")
+        .forEach(button=>{
+
+            button.addEventListener(
+                "click",
+                ()=>completeTask(button.dataset.taskId)
+            );
+
+        });
+}
+
+
+/* ==========================================================
+   COMPLETE TASK
+========================================================== */
+
+async function completeTask(taskId){
+
+    if(!currentUser){
+
+        toast("User account not loaded.");
+
+        return;
+    }
+
+    if(completedTaskIds.has(taskId)){
+
+        toast("You already completed this task.");
+
+        return;
+    }
+
+    const task =
+        tasks.find(item=>item.id === taskId);
+
+    if(!task) return;
+
+    /*
+       Open task URL first.
+    */
+
+    if(task.task_url){
+
+        try{
+
+            if(tg?.openLink){
+
+                tg.openLink(task.task_url);
+
+            }else{
+
+                window.open(
+                    task.task_url,
+                    "_blank"
+                );
+
+            }
+
+        }catch(e){
+
+            window.open(
+                task.task_url,
+                "_blank"
+            );
+
+        }
+
+    }
+
+    /*
+       Small delay so the user can visit the task.
+       For the current database setup, completion is
+       recorded when the user presses the completion action.
+    */
+
+    const confirmed =
+        confirm(
+            "After completing the task, press OK to claim your reward."
+        );
+
+    if(!confirmed) return;
+
+    toast("Verifying task...");
+
+    /*
+       IMPORTANT:
+       reward is NOT sent from the browser.
+       Database trigger gets the real reward from
+       panda_tasks.reward.
+    */
+
+    const { data, error } =
+        await supabase
+        .from("panda_task_completions")
+        .insert({
+
+            user_id:currentUser.id,
+
+            task_id:taskId
+
+        })
+        .select("*")
+        .single();
+
+    if(error){
+
+        /*
+           Duplicate completion.
+        */
+
+        if(
+            error.code === "23505" ||
+            String(error.message).toLowerCase().includes("duplicate")
+        ){
+
+            toast("This task is already completed.");
+
+            completedTaskIds.add(taskId);
+
+            renderTasks();
+
+            return;
+        }
+
+        toast(
+            "Task completion failed: " +
+            error.message
+        );
+
+        return;
+    }
+
+    completedTaskIds.add(taskId);
+
+    toast(
+        "🎉 Reward added: " +
+        money(data?.reward || task.reward)
+    );
+
+    /*
+       Reload user from Supabase so balance,
+       total earned and completed count are fresh.
+    */
+
+    await refreshUser();
+
+    renderTasks();
+
+    showPage("home");
+}
+
+
+/* ==========================================================
+   REFRESH USER
+========================================================== */
+
+async function refreshUser(){
+
+    if(!currentUser) return;
+
+    const { data, error } =
+        await supabase
+        .from("panda_users")
+        .select("*")
+        .eq("id",currentUser.id)
+        .single();
+
+    if(!error && data){
+
+        currentUser = data;
+
+        updateProfile();
+
+    }
+}
+
+
+/* ==========================================================
+   NAVIGATION
+========================================================== */
+
+function showPage(page){
+
+    document
+        .querySelectorAll(".page")
+        .forEach(el=>{
+            el.classList.remove("active");
+        });
+
+    document
+        .querySelectorAll(".nav-item")
+        .forEach(el=>{
+            el.classList.remove("active");
+        });
+
+    if(page === "home"){
+
+        document
+            .getElementById("homePage")
+            .classList.add("active");
+
+        document
+            .querySelector('[data-page="home"]')
+            .classList.add("active");
+
+    }
+
+    if(page === "tasks"){
+
+        document
+            .getElementById("tasksPage")
+            .classList.add("active");
+
+        document
+            .querySelector('[data-page="tasks"]')
+            .classList.add("active");
+
+        loadTasks();
+
+    }
+
+    if(page === "referrals"){
+
+        document
+            .getElementById("referralsPage")
+            .classList.add("active");
+
+        document
+            .querySelector('[data-page="referrals"]')
+            .classList.add("active");
+
+    }
 
     window.scrollTo({
         top:0,
         behavior:"smooth"
     });
-
 }
+
+
+document
+    .querySelectorAll(".nav-item")
+    .forEach(button=>{
+
+        button.addEventListener(
+            "click",
+            ()=>{
+                showPage(button.dataset.page);
+            }
+        );
+
+    });
+
+
+/* ==========================================================
+   START EARNING
+========================================================== */
+
+document
+    .getElementById("startEarningBtn")
+    .addEventListener(
+        "click",
+        ()=>{
+            showPage("tasks");
+        }
+    );
+
+
+/* ==========================================================
+   VIEW ALL
+========================================================== */
+
+document
+    .getElementById("viewAllBtn")
+    .addEventListener(
+        "click",
+        ()=>{
+            showPage("tasks");
+        }
+    );
+
+
+/* ==========================================================
+   REFRESH TASKS
+========================================================== */
+
+document
+    .getElementById("refreshTasksBtn")
+    .addEventListener(
+        "click",
+        async ()=>{
+            await loadTasks();
+            toast("Tasks refreshed.");
+        }
+    );
+
+
+/* ==========================================================
+   WALLET
+========================================================== */
+
+document
+    .getElementById("walletBtn")
+    .addEventListener(
+        "click",
+        ()=>{
+
+            openModal(
+                "Your Wallet",
+                `
+                    <div style="
+                        text-align:center;
+                        padding:10px 0 5px;
+                    ">
+
+                        <div style="
+                            color:#7f8998;
+                            font-size:10px;
+                            text-transform:uppercase;
+                            letter-spacing:1px;
+                        ">
+                            Available Balance
+                        </div>
+
+                        <div style="
+                            color:#f3ba2f;
+                            font-size:31px;
+                            font-weight:900;
+                            margin:5px 0 15px;
+                        ">
+                            ${money(currentUser?.balance)}
+                        </div>
+
+                        <div style="
+                            display:grid;
+                            grid-template-columns:1fr 1fr;
+                            gap:8px;
+                        ">
+
+                            <div style="
+                                background:rgba(255,255,255,.04);
+                                border-radius:12px;
+                                padding:12px;
+                            ">
+                                <div style="font-size:9px;color:#747f8f;">
+                                    Total Earned
+                                </div>
+                                <strong style="color:#fff;">
+                                    ${money(currentUser?.total_earned)}
+                                </strong>
+                            </div>
+
+                            <div style="
+                                background:rgba(255,255,255,.04);
+                                border-radius:12px;
+                                padding:12px;
+                            ">
+                                <div style="font-size:9px;color:#747f8f;">
+                                    Completed
+                                </div>
+                                <strong style="color:#fff;">
+                                    ${Number(currentUser?.tasks_completed || 0)}
+                                </strong>
+                            </div>
+
+                        </div>
+
+                    </div>
+                `
+            );
+
+        }
+    );
+
+
+/* ==========================================================
+   MENU
+========================================================== */
+
+document
+    .getElementById("menuBtn")
+    .addEventListener(
+        "click",
+        ()=>{
+
+            const firstName =
+                currentUser?.first_name ||
+                telegramUser?.first_name ||
+                "Panda User";
+
+            const username =
+                currentUser?.username ||
+                telegramUser?.username ||
+                "";
+
+            const avatar =
+                telegramUser?.photo_url ||
+                "https://api.iconify.design/fluent-emoji-flat:panda.svg";
+
+            openModal(
+                "Account",
+                `
+                    <div class="profile-modal">
+
+                        <img src="${escapeHtml(avatar)}">
+
+                        <div>
+                            <div class="profile-name">
+                                ${escapeHtml(firstName)}
+                            </div>
+
+                            <div class="profile-username">
+                                ${
+                                    username
+                                    ? "@" + escapeHtml(username)
+                                    : "Telegram User"
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div style="
+                        display:grid;
+                        gap:8px;
+                    ">
+
+                        <button
+                            onclick="showPage('home');closeModal();"
+                            style="
+                                padding:12px;
+                                border:0;
+                                border-radius:12px;
+                                background:rgba(255,255,255,.05);
+                                color:#fff;
+                                text-align:left;
+                            "
+                        >
+                            <i class="fa-solid fa-house" style="width:22px;color:#2ee879;"></i>
+                            Dashboard
+                        </button>
+
+                        <button
+                            onclick="showPage('tasks');closeModal();"
+                            style="
+                                padding:12px;
+                                border:0;
+                                border-radius:12px;
+                                background:rgba(255,255,255,.05);
+                                color:#fff;
+                                text-align:left;
+                            "
+                        >
+                            <i class="fa-solid fa-list-check" style="width:22px;color:#f3ba2f;"></i>
+                            My Tasks
+                        </button>
+
+                        <button
+                            onclick="showPage('referrals');closeModal();"
+                            style="
+                                padding:12px;
+                                border:0;
+                                border-radius:12px;
+                                background:rgba(255,255,255,.05);
+                                color:#fff;
+                                text-align:left;
+                            "
+                        >
+                            <i class="fa-solid fa-users" style="width:22px;color:#2ee879;"></i>
+                            Referrals
+                        </button>
+
+                    </div>
+                `
+            );
+
+        }
+    );
+
+
+/* ==========================================================
+   QUICK ACTIONS
+========================================================== */
+
+document
+    .querySelectorAll(".action-card")
+    .forEach(card=>{
+
+        card.addEventListener(
+            "click",
+            ()=>{
+
+                const action =
+                    card.dataset.action;
+
+                if(action === "partners"){
+
+                    openModal(
+                        "Partners & Affiliates",
+                        `
+                            <p>
+                                Partner offers and affiliate earning
+                                opportunities will appear here.
+                            </p>
+
+                            <div style="
+                                margin-top:14px;
+                                padding:13px;
+                                border-radius:13px;
+                                background:rgba(46,232,121,.07);
+                                border:1px solid rgba(46,232,121,.15);
+                                color:#2ee879;
+                            ">
+                                <i class="fa-solid fa-handshake"></i>
+                                Partner center ready.
+                            </div>
+                        `
+                    );
+
+                }
+
+                if(action === "card"){
+
+                    openModal(
+                        "Card Management",
+                        `
+                            <p>
+                                Your Panda Earn wallet and withdrawal
+                                card tools will be managed here.
+                            </p>
+
+                            <div style="
+                                margin-top:14px;
+                                padding:15px;
+                                border-radius:15px;
+                                background:linear-gradient(135deg,#242832,#11151b);
+                                border:1px solid rgba(243,186,47,.18);
+                            ">
+                                <div style="font-size:9px;color:#777f8d;">
+                                    AVAILABLE BALANCE
+                                </div>
+
+                                <div style="
+                                    margin-top:4px;
+                                    font-size:25px;
+                                    color:#f3ba2f;
+                                    font-weight:900;
+                                ">
+                                    ${money(currentUser?.balance)}
+                                </div>
+                            </div>
+                        `
+                    );
+
+                }
+
+                if(action === "boost"){
+
+                    openModal(
+                        "Launchpad & Boost",
+                        `
+                            <p>
+                                Boost your earning journey with
+                                upcoming Panda Earn campaigns.
+                            </p>
+
+                            <div style="
+                                margin-top:14px;
+                                padding:13px;
+                                border-radius:13px;
+                                background:rgba(243,186,47,.07);
+                                border:1px solid rgba(243,186,47,.15);
+                                color:#f3ba2f;
+                            ">
+                                <i class="fa-solid fa-rocket"></i>
+                                New campaigns coming soon.
+                            </div>
+                        `
+                    );
+
+                }
+
+            }
+        );
+
+    });
+
+
+/* ==========================================================
+   WELCOME BONUS
+========================================================== */
+
+document
+    .getElementById("claimBonusBtn")
+    .addEventListener(
+        "click",
+        ()=>{
+
+            const claimed =
+                localStorage.getItem(
+                    "panda_welcome_claimed_" +
+                    telegramUser?.id
+                );
+
+            if(claimed){
+
+                toast("Welcome bonus already claimed.");
+
+                return;
+            }
+
+            /*
+               No fake balance modification is performed here.
+               A dedicated welcome_bonus database field/transaction
+               should be added before paying a real bonus.
+            */
+
+            localStorage.setItem(
+                "panda_welcome_claimed_" +
+                telegramUser?.id,
+                "1"
+            );
+
+            const button =
+                document.getElementById("claimBonusBtn");
+
+            button.disabled = true;
+
+            document.getElementById("bonusText")
+                .textContent = "Bonus Claimed";
+
+            toast("🎁 Welcome bonus activated!");
+
+        }
+    );
+
+
+/* ==========================================================
+   REFERRAL COPY
+========================================================== */
+
+document
+    .getElementById("copyReferralBtn")
+    .addEventListener(
+        "click",
+        async ()=>{
+
+            const input =
+                document.getElementById("referralLink");
+
+            try{
+
+                await navigator.clipboard.writeText(
+                    input.value
+                );
+
+                toast("Referral link copied!");
+
+            }catch(e){
+
+                input.select();
+
+                document.execCommand("copy");
+
+                toast("Referral link copied!");
+
+            }
+
+        }
+    );
+
+
+/* ==========================================================
+   INIT
+========================================================== */
+
+async function initApp(){
+
+    try{
+
+        await loadUser();
+
+        updateProfile();
+
+        await loadTasks();
+
+        /*
+           Welcome bonus local UI state.
+        */
+
+        const claimed =
+            localStorage.getItem(
+                "panda_welcome_claimed_" +
+                telegramUser?.id
+            );
+
+        if(claimed){
+
+            document
+                .getElementById("claimBonusBtn")
+                .disabled = true;
+
+            document
+                .getElementById("bonusText")
+                .textContent = "Bonus Claimed";
+
+        }
+
+        document
+            .getElementById("appLoader")
+            .classList.add("hidden");
+
+    }catch(error){
+
+        console.error("Panda Earn Error:",error);
+
+        document
+            .getElementById("appLoader")
+            .innerHTML = `
+                <div style="
+                    font-size:48px;
+                    margin-bottom:12px;
+                ">
+                    ⚠️
+                </div>
+
+                <div style="
+                    font-weight:800;
+                    font-size:15px;
+                    margin-bottom:7px;
+                ">
+                    Unable to load Panda Earn
+                </div>
+
+                <div style="
+                    max-width:300px;
+                    text-align:center;
+                    color:#7e8998;
+                    font-size:10px;
+                    line-height:1.5;
+                    margin-bottom:15px;
+                ">
+                    ${escapeHtml(error.message || "Unknown error")}
+                </div>
+
+                <button
+                    onclick="location.reload()"
+                    style="
+                        border:0;
+                        background:#f3ba2f;
+                        color:#111;
+                        padding:10px 18px;
+                        border-radius:11px;
+                        font-weight:800;
+                    "
+                >
+                    Retry
+                </button>
+            `;
+
+    }
+}
+
+
+/* START */
+
+initApp();
 
 </script>
 
