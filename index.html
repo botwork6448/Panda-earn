@@ -1,119 +1,592 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Panda Earn</title>
+    <!-- Telegram Web App Script -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #0c0d10;
+            --card-bg: #13161c;
+            --card-border: rgba(255, 255, 255, 0.08);
+            --gold-primary: #f3ba2f;
+            --gold-gradient: linear-gradient(135deg, #fce881 0%, #f3ba2f 50%, #c88a14 100%);
+            --text-main: #ffffff;
+            --text-secondary: #94a3b8;
+        }
 
-<title>Panda Earn</title>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
 
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    -webkit-tap-highlight-color:transparent;
-}
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 12px 12px 90px 12px;
+            overflow-x: hidden;
+        }
 
-body{
-    background:#020303;
-    color:#fff;
-    font-family:Arial,Helvetica,sans-serif;
-    overflow-x:hidden;
-}
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding: 4px 0;
+        }
 
-.app{
-    min-height:100vh;
-    padding-bottom:100px;
-    background:
-    radial-gradient(circle at 85% 5%,rgba(255,190,30,.09),transparent 25%),
-    radial-gradient(circle at 5% 45%,rgba(0,100,255,.05),transparent 30%),
-    #020303;
-}
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-/* ================= HEADER ================= */
+        .brand img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
 
-.header{
-    padding:18px 25px 15px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-}
+        .brand h1 {
+            font-size: 20px;
+            font-weight: 700;
+            font-style: italic;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
 
-.brand{
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
+        .brand h1 span {
+            color: var(--gold-primary);
+            font-style: italic;
+        }
 
-.panda{
-    width:65px;
-    height:65px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:48px;
-    filter:drop-shadow(0 5px 12px #000);
-}
+        .brand h1 i {
+            color: #fce881;
+            font-size: 14px;
+        }
 
-.brand-info{
-    display:flex;
-    flex-direction:column;
-}
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-.brand-name{
-    font-size:28px;
-    font-weight:800;
-    font-style:italic;
-}
+        .profile-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 2px solid var(--gold-primary);
+            object-fit: cover;
+        }
 
-.brand-name span{
-    color:#ffc52f;
-}
+        .menu-btn {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 22px;
+            cursor: pointer;
+        }
 
-.username{
-    margin-top:4px;
-    color:#92979e;
-    font-size:13px;
-    font-weight:500;
-}
+        /* Total Balance Card */
+        .balance-card {
+            background: linear-gradient(145deg, #181c24 0%, #0e1117 100%);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 20px;
+            position: relative;
+            margin-bottom: 14px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            overflow: hidden;
+        }
 
-.header-right{
-    display:flex;
-    align-items:center;
-    gap:13px;
-}
+        .balance-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
 
-.profile{
-    width:57px;
-    height:57px;
-    border-radius:50%;
-    border:2px solid #e5a91d;
-    overflow:hidden;
-    background:#171b20;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:32px;
-}
+        .balance-info h3 {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
 
-.profile img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    display:none;
-}
+        .balance-info h2 {
+            font-size: 32px;
+            font-weight: 800;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 14px;
+        }
 
-.menu{
-    border:0;
-    background:none;
-    color:#fff;
-    font-size:31px;
-    cursor:pointer;
-}
+        .wallet-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
 
-/* ================= MAIN ================= */
+        .wallet-btn i {
+            color: var(--gold-primary);
+        }
 
-.container{
+        .progress-graphic {
+            position: absolute;
+            right: -10px;
+            bottom: 0;
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .progress-graphic img {
+            height: 90px;
+            object-fit: contain;
+        }
+
+        /* Welcome Bonus Card */
+        .welcome-card {
+            background: linear-gradient(135deg, #0d2315 0%, #111e14 50%, #0c120e 100%);
+            border: 1px solid rgba(46, 204, 113, 0.2);
+            border-radius: 20px;
+            padding: 18px;
+            position: relative;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .welcome-content h3 {
+            font-size: 16px;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .welcome-content p {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            max-width: 190px;
+            line-height: 1.3;
+        }
+
+        .claim-btn {
+            background: var(--gold-gradient);
+            border: none;
+            color: #111;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(243, 186, 47, 0.3);
+        }
+
+        .welcome-gift-img {
+            height: 85px;
+            object-fit: contain;
+        }
+
+        /* Section Header */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 0 2px;
+        }
+
+        .section-header h2 {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .view-all {
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Overview Grid (2x2) */
+        .overview-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .overview-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 14px;
+            position: relative;
+            min-height: 90px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .overview-card .card-title {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .overview-card .card-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .overview-card .card-value.green {
+            color: #2ecc71;
+        }
+
+        .overview-card img {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            height: 45px;
+            object-fit: contain;
+        }
+
+        /* Quick Actions Grid (3 items) */
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .action-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 12px 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 105px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .action-card:active {
+            transform: scale(0.96);
+        }
+
+        .action-icon-container {
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-icon-container img {
+            width: 26px;
+            height: 26px;
+            object-fit: contain;
+        }
+
+        .action-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .action-card span {
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 1.2;
+            color: #e2e8f0;
+        }
+
+        .action-card i {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Start Earning Banner */
+        .start-earning-banner {
+            background: linear-gradient(135deg, #102414 0%, #152d19 100%);
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            border-radius: 18px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .earning-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .earning-left img {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+        }
+
+        .earning-text h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #2ecc71;
+            margin-bottom: 2px;
+        }
+
+        .earning-text p {
+            font-size: 11px;
+            color: var(--text-secondary);
+            max-width: 150px;
+            line-height: 1.2;
+        }
+
+        .view-tasks-btn {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(46, 204, 113, 0.4);
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #11141b;
+            border-top: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0 16px 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            background: none;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-secondary);
+            font-size: 11px;
+            cursor: pointer;
+            width: 33.33%;
+        }
+
+        .nav-item i {
+            font-size: 18px;
+        }
+
+        .nav-item.active {
+            color: #2ecc71;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="brand">
+            <img src="https://api.iconify.design/fluent-emoji-flat:panda.svg" alt="Panda">
+            <h1>Panda <span>Earn</span> <i class="fa-solid fa-sparkles"></i></h1>
+        </div>
+        <div class="header-right">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces" alt="Profile" class="profile-avatar">
+            <button class="menu-btn"><i class="fa-solid fa-bars"></i></button>
+        </div>
+    </div>
+
+    <!-- Total Balance Card -->
+    <div class="balance-card">
+        <div class="balance-top">
+            <div class="balance-info">
+                <h3>Total Balance</h3>
+                <h2>$0.00</h2>
+                <button class="wallet-btn">
+                    <i class="fa-solid fa-wallet"></i> Wallet <i class="fa-solid fa-chevron-right" style="font-size: 10px;"></i>
+                </button>
+            </div>
+        </div>
+        <div class="progress-graphic">
+            <!-- Stack of money & Coins Graphic representation -->
+            <div style="position: relative; width: 130px; height: 80px;">
+                <div style="position: absolute; right: 0; bottom: 0; font-size: 65px; line-height: 1;">💵</div>
+                <div style="position: absolute; left: 10px; bottom: 0; font-size: 32px; line-height: 1;">🪙</div>
+                <div style="position: absolute; right: 35px; bottom: 5px; font-size: 26px; line-height: 1;">🪙</div>
+            </div>
+            <!-- Circular Progress Badge -->
+            <div style="background: #11141b; border: 3px solid #f3ba2f; border-radius: 50%; width: 55px; height: 55px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
+                <span style="font-size: 12px; font-weight: 800; color: #fff;">0%</span>
+                <span style="font-size: 7px; color: var(--text-secondary); text-transform: uppercase;">Progress</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Welcome Bonus Unlocked Banner -->
+    <div class="welcome-card">
+        <div class="welcome-content">
+            <h3>WELCOME BONUS<br>UNLOCKED!</h3>
+            <p>Claim your welcome bonus and start earning more.</p>
+            <button class="claim-btn">
+                <i class="fa-solid fa-gift"></i> Claim Welcome Bonus
+            </button>
+        </div>
+        <div style="font-size: 65px; margin-right: 5px;">🎁</div>
+    </div>
+
+    <!-- Overview Section -->
+    <div class="section-header">
+        <h2>Overview</h2>
+        <a href="#" class="view-all">View All <i class="fa-solid fa-chevron-right" style="font-size: 10px;"></i></a>
+    </div>
+
+    <div class="overview-grid">
+        <div class="overview-card">
+            <span class="card-title">Total Earned</span>
+            <span class="card-value green">$0.00</span>
+            <span style="position: absolute; right: 12px; bottom: 12px; font-size: 34px;">💰</span>
+        </div>
+        <div class="overview-card">
+            <span class="card-title">Referrals</span>
+            <span class="card-value">0</span>
+            <span style="position: absolute; right: 12px; bottom: 12px; font-size: 34px;">👥</span>
+        </div>
+        <div class="overview-card">
+            <span class="card-title">Tasks Completed</span>
+            <span class="card-value">0</span>
+            <span style="position: absolute; right: 12px; bottom: 12px; font-size: 34px;">📋</span>
+        </div>
+        <div class="overview-card">
+            <span class="card-title">Available in wallet</span>
+            <span class="card-value">$0.00</span>
+            <span style="position: absolute; right: 12px; bottom: 12px; font-size: 34px;">👝</span>
+        </div>
+    </div>
+
+    <!-- Quick Actions Section -->
+    <div class="section-header">
+        <h2>Quick Actions</h2>
+    </div>
+
+    <div class="quick-actions-grid">
+        <div class="action-card">
+            <div class="action-icon-container">
+                <span style="font-size: 20px;">🤝</span>
+            </div>
+            <div class="action-footer">
+                <span>Partners & Affiliates</span>
+                <i class="fa-solid fa-chevron-right"></i>
+            </div>
+        </div>
+        <div class="action-card">
+            <div class="action-icon-container">
+                <span style="font-size: 20px;">💳</span>
+            </div>
+            <div class="action-footer">
+                <span>Card Management</span>
+                <i class="fa-solid fa-chevron-right"></i>
+            </div>
+        </div>
+        <div class="action-card">
+            <div class="action-icon-container">
+                <span style="font-size: 20px;">🚀</span>
+            </div>
+            <div class="action-footer">
+                <span>Launchpad & Boost</span>
+                <i class="fa-solid fa-chevron-right"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Start Earning Banner -->
+    <div class="start-earning-banner">
+        <div class="earning-left">
+            <span style="font-size: 38px;">🎯</span>
+            <div class="earning-text">
+                <h3>Start Earning</h3>
+                <p>Complete tasks and unlock exciting rewards.</p>
+            </div>
+        </div>
+        <button class="view-tasks-btn">
+            View Tasks <i class="fa-solid fa-chevron-right" style="font-size: 10px;"></i>
+        </button>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <button class="nav-item active">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
+        </button>
+        <button class="nav-item">
+            <i class="fa-solid fa-clipboard-list"></i>
+            <span>Tasks</span>
+        </button>
+        <button class="nav-item">
+            <i class="fa-solid fa-users"></i>
+            <span>Referrals</span>
+        </button>
+    </div>
+
+    <script>
+        // Telegram Web App Initialization
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+        
+        // Optional: Add basic interactivity
+        document.querySelector('.claim-btn').addEventListener('click', () => {
+            tg.showAlert('Welcome bonus feature coming soon!');
+        });
+    </script>
+</body>
+</html>
     width:calc(100% - 30px);
     max-width:900px;
     margin:auto;
