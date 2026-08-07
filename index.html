@@ -1,57 +1,67 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Panda Earn Read Test</title>
+    <title>Panda Earn - User Test</title>
 
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
         body {
+            margin: 0;
+            padding: 25px;
             background: #0b0d11;
             color: white;
             font-family: Arial;
-            padding: 25px;
+        }
+
+        .box {
+            max-width: 450px;
+            margin: 30px auto;
+            padding: 22px;
+            background: #151922;
+            border-radius: 18px;
         }
 
         pre {
-            background: #151922;
-            padding: 18px;
-            border-radius: 15px;
+            margin-top: 20px;
+            padding: 15px;
+            background: #090b0f;
+            border-radius: 12px;
             white-space: pre-wrap;
             word-break: break-word;
-        }
-
-        .ok {
-            color: #35e889;
-        }
-
-        .error {
-            color: #ff6464;
         }
     </style>
 </head>
 
 <body>
 
-<h2>🐼 Panda Earn</h2>
+<div class="box">
 
-<pre id="result">Reading database...</pre>
+    <h2>🐼 Panda Earn</h2>
+
+    <div id="status">
+        Loading account...
+    </div>
+
+    <pre id="result"></pre>
+
+</div>
 
 <script>
 
-/* Supabase */
+/* =========================================
+   SUPABASE
+========================================= */
 
 const SUPABASE_URL =
     "https://myzsqddvwvoaiainktdh.supabase.co";
 
 const SUPABASE_KEY =
     "sb_publishable_JN2sZWzesbmhI2ivloEZlA_jP6s324f";
-
-
-/* Create client */
 
 const client =
     window.supabase.createClient(
@@ -60,59 +70,191 @@ const client =
     );
 
 
-/* Read test */
+/* =========================================
+   TELEGRAM
+========================================= */
 
-async function testRead() {
+const tg =
+    window.Telegram.WebApp;
+
+tg.ready();
+tg.expand();
+
+
+/* =========================================
+   LOAD / CREATE USER
+========================================= */
+
+async function loadUser() {
+
+    const status =
+        document.getElementById("status");
 
     const result =
         document.getElementById("result");
 
     try {
 
-        const response =
-            await client
-                .from("panda_users")
-                .select("*")
-                .limit(1);
-
-        console.log(response);
+        const tgUser =
+            tg.initDataUnsafe &&
+            tg.initDataUnsafe.user;
 
 
-        if (response.error) {
+        /* Telegram check */
 
-            result.className = "error";
+        if (!tgUser) {
 
-            result.textContent =
-                "❌ READ FAILED\n\n" +
-                response.error.message;
+            status.textContent =
+                "❌ Open this page inside Telegram.";
 
             return;
         }
 
 
-        result.className = "ok";
+        const telegramId =
+            tgUser.id;
+
+
+        status.textContent =
+            "Checking your Panda Earn account...";
+
+
+        /* =====================================
+           FIND USER
+        ===================================== */
+
+        const existing =
+            await client
+                .from("panda_users")
+                .select("*")
+                .eq(
+                    "telegram_id",
+                    telegramId
+                )
+                .maybeSingle();
+
+
+        if (existing.error) {
+
+            throw existing.error;
+
+        }
+
+
+        /* =====================================
+           USER EXISTS
+        ===================================== */
+
+        if (existing.data) {
+
+            status.textContent =
+                "✅ Account found";
+
+            result.textContent =
+                JSON.stringify(
+                    existing.data,
+                    null,
+                    2
+                );
+
+            return;
+        }
+
+
+        /* =====================================
+           CREATE NEW USER
+        ===================================== */
+
+        status.textContent =
+            "Creating your Panda Earn account...";
+
+
+        const newUser =
+            await client
+                .from("panda_users")
+                .insert({
+
+                    telegram_id:
+                        telegramId,
+
+                    username:
+                        tgUser.username ||
+                        "",
+
+                    first_name:
+                        tgUser.first_name ||
+                        "",
+
+                    balance:
+                        0,
+
+                    total_earned:
+                        0,
+
+                    referrals:
+                        0,
+
+                    tasks_completed:
+                        0
+
+                })
+                .select()
+                .single();
+
+
+        if (newUser.error) {
+
+            throw newUser.error;
+
+        }
+
+
+        status.textContent =
+            "🎉 Account created successfully!";
 
         result.textContent =
-            "✅ SUPABASE READ WORKING\n\n" +
             JSON.stringify(
-                response.data,
+                newUser.data,
                 null,
                 2
             );
 
+
     } catch (error) {
 
-        result.className = "error";
+        console.error(error);
+
+        status.textContent =
+            "❌ Account error";
 
         result.textContent =
-            "❌ JAVASCRIPT ERROR\n\n" +
-            error.message;
+            JSON.stringify(
+                {
+                    message:
+                        error.message,
+
+                    code:
+                        error.code,
+
+                    details:
+                        error.details,
+
+                    hint:
+                        error.hint
+                },
+                null,
+                2
+            );
 
     }
 }
 
 
-testRead();
+/* =========================================
+   START
+========================================= */
+
+loadUser();
 
 </script>
 
