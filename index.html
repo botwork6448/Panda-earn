@@ -1,84 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="viewport"
-          content="width=device-width,
-                   initial-scale=1.0">
+    <title>Panda Earn Read Test</title>
 
-    <title>Panda Earn Test</title>
-
-    <!-- Telegram WebApp -->
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-    <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
         body {
-            margin: 0;
-            padding: 25px;
             background: #0b0d11;
             color: white;
-            font-family: Arial, sans-serif;
+            font-family: Arial;
+            padding: 25px;
         }
 
-        .box {
-            max-width: 450px;
-            margin: 30px auto;
-            padding: 22px;
+        pre {
             background: #151922;
-            border-radius: 18px;
-        }
-
-        h2 {
-            margin-top: 0;
-        }
-
-        #result {
-            margin-top: 20px;
-            padding: 15px;
-            background: #090b0f;
-            border-radius: 12px;
+            padding: 18px;
+            border-radius: 15px;
             white-space: pre-wrap;
             word-break: break-word;
-            font-size: 13px;
-            line-height: 1.5;
         }
 
-        .success {
+        .ok {
             color: #35e889;
         }
 
         .error {
-            color: #ff6b6b;
+            color: #ff6464;
         }
     </style>
 </head>
 
 <body>
 
-<div class="box">
+<h2>🐼 Panda Earn</h2>
 
-    <h2>🐼 Panda Earn</h2>
-
-    <div>
-        Simple connection test
-    </div>
-
-    <div id="result">
-        Testing...
-    </div>
-
-</div>
-
+<pre id="result">Reading database...</pre>
 
 <script>
 
-/* =========================================
-   SUPABASE CONFIG
-========================================= */
+/* Supabase */
 
 const SUPABASE_URL =
     "https://myzsqddvwvoaiainktdh.supabase.co";
@@ -87,171 +51,68 @@ const SUPABASE_KEY =
     "sb_publishable_JN2sZWzesbmhI2ivloEZlA_jP6s324f";
 
 
-/* =========================================
-   CREATE SUPABASE CLIENT
-========================================= */
+/* Create client */
 
-const supabaseClient =
+const client =
     window.supabase.createClient(
         SUPABASE_URL,
         SUPABASE_KEY
     );
 
 
-/* =========================================
-   TELEGRAM
-========================================= */
+/* Read test */
 
-const tg =
-    window.Telegram.WebApp;
+async function testRead() {
 
-tg.ready();
-tg.expand();
-
-
-/* =========================================
-   RESULT
-========================================= */
-
-const result =
-    document.getElementById("result");
-
-
-/* =========================================
-   TEST
-========================================= */
-
-async function test() {
+    const result =
+        document.getElementById("result");
 
     try {
 
-        result.textContent =
-            "Connecting to Supabase...";
-
-
-        /* -------------------------------------
-           TEST TABLE
-        ------------------------------------- */
-
         const response =
-            await supabaseClient
+            await client
                 .from("panda_users")
                 .select("*")
                 .limit(1);
 
+        console.log(response);
 
-        console.log(
-            "Supabase response:",
-            response
-        );
-
-
-        /* -------------------------------------
-           ERROR
-        ------------------------------------- */
 
         if (response.error) {
 
-            result.className =
-                "error";
+            result.className = "error";
 
             result.textContent =
-                "❌ DATABASE ERROR\n\n" +
-
-                "Message: " +
-                response.error.message +
-
-                "\n\nCode: " +
-                (
-                    response.error.code ||
-                    "N/A"
-                ) +
-
-                "\n\nDetails: " +
-                (
-                    response.error.details ||
-                    "N/A"
-                ) +
-
-                "\n\nHint: " +
-                (
-                    response.error.hint ||
-                    "N/A"
-                );
+                "❌ READ FAILED\n\n" +
+                response.error.message;
 
             return;
         }
 
 
-        /* -------------------------------------
-           TELEGRAM USER
-        ------------------------------------- */
-
-        const user =
-            tg.initDataUnsafe &&
-            tg.initDataUnsafe.user
-                ? tg.initDataUnsafe.user
-                : null;
-
-
-        /* -------------------------------------
-           SUCCESS
-        ------------------------------------- */
-
-        result.className =
-            "success";
+        result.className = "ok";
 
         result.textContent =
-            "✅ SUPABASE WORKING\n\n" +
-
-            "Table: panda_users\n" +
-
-            "Connection: OK\n\n" +
-
-            "Database response:\n" +
-
+            "✅ SUPABASE READ WORKING\n\n" +
             JSON.stringify(
                 response.data,
                 null,
                 2
-            ) +
-
-            "\n\n----------------\n\n" +
-
-            "Telegram User:\n" +
-
-            JSON.stringify(
-                user,
-                null,
-                2
             );
-
 
     } catch (error) {
 
-        console.error(error);
-
-        result.className =
-            "error";
+        result.className = "error";
 
         result.textContent =
             "❌ JAVASCRIPT ERROR\n\n" +
-
-            String(
-                error.message ||
-                error
-            );
+            error.message;
 
     }
-
 }
 
 
-/* =========================================
-   START
-========================================= */
-
-test();
+testRead();
 
 </script>
 
