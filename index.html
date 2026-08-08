@@ -9,28 +9,26 @@
 
 <style>
 :root{
-  --bg:#05070a;--panel:#0e1218;--panel2:#111720;--line:rgba(255,255,255,.10);
+  --bg:#030507;--panel:#0e1218;--panel2:#111720;--line:rgba(255,255,255,.10);
   --gold:#f7c84b;--gold2:#ffdf7b;--green:#61ef7b;--muted:#8d98a8;--white:#f7f9fc;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--white);font-family:Inter,Arial,sans-serif;min-height:100%;overflow-x:hidden}
-body:before{content:"";position:fixed;inset:0;pointer-events:none;background:
- radial-gradient(circle at 80% 10%,rgba(247,200,75,.08),transparent 28%),
- radial-gradient(circle at 10% 70%,rgba(66,255,119,.05),transparent 30%)}
+body:after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.25;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(to bottom,black,transparent 90%)}
 button{font:inherit}
-.app{width:100%;max-width:720px;margin:auto;padding:14px 14px 92px}
+.app{width:100%;max-width:760px;margin:auto;padding:12px 13px 96px}
 .hidden{display:none!important}
 
 /* loading */
-.loader{position:fixed;z-index:50;inset:0;background:#05070a;display:flex;align-items:center;justify-content:center}
+.loader{position:fixed;z-index:50;inset:0;background:#030507;display:flex;align-items:center;justify-content:center}
 .loaderbox{text-align:center;width:280px}
 .logo3d{width:92px;height:92px;margin:auto;border-radius:28px;background:
- linear-gradient(145deg,#eef2f5 0 28%,#151b22 29% 100%);
+ linear-gradient(145deg,#fff7bf 0 28%,#151b22 29% 100%);
  box-shadow:0 0 35px rgba(247,200,75,.18),inset -12px -12px 25px #0008;
  position:relative}
-.logo3d:before,.logo3d:after{content:"";position:absolute;top:23px;width:20px;height:27px;border-radius:50%;background:#05070a}
+.logo3d:before,.logo3d:after{content:"";position:absolute;top:23px;width:20px;height:27px;border-radius:50%;background:#030507}
 .logo3d:before{left:18px}.logo3d:after{right:18px}
-.logoeye{position:absolute;left:36px;top:52px;width:20px;height:10px;border-radius:50%;background:#05070a}
+.logoeye{position:absolute;left:36px;top:52px;width:20px;height:10px;border-radius:50%;background:#030507}
 .brandmark{margin-top:10px;font-size:20px;font-weight:900;font-style:italic;letter-spacing:.5px}
 .brandmark span{color:var(--gold)}
 .spinner{width:58px;height:58px;border:5px solid #26303d;border-top-color:var(--gold);border-right-color:var(--gold);border-radius:50%;margin:28px auto 20px;animation:spin 1s linear infinite}
@@ -38,117 +36,150 @@ button{font:inherit}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* header */
-.header{display:flex;align-items:center;gap:11px;padding:6px 2px 14px}
-.brandIcon{width:45px;height:45px;border-radius:14px;background:linear-gradient(145deg,#dfe5e8,#10151c);box-shadow:0 0 20px #f7c84b22;position:relative;flex:none}
-.brandIcon:before,.brandIcon:after{content:"";position:absolute;top:10px;width:11px;height:15px;background:#080a0d;border-radius:50%}
-.brandIcon:before{left:9px}.brandIcon:after{right:9px}
-.brandName{font-weight:900;font-size:21px;letter-spacing:-.5px}.brandName span{color:var(--gold)}
+.header{display:flex;align-items:center;gap:10px;padding:8px 3px 16px;position:relative}
+.brandIcon{width:49px;height:49px;border-radius:16px;border:1px solid rgba(255,215,94,.35);box-shadow:0 8px 28px rgba(0,0,0,.5),0 0 28px rgba(247,200,75,.10);position:relative;flex:none}
+.premiumCoinLogo{background:radial-gradient(circle at 35% 30%,#fff7bf 0 6%,#f5c94d 7% 20%,#7b5313 21% 26%,#17120a 27% 100%);overflow:hidden}
+.premiumCoinLogo:before{content:"P";position:absolute;inset:0;display:grid;place-items:center;font-size:24px;font-weight:1000;color:#fff5b7;text-shadow:0 2px 8px #5b3b00}
+.premiumCoinLogo:after{content:"";position:absolute;inset:6px;border-radius:50%;border:1px solid rgba(255,244,178,.6);box-shadow:inset 0 0 0 2px rgba(0,0,0,.18)}
+.brandWrap{min-width:0}
+.brandName{font-weight:1000;font-size:22px;letter-spacing:-.5px;line-height:1}
+.brandName span{color:var(--gold)}
+.brandSub{font-size:8px;color:#74808e;letter-spacing:1.5px;margin-top:5px;font-weight:800}
 .headerSpace{flex:1}
-.avatar{width:43px;height:43px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);background:#171d25}
-.menuBtn{width:43px;height:43px;border:1px solid var(--line);border-radius:13px;background:#10151c;color:white;display:grid;place-items:center}
+.userChip{display:flex;align-items:center;gap:7px;padding:3px 7px 3px 3px;border:1px solid rgba(255,255,255,.09);border-radius:16px;background:linear-gradient(145deg,#121821,#080b10);box-shadow:inset 0 1px rgba(255,255,255,.04)}
+.userChipText{display:flex;flex-direction:column;max-width:78px;overflow:hidden}
+.userChipText b{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.userChipText small{font-size:7px;color:#64ef7a;letter-spacing:1px;margin-top:2px}
+.avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);background:#171d25}
+.menuBtn{width:42px;height:42px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(145deg,#151b23,#090c11);color:white;display:grid;place-items:center;box-shadow:0 8px 20px #0008}
 .menuIcon{width:20px;height:14px;border-top:2px solid #fff;border-bottom:2px solid #fff;position:relative}
 .menuIcon:after{content:"";position:absolute;left:0;right:0;top:5px;border-top:2px solid #fff}
 
-/* user */
-.userline{color:var(--muted);font-size:12px;margin:0 2px 10px}.userline b{color:#e8edf4}
-
 /* hero banner */
-.banner{position:relative;overflow:hidden;border:1px solid #b58a2c88;border-radius:24px;min-height:205px;padding:24px 20px;margin-bottom:13px;
+.banner{position:relative;overflow:hidden;border:1px solid rgba(255,211,77,.32);border-radius:26px;min-height:278px;padding:24px 20px;margin-bottom:13px;
 background:
- radial-gradient(circle at 82% 40%,#f5c23b1c,transparent 30%),
- linear-gradient(135deg,#10151b,#07090d 65%,#11100b)}
-.banner:after{content:"";position:absolute;inset:0;background-image:linear-gradient(115deg,transparent 35%,#ffffff05 35.5%,transparent 36%);background-size:42px 42px;pointer-events:none}
-.bannerText{position:relative;z-index:2;width:62%}
-.eyebrow{font-size:11px;letter-spacing:2px;color:var(--gold);font-weight:800}
-.banner h1{font-size:25px;line-height:1.05;margin:8px 0}
-.banner p{color:#aeb7c3;font-size:12px;line-height:1.45;margin:0}
-.pandaHero{position:absolute;right:-2px;bottom:-8px;width:49%;height:100%;display:flex;align-items:flex-end;justify-content:center}
-.pandaBody{width:125px;height:145px;border-radius:50px 50px 30px 30px;background:linear-gradient(145deg,#26303a,#05070a 70%);position:relative;box-shadow:inset 15px 10px 20px #ffffff10,0 15px 30px #000}
+ radial-gradient(circle at 78% 58%,rgba(240,188,56,.18),transparent 24%),
+ linear-gradient(125deg,#111821,#080b10 62%,#0d0e0a);
+ box-shadow:0 20px 55px #000b,inset 0 1px rgba(255,255,255,.08),0 0 35px rgba(247,200,75,.07)}
+.banner:after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 0 45%,rgba(255,255,255,.035) 46%,transparent 47% 100%);opacity:.7;pointer-events:none}
+.heroGlow{position:absolute;width:240px;height:240px;right:30px;top:15px;border-radius:50%;background:radial-gradient(circle,rgba(255,209,77,.18),transparent 64%);filter:blur(4px);pointer-events:none}
+.heroBamboo{position:absolute;left:-10px;bottom:-25px;width:90px;height:190px;opacity:.35;transform:rotate(-10deg);background:repeating-linear-gradient(175deg,#335c25 0 14px,#13291a 15px 18px);border-radius:40px 12px 0 0;filter:blur(.3px);pointer-events:none}
+.bannerText{position:relative;z-index:4;max-width:58%;padding-top:4px}
+.eyebrow{font-size:9px;letter-spacing:1.8px;color:#aeb7c2;font-weight:900}
+.liveDot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#64ef7a;box-shadow:0 0 12px #64ef7a;margin-right:5px}
+.banner h1{font-size:29px;line-height:1.03;margin:10px 0 10px;font-weight:800;letter-spacing:-1px}
+.banner h1 strong{color:#f4c64d;text-shadow:0 0 22px rgba(244,198,77,.18)}
+.banner p{color:#8d99a8;font-size:11px;line-height:1.5;margin:0;max-width:245px}
+.heroPill{display:flex;align-items:center;gap:7px;margin-top:15px;border:1px solid rgba(246,199,73,.28);background:rgba(255,202,65,.07);padding:8px 10px;border-radius:12px;font-size:8px;font-weight:900;letter-spacing:.7px;color:#f4d879;width:max-content;max-width:100%}
+.miniCoin,.btnCoin{width:19px;height:19px;border-radius:50%;display:inline-grid;place-items:center;background:radial-gradient(circle at 32% 28%,#fff6b8,#f2bf3f 45%,#80530f 75%);color:#3d2800;font-size:10px;font-weight:1000;box-shadow:0 2px 8px #0008}
+.arrow{font-size:16px;color:#fff0a8;margin-left:2px}
+
+.pandaHero{position:absolute;right:0;bottom:0;width:46%;height:100%;display:flex;align-items:flex-end;justify-content:center;z-index:3}
+.pandaBody{width:125px;height:145px;border-radius:50px 50px 30px 30px;background:linear-gradient(145deg,#26303a,#05070a 70%);position:relative;box-shadow:inset 15px 10px 20px #ffffff10,0 15px 30px #000;transform:scale(1.08);filter:drop-shadow(0 18px 15px #000b)}
 .pandaHead{position:absolute;width:105px;height:94px;left:10px;top:-62px;border-radius:50%;background:linear-gradient(145deg,#f4f6f7,#737b83 58%,#11161c);box-shadow:inset -9px -9px 15px #0008}
 .pandaHead:before,.pandaHead:after{content:"";position:absolute;top:28px;width:25px;height:34px;background:#101419;border-radius:50%;transform:rotate(35deg)}
 .pandaHead:before{left:13px}.pandaHead:after{right:13px;transform:rotate(-35deg)}
 .pandaFace{position:absolute;left:39px;top:42px;width:27px;height:17px;border-radius:50%;background:#05070a}
-.coin{position:absolute;width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff2a1,#f2bb32 48%,#9a6510);border:2px solid #ffdf73;box-shadow:0 4px 15px #f7c84b55}
-.coin:after{content:"P";position:absolute;inset:0;display:grid;place-items:center;color:#704500;font-weight:900;font-size:17px}
-.c1{right:27%;top:28px}.c2{right:7%;bottom:35px;width:28px;height:28px}.c3{right:37%;bottom:18px;width:23px;height:23px}.c4{right:4%;top:55px;width:19px;height:19px}
+.blueCoat{position:absolute;bottom:-8px;left:23px;width:118px;height:105px;background:linear-gradient(135deg,#3b8cff,#12366f 65%,#081528);border-radius:48px 48px 20px 20px;box-shadow:inset 8px 8px 16px #ffffff22,0 8px 18px #0008;z-index:-1}
+
+.coinOrbit{position:absolute;border:1px solid rgba(255,214,89,.24);border-radius:50%;transform:rotate(-20deg)}
+.orbit1{width:210px;height:95px;right:-8px;top:75px}
+.orbit2{width:155px;height:70px;right:20px;top:90px;opacity:.65}
+
+.coin{position:absolute;border-radius:50%;background:radial-gradient(circle at 30% 25%,#fff2a4,#e3aa2e 45%,#7b4e0a 76%,#251803);border:2px solid #ffd75e;box-shadow:0 3px 10px #000b,inset 0 0 0 2px #8a5a0d,inset 0 0 8px #fff2a466}
+.coin:after{content:"P";position:absolute;inset:0;display:grid;place-items:center;height:100%;color:#fff0a4;font-weight:1000;font-size:10px;text-shadow:0 1px 3px #432700}
+.c1{width:42px;height:42px;right:22px;bottom:30px}
+.c2{width:29px;height:29px;right:85px;bottom:20px}
+.c3{width:34px;height:34px;right:125px;bottom:42px}
+.c4{width:24px;height:24px;right:54px;bottom:96px}
+.c5{width:18px;height:18px;right:150px;bottom:90px}
 
 /* balance */
-.balanceCard{border:1px solid var(--line);border-radius:22px;background:linear-gradient(145deg,#10161d,#0a0d12);padding:20px;margin-bottom:13px}
+.balanceCard{border:1px solid rgba(255,255,255,.10);border-radius:24px;background:linear-gradient(145deg,#111820,#090d12);padding:18px 18px 16px;margin-bottom:13px;box-shadow:0 15px 35px #0007,inset 0 1px rgba(255,255,255,.05)}
 .balanceTop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
-.label{font-size:11px;color:#8f99a7;letter-spacing:1.4px}.balance{font-size:37px;font-weight:900;margin-top:5px;letter-spacing:-1.5px}.coinword{color:var(--gold)}
-.actionrow{display:flex;gap:8px;margin-top:16px}
-.btn{border:1px solid #8e6a21;border-radius:12px;background:linear-gradient(135deg,#f7d76d,#c98c1c);color:#111;font-weight:900;padding:12px 13px;flex:1}
-.btn.secondary{background:#141a21;color:#f0f3f7;border-color:var(--line)}
+.label{font-size:9px;color:#8f99a7;letter-spacing:1.7px}
+.balance{font-size:42px;font-weight:900;margin-top:7px;letter-spacing:-1.5px;line-height:1;text-shadow:0 0 28px rgba(255,209,74,.14)}
+.coinword{color:var(--gold);font-size:.55em}
+.levelSmall{color:#f3ca59;background:rgba(243,202,89,.07);border:1px solid rgba(243,202,89,.2);padding:6px 9px;border-radius:9px;font-weight:900;font-size:10px}
+.actionrow{display:flex;gap:8px;margin-top:15px}
+.btn{border:1px solid #8e6a21;border-radius:12px;background:linear-gradient(135deg,#f7d76d,#c98c1c);color:#111;font-weight:900;padding:12px 13px;flex:1;letter-spacing:.2px}
+.btn.secondary{background:#0d1219;color:#f0f3f7;border-color:rgba(255,255,255,.11)}
 .btn:disabled{opacity:.5}
 
-/* cards */
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-.stat{border:1px solid var(--line);border-radius:18px;padding:15px;background:#0d1218;min-height:100px}
-.statTitle{color:#909aa8;font-size:12px}.statVal{font-size:25px;font-weight:900;margin-top:9px}.gold{color:var(--gold)}.green{color:var(--green)}
+/* welcome banner */
+.welcomePremium{position:relative;overflow:hidden;background:linear-gradient(120deg,#142218,#0a0e0d 60%,#1b160a);border:1px solid rgba(255,209,75,.28);border-radius:24px;min-height:155px;padding:20px;margin-bottom:13px;box-shadow:0 18px 40px #0009,inset 0 1px #ffffff10}
+.welcomeGlow{position:absolute;width:240px;height:180px;right:-40px;top:-30px;background:radial-gradient(circle,rgba(246,197,68,.22),transparent 67%);pointer-events:none}
+.welcomePremium .bannerText{width:66%;z-index:5}
+.welcomePremium h1{font-size:24px;line-height:1.02;margin:8px 0}
+.welcomePremium h1 strong{color:#f4c64d}
+.welcomePremium p{font-size:10px;color:#99a3b0;margin:0}
+.welcomePanda{right:0;width:38%;height:100%;position:absolute;bottom:0;display:flex;align-items:flex-end;justify-content:center}
+.welcomePanda .pandaBody{transform:scale(.72);filter:drop-shadow(0 14px 14px #000)}
+.blackCoat{position:absolute;bottom:10px;left:31px;width:100px;height:85px;background:linear-gradient(145deg,#303943,#090d12 70%);border-radius:40px 40px 16px 16px;z-index:-1}
+.giftBox{position:absolute;right:12px;top:36px;width:58px;height:58px;border-radius:8px;background:linear-gradient(145deg,#ffe58c,#b87512 65%,#5c3608);box-shadow:0 12px 20px #0008;transform:rotate(8deg)}
+.giftBox:before{content:"";position:absolute;left:24px;top:0;width:9px;height:100%;background:#fff0a8aa}
+.giftBox:after{content:"";position:absolute;left:0;top:22px;width:100%;height:9px;background:#fff0a8aa}
+.premiumBtn{display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(145deg,#ffe78e,#e3a92f)!important;color:#241700!important;border:0!important;box-shadow:0 8px 24px rgba(243,188,54,.25),inset 0 1px #fff8b0;margin-top:12px}
 
-.sectionTitle{font-size:18px;font-weight:900;margin:18px 2px 10px}
-.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
-.actionCard{min-height:112px;border:1px solid var(--line);border-radius:17px;background:linear-gradient(145deg,#121820,#0b0f14);padding:13px;text-align:left;color:white}
-.svgIcon{width:38px;height:38px;margin-bottom:8px}.actionCard b{font-size:12px;line-height:1.25;display:block}
-.greenPanel{border:1px solid #5dff76;border-radius:20px;background:linear-gradient(100deg,#0d1712,#0a100d);box-shadow:0 0 25px #49ff6418;padding:16px;margin-top:13px;display:flex;align-items:center;gap:12px}
-.greenPanel .big{font-size:18px;font-weight:900;color:#5cff74}.greenPanel p{margin:3px 0 0;color:#9ca8a8;font-size:11px}
+/* cards & stats */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
+.stat{border:1px solid var(--line);border-radius:18px;padding:15px;background:linear-gradient(145deg,#10161d,#090d12);min-height:95px;box-shadow:0 10px 25px #0007,inset 0 1px #ffffff06}
+.statTitle{color:#909aa8;font-size:8px;letter-spacing:1.4px}
+.statVal{font-size:22px;font-weight:900;margin-top:7px}
+.gold{color:var(--gold)}
+.green{color:var(--green)}
+
+.sectionTitle{font-size:18px;font-weight:900;margin:21px 3px 11px;letter-spacing:-.3px}
+.actions{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-bottom:14px}
+.actionCard{min-height:108px;border:1px solid rgba(255,255,255,.10);border-radius:18px;background:linear-gradient(145deg,#121920,#080c11);padding:13px 8px;text-align:center;color:white;box-shadow:0 12px 28px #0008,inset 0 1px rgba(255,255,255,.04);position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.actionCard:after{content:"";position:absolute;width:80px;height:80px;right:-25px;top:-25px;border-radius:50%;background:radial-gradient(circle,rgba(255,205,67,.10),transparent 68%)}
+.svgIcon{width:38px;height:38px;margin-bottom:9px;filter:drop-shadow(0 5px 7px #0009)}
+.actionCard b{font-size:11px;line-height:1.25;display:block}
+
+.greenPanel{border:1px solid rgba(91,242,114,.6);border-radius:22px;background:linear-gradient(120deg,#0b2415,#0c1411 65%,#10170f);box-shadow:0 0 30px rgba(73,255,101,.10),inset 0 1px #ffffff08;padding:16px;margin-top:13px;display:flex;align-items:center;gap:12px}
+.greenPanel .big{font-size:17px;font-weight:1000;color:#64ef7a}
+.greenPanel p{margin:3px 0 0;color:#9ca8a8;font-size:10px}
 .greenPanel button{margin-left:auto;flex:none}
 
 /* pages */
 .page{display:none}.page.active{display:block}
-.back{border:0;background:none;color:#aeb7c3;padding:8px 0;font-size:13px}
+.back{border:0;background:none;color:#aeb7c3;padding:8px 0;font-size:13px;cursor:pointer}
 .task{border:1px solid var(--line);background:#0d1218;border-radius:18px;padding:15px;margin-bottom:9px;display:flex;gap:12px;align-items:center}
-.taskMain{flex:1}.taskTitle{font-weight:800}.taskReward{font-size:12px;color:var(--gold);margin-top:5px}.task button{width:105px}
+.taskMain{flex:1}.taskTitle{font-weight:800}.taskReward{font-size:12px;color:var(--gold);margin-top:5px}
+.task button{width:105px}
 .empty{border:1px dashed #39414c;border-radius:18px;padding:25px;text-align:center;color:#8993a1;font-size:13px}
 .level{border:1px solid #80601d;background:linear-gradient(135deg,#16130c,#0e1115);border-radius:20px;padding:18px}
 .levelName{font-size:26px;font-weight:900;color:var(--gold)}
-.levelbar{height:8px;background:#252b33;border-radius:99px;overflow:hidden;margin-top:12px}.levelbar i{display:block;width:14%;height:100%;background:linear-gradient(90deg,#e0a928,#ffe27c)}
-.modal{position:fixed;inset:0;background:#000b;z-index:30;display:none;align-items:flex-end}.modal.open{display:flex}
-.sheet{width:100%;max-width:720px;margin:auto;background:#10151c;border:1px solid var(--line);border-radius:25px 25px 0 0;padding:20px}
-.sheet h2{margin:0 0 8px}.sheet p{color:#99a3b0;font-size:13px;line-height:1.5}
-.close{float:right;border:0;background:#1b222b;color:#fff;border-radius:10px;padding:8px 11px}
-.nav{position:fixed;z-index:20;bottom:0;left:0;right:0;background:#090c11ee;backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:9px max(10px,calc((100vw - 720px)/2 + 10px)) 10px;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.nav button{border:0;background:none;color:#7f8997;font-size:10px;padding:6px}.nav button.active{color:#65ef7b}.nav svg{display:block;margin:auto auto 3px;width:22px;height:22px}
-.toast{position:fixed;z-index:60;left:50%;bottom:78px;transform:translateX(-50%) translateY(15px);opacity:0;background:#171d25;border:1px solid var(--line);padding:11px 14px;border-radius:12px;font-size:12px;transition:.2s;max-width:90%;text-align:center}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-@media(max-width:390px){.banner h1{font-size:21px}.actions{grid-template-columns:1fr 1fr}.balance{font-size:32px}}
+.levelbar{height:8px;background:#252b33;border-radius:99px;overflow:hidden;margin-top:12px}
+.levelbar i{display:block;width:14%;height:100%;background:linear-gradient(90deg,#e0a928,#ffe27c)}
 
-/* ================= PREMIUM PANDA COIN VISUAL SYSTEM ================= */
-body{background:#030507;letter-spacing:.01em}
-body:after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.25;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(to bottom,black,transparent 90%)}
-.app{max-width:760px;padding:12px 13px 96px}
-.header{padding:8px 3px 16px;gap:10px;position:relative}
-.brandIcon{width:49px;height:49px;border-radius:16px;border:1px solid rgba(255,215,94,.35);box-shadow:0 8px 28px rgba(0,0,0,.5),0 0 28px rgba(247,200,75,.10)}
-.premiumCoinLogo{background:radial-gradient(circle at 35% 30%,#fff7bf 0 6%,#f5c94d 7% 20%,#7b5313 21% 26%,#17120a 27% 100%);overflow:hidden}
-.premiumCoinLogo:before{content:"P";position:absolute;inset:0;display:grid;place-items:center;font-size:24px;font-weight:1000;color:#fff5b7;text-shadow:0 2px 8px #5b3b00}
-.premiumCoinLogo:after{content:"";position:absolute;inset:6px;border-radius:50%;border:1px solid rgba(255,244,178,.6);box-shadow:inset 0 0 0 2px rgba(0,0,0,.18)}
-.brandWrap{min-width:0}.brandName{font-size:22px;line-height:1}.brandSub{font-size:8px;color:#74808e;letter-spacing:1.5px;margin-top:5px;font-weight:800}
-.userChip{display:flex;align-items:center;gap:7px;padding:3px 7px 3px 3px;border:1px solid rgba(255,255,255,.09);border-radius:16px;background:linear-gradient(145deg,#121821,#080b10);box-shadow:inset 0 1px rgba(255,255,255,.04)}
-.userChipText{display:flex;flex-direction:column;max-width:78px;overflow:hidden}.userChipText b{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.userChipText small{font-size:7px;color:#64ef7a;letter-spacing:1px;margin-top:2px}.avatar{width:40px;height:40px}
-.menuBtn{width:42px;height:42px;border-radius:14px;background:linear-gradient(145deg,#151b23,#090c11);box-shadow:0 8px 20px #0008}
-/* hero */
-.premiumHero{min-height:278px!important;border-radius:26px!important;position:relative;overflow:hidden;background:radial-gradient(circle at 78% 58%,rgba(240,188,56,.18),transparent 24%),linear-gradient(125deg,#111821,#080b10 62%,#0d0e0a)!important;border:1px solid rgba(255,211,77,.32)!important;box-shadow:0 20px 55px #000b,inset 0 1px rgba(255,255,255,.08),0 0 35px rgba(247,200,75,.07)}
-.premiumHero:before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 0 45%,rgba(255,255,255,.035) 46%,transparent 47% 100%);opacity:.7}
-.heroGlow{position:absolute;width:240px;height:240px;right:30px;top:15px;border-radius:50%;background:radial-gradient(circle,rgba(255,209,77,.18),transparent 64%);filter:blur(4px)}
-.heroBamboo{position:absolute;left:-10px;bottom:-25px;width:90px;height:190px;opacity:.35;transform:rotate(-10deg);background:repeating-linear-gradient(175deg,#335c25 0 14px,#13291a 15px 18px);border-radius:40px 12px 0 0;filter:blur(.3px)}
-.bannerText{position:relative;z-index:4}.premiumHero .bannerText{padding-top:4px;max-width:58%}
-.eyebrow{font-size:9px;letter-spacing:1.8px;color:#aeb7c2;font-weight:900}.liveDot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#64ef7a;box-shadow:0 0 12px #64ef7a;margin-right:5px}
-.premiumHero h1{font-size:29px;line-height:1.03;margin:10px 0 10px;font-weight:800;letter-spacing:-1px}.premiumHero h1 strong{color:#f4c64d;text-shadow:0 0 22px rgba(244,198,77,.18)}
-.premiumHero p{font-size:11px;color:#8d99a8;line-height:1.5;max-width:245px}.heroPill{display:flex;align-items:center;gap:7px;margin-top:15px;border:1px solid rgba(246,199,73,.28);background:rgba(255,202,65,.07);padding:8px 10px;border-radius:12px;font-size:8px;font-weight:900;letter-spacing:.7px;color:#f4d879;width:max-content;max-width:100%}.miniCoin,.btnCoin{width:19px;height:19px;border-radius:50%;display:inline-grid;place-items:center;background:radial-gradient(circle at 32% 28%,#fff6b8,#f2bf3f 45%,#80530f 75%);color:#3d2800;font-size:10px;font-weight:1000;box-shadow:0 2px 8px #0008}.arrow{font-size:16px;color:#fff0a8;margin-left:2px}
-.premiumPanda{right:0!important;width:46%!important;height:100%!important;z-index:3}.premiumPanda .pandaBody{transform:scale(1.08);filter:drop-shadow(0 18px 15px #000b)}.premiumPanda .blueCoat{position:absolute;bottom:-8px;left:23px;width:118px;height:105px;background:linear-gradient(135deg,#3b8cff,#12366f 65%,#081528);border-radius:48px 48px 20px 20px;box-shadow:inset 8px 8px 16px #ffffff22,0 8px 18px #0008;z-index:-1}
-.coinOrbit{position:absolute;border:1px solid rgba(255,214,89,.24);border-radius:50%;transform:rotate(-20deg)}.orbit1{width:210px;height:95px;right:-8px;top:75px}.orbit2{width:155px;height:70px;right:20px;top:90px;opacity:.65}
-.coin{background:radial-gradient(circle at 30% 25%,#fff2a4,#e3aa2e 45%,#7b4e0a 76%,#251803);border:2px solid #ffd75e;box-shadow:0 3px 10px #000b,inset 0 0 0 2px #8a5a0d,inset 0 0 8px #fff2a466}.coin:after{content:"P";display:grid;place-items:center;height:100%;color:#fff0a4;font-weight:1000;font-size:10px;text-shadow:0 1px 3px #432700}
-.premiumPanda .c1{width:42px;height:42px;right:22px;bottom:30px}.premiumPanda .c2{width:29px;height:29px;right:85px;bottom:20px}.premiumPanda .c3{width:34px;height:34px;right:125px;bottom:42px}.premiumPanda .c4{width:24px;height:24px;right:54px;bottom:96px}.premiumPanda .c5{width:18px;height:18px;right:150px;bottom:90px}
-/* balance */
-.balanceCard{border-radius:24px!important;background:linear-gradient(145deg,#111820,#090d12)!important;border:1px solid rgba(255,255,255,.10)!important;box-shadow:0 15px 35px #0007,inset 0 1px rgba(255,255,255,.05);padding:18px 18px 16px!important}.label{font-size:9px;letter-spacing:1.7px}.balance{font-size:42px;line-height:1;margin-top:7px;text-shadow:0 0 28px rgba(255,209,74,.14)}.coinword{font-size:.55em}.actionrow{margin-top:15px}.btn{border-radius:12px!important;font-weight:900!important;letter-spacing:.2px}.btn.secondary{background:#0d1219!important;border-color:rgba(255,255,255,.11)!important}.levelSmall{color:#f3ca59!important;background:rgba(243,202,89,.07);border:1px solid rgba(243,202,89,.2);padding:6px 9px;border-radius:9px}
-/* welcome */
-.welcomePremium{position:relative;overflow:hidden;background:linear-gradient(120deg,#142218,#0a0e0d 60%,#1b160a)!important;border-color:rgba(255,209,75,.28)!important;box-shadow:0 18px 40px #0009,inset 0 1px #ffffff10}.welcomePremium .bannerText{position:relative;z-index:5}.welcomePremium h1{line-height:1.02}.welcomePremium h1 strong{color:#f4c64d}.welcomePremium p{font-size:10px}.welcomeGlow{position:absolute;width:240px;height:180px;right:-40px;top:-30px;background:radial-gradient(circle,rgba(246,197,68,.22),transparent 67%)}.welcomePanda{right:0!important;width:38%!important}.welcomePanda .pandaBody{transform:scale(.72);filter:drop-shadow(0 14px 14px #000)}.welcomePanda .blackCoat{position:absolute;bottom:10px;left:31px;width:100px;height:85px;background:linear-gradient(145deg,#303943,#090d12 70%);border-radius:40px 40px 16px 16px;z-index:-1}.giftBox{position:absolute;right:12px;top:36px;width:58px;height:58px;border-radius:8px;background:linear-gradient(145deg,#ffe58c,#b87512 65%,#5c3608);box-shadow:0 12px 20px #0008;transform:rotate(8deg)}.giftBox:before{content:"";position:absolute;left:24px;top:0;width:9px;height:100%;background:#fff0a8aa}.giftBox:after{content:"";position:absolute;left:0;top:22px;width:100%;height:9px;background:#fff0a8aa}.premiumBtn{display:flex!important;align-items:center;justify-content:center;gap:8px;background:linear-gradient(145deg,#ffe78e,#e3a92f)!important;color:#241700!important;border:0!important;box-shadow:0 8px 24px rgba(243,188,54,.25),inset 0 1px #fff8b0}.btnCoin{width:20px;height:20px}
-/* stats */
-.grid{gap:9px}.stat{border-radius:18px!important;background:linear-gradient(145deg,#10161d,#090d12)!important;box-shadow:0 10px 25px #0007,inset 0 1px #ffffff06;padding:15px!important}.statTitle{font-size:8px;letter-spacing:1.4px}.statVal{font-size:22px!important;margin-top:7px}
-.sectionTitle{font-size:18px!important;letter-spacing:-.3px;margin:21px 3px 11px}
-.actions{gap:9px}.actionCard{min-height:108px!important;border-radius:18px!important;background:linear-gradient(145deg,#121920,#080c11)!important;border:1px solid rgba(255,255,255,.10)!important;box-shadow:0 12px 28px #0008,inset 0 1px rgba(255,255,255,.04)!important;position:relative;overflow:hidden;text-align:left!important}.actionCard:after{content:"";position:absolute;width:80px;height:80px;right:-25px;top:-25px;border-radius:50%;background:radial-gradient(circle,rgba(255,205,67,.10),transparent 68%)}.actionCard b{font-size:11px;line-height:1.25}.svgIcon{filter:drop-shadow(0 5px 7px #0009);margin-bottom:9px!important}
-.greenPanel{border-radius:22px!important;background:linear-gradient(120deg,#0b2415,#0c1411 65%,#10170f)!important;border:1px solid rgba(91,242,114,.6)!important;box-shadow:0 0 30px rgba(73,255,101,.10),inset 0 1px #ffffff08;padding:16px!important}.greenPanel .big{font-size:17px;font-weight:1000;color:#64ef7a}.greenPanel p{font-size:10px}
-.nav{background:rgba(7,10,14,.88)!important;backdrop-filter:blur(22px);border-top-color:rgba(255,255,255,.08);box-shadow:0 -12px 35px #0009}.nav button.active{color:#68ef7d!important}
-@media(max-width:430px){.premiumHero{min-height:265px!important}.premiumHero .bannerText{max-width:62%}.premiumHero h1{font-size:25px}.userChipText{display:none}.userChip{padding:2px}.avatar{width:39px;height:39px}.balance{font-size:38px}.actionCard{min-height:104px!important}}
+/* modal */
+.modal{position:fixed;inset:0;background:#000b;z-index:30;display:none;align-items:flex-end}
+.modal.open{display:flex}
+.sheet{width:100%;max-width:760px;margin:auto;background:#10151c;border:1px solid var(--line);border-radius:25px 25px 0 0;padding:20px}
+.sheet h2{margin:0 0 8px}
+.sheet p{color:#99a3b0;font-size:13px;line-height:1.5}
+.close{float:right;border:0;background:#1b222b;color:#fff;border-radius:10px;padding:8px 11px;cursor:pointer}
+
+/* bottom nav */
+.nav{position:fixed;z-index:20;bottom:0;left:0;right:0;background:rgba(7,10,14,.88);backdrop-filter:blur(22px);border-top:1px solid rgba(255,255,255,.08);box-shadow:0 -12px 35px #0009;padding:9px max(10px,calc((100vw - 760px)/2 + 10px)) 10px;display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.nav button{border:0;background:none;color:#7f8997;font-size:10px;padding:6px;cursor:pointer}
+.nav button.active{color:#68ef7d!important}
+.nav svg{display:block;margin:auto auto 3px;width:22px;height:22px}
+
+.toast{position:fixed;z-index:60;left:50%;bottom:78px;transform:translateX(-50%) translateY(15px);opacity:0;background:#171d25;border:1px solid var(--line);padding:11px 14px;border-radius:12px;font-size:12px;transition:.2s;max-width:90%;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:430px){
+  .banner{min-height:265px}
+  .bannerText{max-width:62%}
+  .banner h1{font-size:25px}
+  .userChipText{display:none}
+  .userChip{padding:2px}
+  .avatar{width:39px;height:39px}
+  .balance{font-size:38px}
+  .actions{grid-template-columns:repeat(3,1fr)}
+}
 </style>
 </head>
 
@@ -167,15 +198,21 @@ body:after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.25;bac
 
 <header class="header">
   <div class="brandIcon premiumCoinLogo"><span></span></div>
-  <div class="brandWrap"><div class="brandName">PANDA <span>EARN</span></div><div class="brandSub">PANDA COIN ECOSYSTEM</div></div>
+  <div class="brandWrap">
+    <div class="brandName">PANDA <span>EARN</span></div>
+    <div class="brandSub">PANDA COIN ECOSYSTEM</div>
+  </div>
   <div class="headerSpace"></div>
-  <div class="userChip"><img id="avatar" class="avatar" alt="Profile"><div class="userChipText"><b id="username">@loading</b><small>CONNECTED</small></div></div>
+  <div class="userChip">
+    <img id="avatar" class="avatar" alt="Profile">
+    <div class="userChipText"><b id="username">@loading</b><small>CONNECTED</small></div>
+  </div>
   <button class="menuBtn" onclick="openMenu()" aria-label="Menu"><span class="menuIcon"></span></button>
 </header>
 
 <main>
 <section id="homePage" class="page active">
-  <div class="banner premiumHero">
+  <div class="banner">
     <div class="heroGlow"></div>
     <div class="heroBamboo"></div>
     <div class="bannerText">
@@ -184,9 +221,12 @@ body:after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.25;bac
       <p>Earn Panda Coins now and get ready for the upcoming launch.</p>
       <div class="heroPill"><span class="miniCoin">P</span> EARN PANDA COINS NOW <span class="arrow">›</span></div>
     </div>
-    <div class="pandaHero premiumPanda">
+    <div class="pandaHero">
       <div class="coinOrbit orbit1"></div><div class="coinOrbit orbit2"></div>
-      <div class="pandaBody"><div class="pandaHead"><div class="pandaFace"></div><span class="pandaEyeShine"></span></div><div class="blueCoat"></div></div>
+      <div class="pandaBody">
+        <div class="pandaHead"><div class="pandaFace"></div></div>
+        <div class="blueCoat"></div>
+      </div>
       <i class="coin c1"></i><i class="coin c2"></i><i class="coin c3"></i><i class="coin c4"></i><i class="coin c5"></i>
     </div>
   </div>
@@ -197,7 +237,7 @@ body:after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.25;bac
         <div class="label">PANDA COINS BALANCE</div>
         <div id="balance" class="balance">0 <span class="coinword">P</span></div>
       </div>
-      <div class="label" id="levelSmall">BRONZE</div>
+      <div class="levelSmall" id="levelSmall">BRONZE</div>
     </div>
     <div class="actionrow">
       <button class="btn secondary" onclick="convertUsd()">Convert USD</button>
@@ -205,15 +245,22 @@ body:after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.25;bac
     </div>
   </div>
 
-  <div id="welcomeCard" class="banner welcomePremium" style="min-height:155px">
+  <div id="welcomeCard" class="welcomePremium">
     <div class="welcomeGlow"></div>
-    <div class="bannerText" style="width:66%">
+    <div class="bannerText">
       <div class="eyebrow">NEW ACCOUNT REWARD</div>
-      <h1 style="font-size:24px">WELCOME BONUS<br><strong>+1,000 PANDA COINS</strong></h1>
+      <h1>WELCOME BONUS<br><strong>+1,000 PANDA COINS</strong></h1>
       <p>Your one-time starter reward is ready.</p>
       <button id="welcomeBtn" class="btn premiumBtn" onclick="claimWelcome()"><span class="btnCoin">P</span> CLAIM BONUS <span>›</span></button>
     </div>
-    <div class="pandaHero welcomePanda"><div class="giftBox"></div><div class="pandaBody"><div class="pandaHead"><div class="pandaFace"></div></div><div class="blackCoat"></div></div><i class="coin c1"></i><i class="coin c3"></i></div>
+    <div class="welcomePanda">
+      <div class="giftBox"></div>
+      <div class="pandaBody">
+        <div class="pandaHead"><div class="pandaFace"></div></div>
+        <div class="blackCoat"></div>
+      </div>
+      <i class="coin c1" style="right:10px;bottom:20px;width:24px;height:24px;"></i>
+    </div>
   </div>
 
   <div class="grid">
@@ -245,10 +292,6 @@ body:after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.25;bac
       <svg class="svgIcon" viewBox="0 0 48 48" fill="none"><path d="M8 35h32M12 35V24l12-13 12 13v11" stroke="#62d7ff" stroke-width="3"/><path d="M20 35V26h8v9M24 8v7M19 12h10" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>
       <b>Launchpool</b>
     </button>
-    <button class="actionCard" onclick="showPage('level')">
-      <svg class="svgIcon" viewBox="0 0 48 48" fill="none"><path d="M24 6l5 10 11 1-8 8 3 11-11-6-11 6 3-11-8-8 11-1 5-10z" stroke="#f7c84b" stroke-width="3" stroke-linejoin="round"/></svg>
-      <b>Account Level</b>
-    </button>
   </div>
 
   <div class="greenPanel">
@@ -271,7 +314,7 @@ body:after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.25;bac
     <div class="label">YOUR REFERRAL REWARD</div>
     <div class="balance">1,500 <span class="coinword">P</span></div>
     <p style="color:#909aa8;font-size:12px">Invite a new user through your Telegram referral link. Rewards will be recorded by the bot/backend.</p>
-    <button class="btn" onclick="shareReferral()">Share Referral</button>
+    <button class="btn" onclick="shareReferral()" style="margin-top:12px">Share Referral</button>
   </div>
   <div class="empty">Referral counting and rewards are controlled by the Telegram bot/backend.</div>
 </section>
@@ -283,7 +326,7 @@ body:after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.25;bac
     <div class="label">CURRENT LEVEL</div>
     <div id="levelName" class="levelName">BRONZE</div>
     <div class="levelbar"><i></i></div>
-    <p style="color:#9ca5b2;font-size:12px;line-height:1.5">Your level determines the maximum farming rate. Level progression can be connected to your verified earnings system later.</p>
+    <p style="color:#9ca5b2;font-size:12px;line-height:1.5;margin-top:12px">Your level determines the maximum farming rate. Level progression can be connected to your verified earnings system later.</p>
   </div>
 </section>
 </main>
@@ -297,10 +340,13 @@ body:after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.25;bac
     <svg viewBox="0 0 24 24" fill="none"><rect x="5" y="3" width="14" height="18" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="2"/></svg>Tasks
   </button>
   <button onclick="showPage('referrals')" data-page="referrals">
-    <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="7" r="3" stroke="currentColor" stroke-width="2"/><path d="M5 21c.5-5 3-7 7-7s6.5 2 7 7M4 12a3 3 0 0 0-2 3M20 12a3 3 0 0 1 2 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Referrals
+    <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="7" r="3" stroke="currentColor" stroke-width="2"/><path d="M5 21c.5-5 3-7 7-7s6.5 2 7 7M4 12a3 3 0 0 0-2 3M20 12a3 3 0 0 1 2 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Refer
   </button>
   <button onclick="showPage('level')" data-page="level">
-    <svg viewBox="0 0 24 24" fill="none"><path d="M12 3l3 6 6 .8-4.5 4.5 1 6.2-5.5-3-5.5 3 1-6.2L3 9.8 9 9l3-6z" stroke="currentColor" stroke-width="2"/></svg>Level
+    <svg viewBox="0 0 24 24" fill="none"><path d="M12 3l3 6 6 .8-4.5 4.5 1 6.2-5.5-3-5.5 3 1-6.2L3 9.8 9 9l3-6z" stroke="currentColor" stroke-width="2"/></svg>Levels
+  </button>
+  <button onclick="showPage('home')" data-page="earning">
+    <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="2"/></svg>Earning
   </button>
 </nav>
 
@@ -309,15 +355,11 @@ body:after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.25;bac
     <button class="close" onclick="closeModal()">Close</button>
     <h2 id="modalTitle">Panda Earn</h2>
     <p id="modalText"></p>
-    <button id="modalAction" class="btn hidden" style="width:100%" onclick="closeModal()">OK</button>
   </div>
 </div>
 <div id="toast" class="toast"></div>
 
 <script>
-/* =========================
-   PANDA EARN CONFIG
-========================= */
 const SUPABASE_URL = "https://myzsqddvwvoaiainktdh.supabase.co";
 const SUPABASE_KEY = "sb_publishable_JN2sZWzesbmhI2ivloEZlA_jP6s324f";
 const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -328,7 +370,6 @@ let pandaUser = null;
 let activeTasks = [];
 let welcomeTask = null;
 
-/* Helpers */
 function money(n){return Number(n||0).toLocaleString("en-IN",{maximumFractionDigits:2});}
 function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
 function toast(msg){
@@ -336,15 +377,13 @@ function toast(msg){
   clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.classList.remove("show"),2800);
 }
 function setLoading(msg){document.getElementById("loadingText").textContent=msg;}
-function showModal(title,text,action=false){
+function showModal(title,text){
   document.getElementById("modalTitle").textContent=title;
   document.getElementById("modalText").textContent=text;
-  document.getElementById("modalAction").classList.toggle("hidden",!action);
   document.getElementById("modal").classList.add("open");
 }
 function closeModal(){document.getElementById("modal").classList.remove("open");}
 
-/* Telegram identity: NEVER invent a user */
 async function boot(){
   try{
     if(!tg || !tg.initDataUnsafe || !tg.initDataUnsafe.user){
@@ -384,7 +423,6 @@ async function loadPandaUser(){
   if(error) throw new Error("Database connection failed: "+error.message);
 
   if(!data){
-    /* Create only the real Telegram user. */
     const {data:created,error:createError}=await client.from("panda_users")
       .insert({
         telegram_id:tgUser.id,
@@ -402,7 +440,6 @@ async function loadPandaUser(){
     pandaUser=created;
   }else{
     pandaUser=data;
-    /* Keep profile information current without touching money fields. */
     const changed =
       (data.username||null)!==(tgUser.username||null) ||
       (data.first_name||"")!==(tgUser.first_name||"");
@@ -441,7 +478,6 @@ function renderUser(){
   );
 }
 
-/* Tasks */
 async function loadTasks(){
   const {data,error}=await client.from("panda_tasks")
     .select("id,title,reward,is_active")
@@ -484,7 +520,8 @@ async function renderWelcomeState(){
   const done=await completedTaskIds();
   if(done.has(welcomeTask.id)) card.classList.add("hidden");
   else{
-    document.getElementById("welcomeBtn").textContent="Claim "+money(welcomeTask.reward);
+    document.getElementById("welcomeBtninnerHTML")?.remove();
+    document.getElementById("welcomeBtn").innerHTML='<span class="btnCoin">P</span> CLAIM '+money(welcomeTask.reward)+' <span>›</span>';
     card.classList.remove("hidden");
   }
 }
@@ -514,7 +551,6 @@ async function claimWelcome(){
   await renderWelcomeState();
 }
 
-/* Navigation */
 function showPage(page){
   document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
   const el=document.getElementById(page+"Page"); if(el)el.classList.add("active");
@@ -525,11 +561,10 @@ function openMenu(){
   showModal("Panda Earn","Your account is securely linked to the Telegram ID shown in your account. No demo user or demo balance is used.");
 }
 
-/* Other modules — intentionally no fake balance */
 function convertUsd(){showModal("Convert to USD","USD conversion is not enabled yet. Your Panda Coin balance remains unchanged.");}
 function withdraw(){showModal("Withdrawal","Withdrawal is locked until Panda Coins are converted to USD.");}
-function dailyBonus(){showModal("Daily Bonus","Daily check-in rewards will be connected to the secure backend next. No fake coins are added.");}
-function cipher(){showModal("Daily Cipher","Enter today's verified cipher here once the bot/backend cipher system is connected. No coins are added by this screen.");}
+function dailyBonus(){showModal("Daily Bonus","Daily check-in rewards will be connected to the secure backend next.");}
+function cipher(){showModal("Daily Cipher","Enter today's verified cipher here once the bot/backend cipher system is connected.");}
 function launchpool(){showModal("Launchpool","Launchpool is coming soon.");}
 function shareReferral(){
   const link = "https://t.me/share/url?url="+encodeURIComponent("https://t.me/YourPandaBot?start=ref_"+tgUser.id)+"&text="+encodeURIComponent("Join Panda Earn and start earning Panda Coins.");
