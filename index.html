@@ -2,501 +2,283 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
-
-<title>Panda Earn - Function Test</title>
-
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Panda Earn</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-*{
-    box-sizing:border-box;
-}
-
-body{
-    margin:0;
-    min-height:100vh;
-    background:#090b0f;
-    color:#fff;
-    font-family:Arial,sans-serif;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-}
-
-.card{
-    width:100%;
-    max-width:430px;
-    background:#151920;
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:22px;
-    padding:24px;
-    box-shadow:0 20px 50px rgba(0,0,0,.5);
-}
-
-.logo{
-    text-align:center;
-    font-size:42px;
-    margin-bottom:5px;
-}
-
-h1{
-    text-align:center;
-    margin:0;
-    font-size:24px;
-}
-
-.sub{
-    text-align:center;
-    color:#8993a3;
-    font-size:12px;
-    margin-top:7px;
-    margin-bottom:22px;
-}
-
-.status{
-    padding:14px;
-    border-radius:13px;
-    background:#0c1015;
-    border:1px solid rgba(255,255,255,.06);
-    margin-bottom:10px;
-    font-size:13px;
-}
-
-.ok{
-    color:#2ecc71;
-}
-
-.error{
-    color:#ff5c5c;
-}
-
-.loading{
-    color:#f3ba2f;
-}
-
-pre{
-    margin:15px 0 0;
-    padding:14px;
-    min-height:150px;
-    max-height:350px;
-    overflow:auto;
-    white-space:pre-wrap;
-    word-break:break-word;
-    border-radius:13px;
-    background:#080a0e;
-    border:1px solid rgba(255,255,255,.06);
-    color:#cfd7e3;
-    font-size:11px;
-    line-height:1.5;
-}
-
-button{
-    width:100%;
-    margin-top:15px;
-    padding:13px;
-    border:0;
-    border-radius:12px;
-    background:linear-gradient(
-        135deg,
-        #ffe88a,
-        #f3ba2f,
-        #c88a14
-    );
-    color:#111;
-    font-weight:800;
-    cursor:pointer;
-}
+:root{--bg:#030807;--card:#0d1715;--line:#ffffff18;--muted:#9ca8a3;--green:#58ef82;--gold:#e7bd57}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 20% 0,#16422e44,transparent 32%),#030807;color:#f7f8f5;font-family:Arial,system-ui,sans-serif}
+button{font:inherit}.app{max-width:720px;margin:auto;padding:10px 12px 90px}.header{height:65px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:9px}.panda-logo{width:52px;height:52px;border-radius:18px;display:grid;place-items:center;font-size:34px;background:radial-gradient(circle at 35% 25%,#fff,#aab3ae 35%,#26302d 70%);box-shadow:0 8px 25px #000}
+.brand b{font-size:21px}.brand b span{color:var(--gold)}.brand small{display:block;color:#89958f;font-size:9px;letter-spacing:1px;margin-top:3px}
+.user{display:flex;align-items:center;gap:8px}.avatar{width:44px;height:44px;border:2px solid var(--gold);border-radius:50%;object-fit:cover;background:#111}.menu{width:44px;height:44px;border-radius:13px;border:1px solid var(--line);background:#101917;color:#fff;font-size:22px}
+.card{border:1px solid var(--line);border-radius:23px;background:linear-gradient(145deg,#12201c,#09100f);box-shadow:0 15px 45px #0008,inset 0 1px #fff2;overflow:hidden}
+.hero{min-height:205px;padding:21px;position:relative}.hero:after{content:"";position:absolute;right:-65px;top:-65px;width:230px;height:230px;border:1px solid #ffffff16;border-radius:50%;box-shadow:0 0 0 30px #ffffff06,0 0 0 60px #ffffff03}
+.label{font-size:11px;letter-spacing:1.5px;color:#9ba7a2}.balance{font-size:42px;font-weight:900;margin:8px 0}.balance span{color:var(--gold);font-size:18px}.sub{font-size:11px;color:#98a39f}.hero-art{position:absolute;right:15px;bottom:10px;font-size:70px;filter:drop-shadow(0 14px 10px #000);transform:rotate(-5deg)}
+.actions{display:flex;gap:8px;margin-top:18px}.btn{border:1px solid var(--line);border-radius:12px;background:#131d1a;color:#fff;padding:11px 14px;font-weight:800;cursor:pointer}.gold{background:linear-gradient(135deg,#fff0a4,#d6a53a);color:#16130b;border-color:#f3d266}.green{background:linear-gradient(135deg,#7aff9a,#2ab65a);color:#031008;border-color:#7cff9c}
+.banner{margin-top:14px;min-height:155px;padding:18px 135px 17px 19px;position:relative;background:linear-gradient(120deg,#173128,#0d1714 55%,#211c0f);border-color:#d5b44e66}.banner h2{font-size:22px;line-height:1.05;margin:6px 0;color:#f3dfa0}.banner p{font-size:11px;color:#bbc5c0;line-height:1.4}.gift{position:absolute;right:17px;top:30px;font-size:68px;filter:drop-shadow(0 14px 10px #000)}
+.head{display:flex;justify-content:space-between;align-items:center;margin:19px 8px 9px}.head h2{margin:0;font-size:20px}.head span{font-size:11px;color:#98a39e}.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.stat{padding:14px;min-height:105px}.stat small{color:#a4afa9;font-size:12px}.stat b{display:block;font-size:23px;margin-top:9px}.g{color:var(--green)}.y{color:var(--gold)}.b{color:#56b9ff}.p{color:#b58cff}
+.quick{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.quick button{min-height:112px;text-align:left;padding:11px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,#14201d,#09100f);color:#fff;cursor:pointer}.ico{font-size:32px;display:block;margin-bottom:8px}.quick strong{font-size:12px}.quick small{display:block;color:#8e9a95;margin-top:4px;font-size:9px}
+.earn{margin-top:14px;padding:18px;border:1px solid #58ef8266;border-radius:22px;background:linear-gradient(110deg,#0b2416,#09120f);box-shadow:0 0 30px #58ef8212}.rate{font-size:29px;font-weight:900;color:var(--green)}.rate small{font-size:11px;color:#a0aca6}.row{display:flex;justify-content:space-between;align-items:center}.progress{height:7px;background:#ffffff0b;border-radius:99px;overflow:hidden;margin:12px 0}.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,#3dd86e,#e3ef72)}
+.level{margin-top:14px;padding:16px}.levelname{font-size:21px;font-weight:900}.leveldesc{font-size:10px;color:#909d97;margin-top:4px}
+.bottom{position:fixed;bottom:9px;left:50%;transform:translateX(-50%);width:min(calc(100% - 18px),700px);display:grid;grid-template-columns:repeat(4,1fr);padding:6px;border:1px solid var(--line);border-radius:21px;background:#0d1615ee;backdrop-filter:blur(16px);z-index:20}.nav{border:0;background:none;color:#8d9993;padding:8px;border-radius:15px;font-size:10px}.nav.active{color:var(--green);background:#ffffff08}.nav div{font-size:19px}
+.loading{position:fixed;inset:0;background:#030807;z-index:100;display:flex;align-items:center;justify-content:center;flex-direction:column}.spin{width:52px;height:52px;border:4px solid #ffffff12;border-top-color:var(--green);border-radius:50%;animation:s 1s linear infinite}@keyframes s{to{transform:rotate(360deg)}}
+.modal{display:none;position:fixed;inset:0;background:#000b;z-index:50;align-items:flex-end}.sheet{width:min(100%,720px);background:#101a18;border-radius:23px 23px 0 0;border:1px solid var(--line);padding:20px;max-height:75vh;overflow:auto}.close{float:right;border:0;background:#ffffff0d;color:#fff;border-radius:10px;padding:7px}.sheet h3{margin:0 0 7px}.sheet p{color:#a0aaa5;font-size:12px;line-height:1.5}
+.toast{position:fixed;top:12px;left:50%;transform:translate(-50%,-20px);opacity:0;background:#14201d;border:1px solid #ffffff20;border-radius:13px;padding:11px 14px;font-size:11px;z-index:200;transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:480px){.app{padding-left:9px;padding-right:9px}.balance{font-size:38px}.hero-art{font-size:60px}.quick button{min-height:103px;padding:9px}.banner{padding-right:120px}.banner h2{font-size:19px}}
 </style>
 </head>
-
 <body>
 
-<div class="card">
+<div id="loading" class="loading">
+  <div style="font-size:55px">🐼</div>
+  <div class="spin" style="margin-top:15px"></div>
+  <div style="color:#8e9a95;font-size:11px;margin-top:12px">Loading Panda Earn...</div>
+</div>
+<div id="toast" class="toast"></div>
 
-    <div class="logo">🐼</div>
+<main class="app">
+<header class="header">
+  <div class="brand">
+    <div class="panda-logo">🐼</div>
+    <div><b>Panda <span>Earn</span></b><small>PANDA COINS ECOSYSTEM</small></div>
+  </div>
+  <div class="user">
+    <img id="avatar" class="avatar" alt="profile">
+    <button class="menu" onclick="openBox('menu')">☰</button>
+  </div>
+</header>
 
-    <h1>Panda Earn</h1>
+<section class="card hero">
+  <div class="label">TOTAL PANDA COINS</div>
+  <div class="balance"><span id="balance">0</span> <span>🪙</span></div>
+  <div class="sub">@<b id="username">loading</b> · <b id="levelMini">BRONZE</b></div>
+  <div class="actions">
+    <button class="btn gold" onclick="openBox('convert')">Convert USD</button>
+    <button class="btn" onclick="openBox('withdraw')">Withdrawal</button>
+  </div>
+  <div class="hero-art">🐼🪙</div>
+</section>
 
-    <div class="sub">
-        Secure Telegram + Supabase Connection Test
+<section id="welcome" class="card banner">
+  <div class="label">EARLY EARNER BONUS</div>
+  <h2>WELCOME BONUS<br>1,000 🪙</h2>
+  <p>Claim once and use your Panda Coins to increase your earning rate.</p>
+  <button id="welcomeBtn" class="btn gold" onclick="claimWelcome()">🎁 Claim Welcome Bonus</button>
+  <div class="gift">🎁</div>
+</section>
+
+<div class="head"><h2>Overview</h2><span>Live account</span></div>
+<section class="grid">
+  <div class="card stat"><small>Total Earned</small><b class="g"><span id="totalEarned">0</span> 🪙</b></div>
+  <div class="card stat"><small>Referrals</small><b class="b" id="referrals">0</b></div>
+  <div class="card stat"><small>Tasks Completed</small><b class="p" id="tasks">0</b></div>
+  <div class="card stat"><small>Available Wallet</small><b class="y"><span id="wallet">0</span> 🪙</b></div>
+</section>
+
+<div class="head"><h2>Quick Actions</h2><span>Earn more</span></div>
+<section class="quick">
+  <button onclick="openBox('ref')"><span class="ico">🤝</span><strong>Refer Friends</strong><small>+1,500 🪙 / referral</small></button>
+  <button onclick="openBox('task')"><span class="ico">🎯</span><strong>Complete Task</strong><small>Channel join</small></button>
+  <button onclick="openBox('daily')"><span class="ico">🎁</span><strong>Daily Bonus</strong><small>30 day check-in</small></button>
+  <button onclick="openBox('cipher')"><span class="ico">🔐</span><strong>Daily Cipher</strong><small>100–10K 🪙</small></button>
+  <button onclick="openBox('launch')"><span class="ico">🚀</span><strong>Launchpool</strong><small>Coming soon</small></button>
+  <button onclick="openBox('level')"><span class="ico">🏆</span><strong>My Level</strong><small id="levelAction">Bronze</small></button>
+</section>
+
+<section class="earn">
+  <div class="row">
+    <div><div class="label">START EARNING</div><div class="rate"><span id="rate">100</span> <small>🪙 / HOUR</small></div></div>
+    <div style="font-size:46px;filter:drop-shadow(0 10px 8px #000)">🐼</div>
+  </div>
+  <div class="progress"><i id="rateProgress"></i></div>
+  <div class="row" style="font-size:10px;color:#9aa59f">
+    <span>Invested: <b id="invested">0</b> 🪙</span>
+    <button class="btn green" onclick="openBox('invest')">Invest Coins</button>
+  </div>
+  <div style="margin-top:10px;font-size:10px;color:#8e9a94">Session: <b id="session">00:00</b> · Session earned: <b id="sessionEarned">0.00</b> 🪙</div>
+  <button class="btn green" style="width:100%;margin-top:11px" onclick="claimMining()">CLAIM EARNINGS</button>
+</section>
+
+<section class="card level">
+  <div class="row">
+    <div>
+      <div class="label">ACCOUNT LEVEL</div>
+      <div class="levelname" id="level">🥉 Bronze</div>
+      <div class="leveldesc" id="levelDesc">Maximum 2,400 🪙 / hour</div>
     </div>
+    <div style="font-size:38px">🏆</div>
+  </div>
+  <div class="progress"><i id="levelProgress"></i></div>
+  <div class="row" style="font-size:9px;color:#8e9a94"><span id="levelRate">100 / 2,400 🪙/h</span><span id="nextLevel">Next: Silver</span></div>
+</section>
+</main>
 
-    <div id="telegramStatus"
-         class="status loading">
-        ⏳ Checking Telegram...
-    </div>
+<nav class="bottom">
+<button class="nav active" onclick="scrollTo({top:0,behavior:'smooth'})"><div>⌂</div>Home</button>
+<button class="nav" onclick="openBox('task')"><div>🎯</div>Tasks</button>
+<button class="nav" onclick="openBox('invest')"><div>⚡</div>Earning</button>
+<button class="nav" onclick="openBox('ref')"><div>👥</div>Friends</button>
+</nav>
 
-    <div id="functionStatus"
-         class="status loading">
-        ⏳ Waiting for Telegram...
-    </div>
-
-    <div id="databaseStatus"
-         class="status loading">
-        ⏳ Waiting for database...
-    </div>
-
-    <pre id="result">Starting...</pre>
-
-    <button id="retryBtn"
-            onclick="startTest()">
-        TEST AGAIN
-    </button>
-
+<div id="modal" class="modal" onclick="if(event.target===this)closeBox()">
+  <div class="sheet">
+    <button class="close" onclick="closeBox()">✕</button>
+    <h3 id="boxTitle">Panda Earn</h3>
+    <p id="boxText"></p>
+    <div id="boxBody"></div>
+  </div>
 </div>
 
-
 <script>
+const SUPABASE_URL="https://myzsqddvwvoaiainktdh.supabase.co";
+const SUPABASE_KEY="sb_publishable_JN2sZWzesbmhI2ivloEZlA_jP6s324f";
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-/* ==========================================
-   CONFIG
-========================================== */
+const tg=window.Telegram?.WebApp;
+if(tg){tg.ready();tg.expand();}
+const telegramUser=tg?.initDataUnsafe?.user||null;
 
-const FUNCTION_URL =
-"https://myzsqddvwvoaiainktdh.supabase.co/functions/v1/rapid-task";
+let account=null;
+let rate=100;
+let started=Date.now();
 
+const LEVELS=[
+ ["Bronze","🥉",2400],["Silver","🥈",4000],["Gold","🥇",7000],
+ ["Platinum","💠",13000],["Diamond","💎",25000],["Master","👑",50000],
+ ["Mythic","🔥",100000],["Apex","⚡",250000],["God","🌟",500000]
+];
 
-/* ==========================================
-   TELEGRAM
-========================================== */
+function toast(x){let t=document.getElementById("toast");t.textContent=x;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2300)}
+function fmt(x){return Number(x||0).toLocaleString(undefined,{maximumFractionDigits:2})}
+function esc(x){return String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 
-const tg = window.Telegram.WebApp;
+async function loadAccount(){
+  if(!telegramUser){toast("Open this page inside Telegram Mini App");return}
+  let {data,error}=await sb.from("panda_users").select("*").eq("telegram_id",telegramUser.id).maybeSingle();
+  if(error)throw error;
 
-try{
-    tg.ready();
-    tg.expand();
-}catch(e){
-    console.log("Telegram WebApp error:",e);
+  if(!data){
+    const r=await sb.from("panda_users").insert({
+      telegram_id:telegramUser.id,
+      username:telegramUser.username||null,
+      first_name:telegramUser.first_name||"User",
+      balance:0,referrals:0,tasks_completed:0,total_earned:0
+    }).select("*").single();
+    if(r.error)throw r.error;
+    data=r.data;
+  }
+  account=data;
+  render();
 }
 
+function render(){
+  document.getElementById("username").textContent=account.username||account.first_name||"user";
+  document.getElementById("balance").textContent=fmt(account.balance);
+  document.getElementById("wallet").textContent=fmt(account.balance);
+  document.getElementById("totalEarned").textContent=fmt(account.total_earned);
+  document.getElementById("referrals").textContent=account.referrals||0;
+  document.getElementById("tasks").textContent=account.tasks_completed||0;
 
-/* ==========================================
-   ELEMENTS
-========================================== */
+  if(telegramUser?.photo_url)document.getElementById("avatar").src=telegramUser.photo_url;
+  else document.getElementById("avatar").src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><rect width='100' height='100' fill='#13201c'/><text x='50' y='67' text-anchor='middle' font-size='50'>🐼</text></svg>");
 
-const telegramStatus =
-document.getElementById("telegramStatus");
-
-const functionStatus =
-document.getElementById("functionStatus");
-
-const databaseStatus =
-document.getElementById("databaseStatus");
-
-const result =
-document.getElementById("result");
-
-const retryBtn =
-document.getElementById("retryBtn");
-
-
-/* ==========================================
-   HELPERS
-========================================== */
-
-function setStatus(element,text,type){
-
-    element.textContent = text;
-
-    element.className =
-        "status " + type;
+  setLevel();
 }
 
-
-/* ==========================================
-   MAIN TEST
-========================================== */
-
-async function startTest(){
-
-    retryBtn.disabled = true;
-    retryBtn.textContent = "TESTING...";
-
-    result.textContent =
-        "Starting secure connection...\n\n";
-
-    setStatus(
-        telegramStatus,
-        "⏳ Checking Telegram...",
-        "loading"
-    );
-
-    setStatus(
-        functionStatus,
-        "⏳ Waiting...",
-        "loading"
-    );
-
-    setStatus(
-        databaseStatus,
-        "⏳ Waiting...",
-        "loading"
-    );
-
-
-    /* ======================================
-       CHECK TELEGRAM
-    ====================================== */
-
-    const initData =
-        tg.initData;
-
-    const telegramUser =
-        tg.initDataUnsafe &&
-        tg.initDataUnsafe.user;
-
-
-    if(!initData){
-
-        setStatus(
-            telegramStatus,
-            "❌ Telegram initData missing",
-            "error"
-        );
-
-        result.textContent =
-            "This page must be opened inside the Telegram Mini App.\n\n" +
-            "Open @Pandaearnoffical_bot in Telegram and launch the Mini App.";
-
-        retryBtn.disabled = false;
-        retryBtn.textContent = "TRY AGAIN";
-
-        return;
-    }
-
-
-    if(!telegramUser){
-
-        setStatus(
-            telegramStatus,
-            "❌ Telegram user missing",
-            "error"
-        );
-
-        result.textContent =
-            "Telegram opened the page, but user information was not available.";
-
-        retryBtn.disabled = false;
-        retryBtn.textContent = "TRY AGAIN";
-
-        return;
-    }
-
-
-    setStatus(
-        telegramStatus,
-        "✅ Telegram: OK",
-        "ok"
-    );
-
-
-    result.textContent =
-        "Telegram User detected:\n\n" +
-        JSON.stringify(
-            telegramUser,
-            null,
-            2
-        ) +
-        "\n\nCalling secure Edge Function...";
-
-
-    /* ======================================
-       CALL EDGE FUNCTION
-    ====================================== */
-
-    try{
-
-        const response =
-            await fetch(
-                FUNCTION_URL,
-                {
-                    method:"POST",
-
-                    headers:{
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body:JSON.stringify({
-
-                        action:"account",
-
-                        initData:initData
-
-                    })
-                }
-            );
-
-
-        const text =
-            await response.text();
-
-
-        let data;
-
-        try{
-            data =
-                JSON.parse(text);
-        }catch(e){
-
-            data = {
-                raw:text
-            };
-
-        }
-
-
-        /* ==================================
-           FUNCTION ERROR
-        ================================== */
-
-        if(!response.ok){
-
-            setStatus(
-                functionStatus,
-                "❌ Edge Function failed",
-                "error"
-            );
-
-            setStatus(
-                databaseStatus,
-                "❌ Database not confirmed",
-                "error"
-            );
-
-            result.textContent =
-                "HTTP STATUS: " +
-                response.status +
-                "\n\n" +
-                JSON.stringify(
-                    data,
-                    null,
-                    2
-                );
-
-            retryBtn.disabled = false;
-            retryBtn.textContent = "TEST AGAIN";
-
-            return;
-        }
-
-
-        setStatus(
-            functionStatus,
-            "✅ Edge Function: OK",
-            "ok"
-        );
-
-
-        /* ==================================
-           DATABASE RESULT
-        ================================== */
-
-        if(
-            data &&
-            data.success === true &&
-            data.user
-        ){
-
-            setStatus(
-                databaseStatus,
-                "✅ Database: OK",
-                "ok"
-            );
-
-
-            result.textContent =
-                "🎉 EVERYTHING WORKING\n\n" +
-
-                "Telegram:\n" +
-                "ID: " +
-                (data.telegram_user?.id || "N/A") +
-                "\nUsername: @" +
-                (
-                    data.telegram_user?.username ||
-                    "none"
-                ) +
-
-                "\n\nPanda User:\n" +
-
-                JSON.stringify(
-                    data.user,
-                    null,
-                    2
-                ) +
-
-                "\n\nCompleted Tasks:\n" +
-
-                JSON.stringify(
-                    data.completed_task_ids || [],
-                    null,
-                    2
-                );
-
-            retryBtn.textContent =
-                "TEST SUCCESSFUL";
-
-            retryBtn.disabled = false;
-
-        }else{
-
-            setStatus(
-                databaseStatus,
-                "❌ User data missing",
-                "error"
-            );
-
-            result.textContent =
-                "Function responded, but user data was not returned.\n\n" +
-                JSON.stringify(
-                    data,
-                    null,
-                    2
-                );
-
-            retryBtn.disabled = false;
-            retryBtn.textContent = "TEST AGAIN";
-        }
-
-
-    }catch(error){
-
-        setStatus(
-            functionStatus,
-            "❌ Request failed",
-            "error"
-        );
-
-        setStatus(
-            databaseStatus,
-            "❌ Database not reached",
-            "error"
-        );
-
-        result.textContent =
-            "REQUEST ERROR\n\n" +
-            String(
-                error.message ||
-                error
-            );
-
-        retryBtn.disabled = false;
-        retryBtn.textContent = "TEST AGAIN";
-    }
-
+function setLevel(){
+  let i=0;
+  for(let n=0;n<LEVELS.length;n++){if(rate>=LEVELS[n][2]&&n<LEVELS.length-1)i=n+1}
+  const l=LEVELS[i];
+  document.getElementById("level").textContent=l[1]+" "+l[0];
+  document.getElementById("levelMini").textContent=l[0].toUpperCase();
+  document.getElementById("levelAction").textContent=l[0];
+  document.getElementById("levelDesc").textContent="Maximum "+fmt(l[2])+" 🪙 / hour";
+  document.getElementById("levelRate").textContent=fmt(rate)+" / "+fmt(l[2])+" 🪙/h";
+  document.getElementById("levelProgress").style.width=Math.min(100,rate/l[2]*100)+"%";
+  document.getElementById("rateProgress").style.width=Math.min(100,rate/l[2]*100)+"%";
+  document.getElementById("nextLevel").textContent=i<LEVELS.length-1?"Next: "+LEVELS[i+1][0]:"MAX LEVEL";
 }
 
+async function claimWelcome(){
+  const btn=document.getElementById("welcomeBtn");
+  btn.disabled=true;btn.textContent="Checking...";
+  try{
+    /* IMPORTANT:
+       Create one active panda_tasks row with title WELCOME_BONUS
+       and reward 1000. The existing trigger then applies the real reward.
+    */
+    const q=await sb.from("panda_tasks").select("id,reward,is_active")
+      .eq("title","WELCOME_BONUS").eq("is_active",true).maybeSingle();
+    if(q.error)throw q.error;
+    if(!q.data){
+      toast("WELCOME_BONUS task not found in Supabase");
+      return;
+    }
 
-/* ==========================================
-   START
-========================================== */
+    const r=await sb.from("panda_task_completions").insert({
+      user_id:account.id,task_id:q.data.id,reward:q.data.reward
+    });
 
-startTest();
+    if(r.error){
+      if(r.error.code==="23505")toast("Welcome bonus already claimed");
+      else throw r.error;
+      return;
+    }
 
+    toast("+1,000 Panda Coins added!");
+    await loadAccount();
+    document.getElementById("welcome").style.display="none";
+  }catch(e){console.error(e);toast(e.message||"Claim failed")}
+  finally{btn.disabled=false;btn.textContent="🎁 Claim Welcome Bonus"}
+}
+
+function openBox(type){
+  const data={
+    convert:["Convert USD","Panda Coins → USD conversion is disabled for this test. Airdrop launch soon.","<button class='btn gold' onclick='closeBox()'>OK</button>"],
+    withdraw:["Withdrawal","Please convert Panda Coins to USD first. Withdrawal will be enabled after the conversion system is launched.","<button class='btn' onclick='closeBox()'>OK</button>"],
+    ref:["Refer Friends","Planned reward: 1,500 Panda Coins for each successful referral.","<button class='btn green' onclick='toast(\"Referral backend will be connected next\")'>COPY REFERRAL</button>"],
+    task:["Complete Task","Active tasks are loaded from panda_tasks. Your first task can be a channel-join task.","<button class='btn green' onclick='loadTasks()'>LOAD TASKS</button>"],
+    daily:["Daily Bonus","The 30-day UI is ready, but real daily claims need their secure database table/function. This button intentionally does not fake coins.","<button class='btn' onclick='toast(\"Daily bonus backend not enabled yet\")'>TEST</button>"],
+    cipher:["Daily Cipher","Cipher rewards must be checked server-side so users cannot edit the reward.","<input id='cipher' placeholder='Enter today’s code' style='width:100%;padding:12px;margin:8px 0;background:#09100f;border:1px solid #ffffff18;border-radius:12px;color:#fff'><button class='btn green' onclick='toast(\"Cipher backend not enabled yet\")'>VERIFY</button>"],
+    launch:["Launchpool","Panda Launchpool — coming soon.","<button class='btn' onclick='closeBox()'>COMING SOON</button>"],
+    level:["Account Level","Bronze 2.4K · Silver 4K · Gold 7K · Platinum 13K · Diamond 25K · Master 50K · Mythic 100K · Apex 250K · God 500K 🪙/hour.",""],
+    invest:["Invest Coins","Investment will be enabled only after the secure earning/coins-hour database function is added. This test does not fake a balance change.","<button class='btn' onclick='toast(\"Investment backend not enabled yet\")'>TEST</button>"],
+    menu:["Panda Earn","Profile: @"+esc(account?.username||"user"),"<button class='btn' onclick='closeBox()'>CLOSE</button>"]
+  };
+  let d=data[type]||data.menu;
+  document.getElementById("boxTitle").textContent=d[0];
+  document.getElementById("boxText").textContent=d[1];
+  document.getElementById("boxBody").innerHTML=d[2];
+  document.getElementById("modal").style.display="flex";
+}
+function closeBox(){document.getElementById("modal").style.display="none"}
+
+async function loadTasks(){
+  try{
+    const q=await sb.from("panda_tasks").select("id,title,reward,is_active").eq("is_active",true);
+    if(q.error)throw q.error;
+    document.getElementById("boxBody").innerHTML=(q.data||[]).map(t=>
+      `<div style="padding:12px 0;border-bottom:1px solid #ffffff10"><b>${esc(t.title)}</b><br><small style="color:#9ca8a3">${fmt(t.reward)} 🪙</small></div>`
+    ).join("")||"<p>No active tasks.</p>";
+  }catch(e){toast(e.message||"Task load failed")}
+}
+
+function claimMining(){
+  toast("Earning claim is not enabled yet — no fake coins are added.");
+}
+
+setInterval(()=>{
+  const sec=Math.floor((Date.now()-started)/1000);
+  document.getElementById("session").textContent=String(Math.floor(sec/60)).padStart(2,"0")+":"+String(sec%60).padStart(2,"0");
+  document.getElementById("sessionEarned").textContent=fmt(sec*rate/3600);
+},1000);
+
+(async()=>{
+  try{await loadAccount()}
+  catch(e){console.error(e);toast("Database connection failed: "+(e.message||""))}
+  finally{setTimeout(()=>document.getElementById("loading").style.display="none",800)}
+})();
 </script>
-
 </body>
 </html>
