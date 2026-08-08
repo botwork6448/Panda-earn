@@ -1,260 +1,353 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Panda Protocol AI</title>
-    <style>
-        /* --- CSS Styles --- */
-        :root {
-            --bg-color: #050a0e;
-            --card-bg: #11151c;
-            --text-primary: #e0e6ed;
-            --text-secondary: #8d98aa;
-            --accent-gold: #f3ba2f;
-            --accent-green: #2dde7b;
-            --border-color: rgba(255, 255, 255, 0.06);
-            --hover-bg: rgba(255, 255, 255, 0.03);
-            --font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Panda Earn</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--bg:#050709;--panel:#10151a;--panel2:#0b1015;--line:#293139;--gold:#f5bd35;--gold2:#ffe58a;--green:#55ef70;--muted:#8b959f}
+html,body{margin:0;background:var(--bg);color:#fff;font-family:Inter,system-ui,Arial,sans-serif}
+body{min-height:100vh}
+button{font:inherit}
+.hidden{display:none!important}
+.app{width:100%;max-width:760px;margin:auto;padding:10px 11px 94px}
+.top{height:62px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:9px}
+.logo3d{width:47px;height:47px;border-radius:15px;background:linear-gradient(145deg,#f7f7f7,#737980 38%,#171b20 40%,#050607 76%);position:relative;box-shadow:inset -5px -6px 10px #000,0 0 18px #f4bd3528}
+.logo3d:before,.logo3d:after{content:"";position:absolute;background:#050607;border-radius:50%;width:12px;height:16px;top:11px}
+.logo3d:before{left:8px;transform:rotate(25deg)}.logo3d:after{right:8px;transform:rotate(-25deg)}
+.logo3d i{position:absolute;left:16px;right:16px;bottom:8px;height:10px;border-radius:50%;background:#171a1d}
+.brand h1{margin:0;font-size:21px;font-weight:900;letter-spacing:-.6px}.brand h1 span{color:var(--gold)}
+.brand small{display:block;color:#707a84;font-size:8px;letter-spacing:1.6px;margin-top:2px}
+.topRight{display:flex;align-items:center;gap:8px}
+.avatar{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);background:#171c21}
+.iconBtn{width:43px;height:43px;border-radius:14px;border:1px solid #343c44;background:#11161b;color:#e7eaed;display:grid;place-items:center;cursor:pointer}
+.svg{width:22px;height:22px;display:block}
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            font-family: var(--font-family);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 12px;
-            padding-bottom: 80px; /* Space for bottom nav */
-            overflow-x: hidden;
-        }
+.view{display:none}.view.active{display:block}
+.hero{margin-top:7px;padding:19px;border:1px solid #765a1e;border-radius:25px;background:
+radial-gradient(circle at 85% 35%,#f6bd3516,transparent 28%),linear-gradient(145deg,#141a20,#080b0f 62%,#151109);box-shadow:0 18px 45px #0009;overflow:hidden}
+.heroTop{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.eyebrow{font-size:11px;color:#9aa4ad;letter-spacing:1.4px}.balance{font-size:42px;font-weight:950;color:#ffd45c;text-shadow:0 0 18px #f5bd3538;margin:5px 0}
+.userName{font-size:14px;color:#d1d7dc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px}
+.coin3d{width:112px;height:92px;position:relative;flex:none}
+.coin{position:absolute;width:47px;height:47px;border-radius:50%;background:radial-gradient(circle at 30% 28%,#fff1a5,#e4a820 40%,#825209 74%,#2c1b05);border:3px solid #ffd765;box-shadow:inset -5px -6px 7px #3b2307,0 9px 15px #0008}
+.coin:after{content:"P";position:absolute;inset:0;display:grid;place-items:center;color:#6d4305;font-size:25px;font-weight:950}
+.c1{left:3px;bottom:5px}.c2{left:38px;top:5px;transform:rotate(12deg)}.c3{right:1px;bottom:1px;transform:rotate(-12deg)}
+.actions{display:flex;gap:8px;margin-top:14px}.btn{border:0;border-radius:12px;padding:11px 14px;font-weight:850;cursor:pointer}
+.gold{background:linear-gradient(135deg,#ffe994,#f5bd35,#b97b0c);color:#15120a}.dark{background:#11171c;color:#e9edf0;border:1px solid #394149}.green{background:linear-gradient(135deg,#a4ff9e,#3de468);color:#07120a}
+.btn:disabled{opacity:.55}
 
-        .container { width: 100%; max-width: 520px; }
+.banner{margin-top:13px;min-height:168px;padding:20px;border-radius:23px;border:1px solid #70551d;position:relative;overflow:hidden;background:
+radial-gradient(circle at 14% 70%,#49ed6a18,transparent 26%),linear-gradient(115deg,#14240f,#0b120d 55%,#23180a)}
+.banner .copy{position:relative;z-index:2;max-width:68%}.banner .label{font-size:12px;letter-spacing:1px;color:#f4d26d}.banner h2{margin:4px 0;font-size:25px;line-height:1.05}.banner p{font-size:12px;line-height:1.45;color:#aab2b8;margin:8px 0 14px}
+.bannerArt{position:absolute;right:-5px;bottom:-5px;width:190px;height:155px}
+.pandaSuit{position:absolute;right:17px;bottom:8px;width:91px;height:112px;border-radius:44px 44px 25px 25px;background:linear-gradient(145deg,#141a20,#050608);box-shadow:inset -8px -9px 14px #000,0 10px 20px #0008}
+.pandaHead{position:absolute;right:22px;bottom:91px;width:78px;height:69px;border-radius:50%;background:linear-gradient(145deg,#f2f2f2,#8d9499 54%,#24282b);box-shadow:inset -7px -7px 10px #0005}
+.eye{position:absolute;width:15px;height:24px;background:#07090a;border-radius:60%;top:22px}.eye.l{left:17px;transform:rotate(28deg)}.eye.r{right:17px;transform:rotate(-28deg)}
+.nose{position:absolute;width:12px;height:8px;border-radius:50%;background:#080a0b;left:33px;top:39px}
+.suitBadge{position:absolute;left:30px;top:48px;width:30px;height:30px;border-radius:50%;background:radial-gradient(circle,#ffe178,#b97b0a);display:grid;place-items:center;font-weight:900;color:#4b2d04}
+.coinStack{position:absolute;right:104px;bottom:8px;width:62px;height:58px}.coinStack i{position:absolute;width:54px;height:16px;border-radius:50%;background:linear-gradient(#ffe28a,#bd8010);border:2px solid #f5c64d;box-shadow:0 5px 0 #704607}.coinStack i:nth-child(1){bottom:0}.coinStack i:nth-child(2){bottom:13px}.coinStack i:nth-child(3){bottom:26px}
 
-        /* --- Header --- */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding: 0 4px;
-        }
-        .header-left { display: flex; align-items: center; gap: 10px; }
-        .panda-logo { width: 48px; height: 48px; }
-        .brand-text { font-size: 18px; font-weight: 700; line-height: 1.2; }
-        .header-right { display: flex; align-items: center; gap: 10px; }
-        .profile-pic { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--accent-gold); }
-        .connect-wallet {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 12px; font-weight: 600; cursor: pointer;
-        }
+.sectionHead{display:flex;justify-content:space-between;align-items:center;margin:19px 7px 9px}.sectionHead h2{font-size:20px;margin:0}.muted{color:var(--muted);font-size:11px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.card{padding:14px;min-height:105px;border-radius:18px;background:linear-gradient(145deg,#13191f,#0a0e12);border:1px solid #2a3239}
+.card label{font-size:12px;color:#9ca5ad}.card strong{display:block;margin-top:8px;font-size:23px}.greenText{color:var(--green)}.blueText{color:#60b5ff}.goldText{color:#ffbd38}.purpleText{color:#bd84ff}
 
-        /* --- Cards --- */
-        .card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 16px;
-            border: 1px solid var(--border-color);
-            position: relative;
-        }
+.level{margin-top:10px;padding:16px;border-radius:20px;border:1px solid #6b531f;background:linear-gradient(135deg,#17140c,#0d1115)}.levelRow{display:flex;justify-content:space-between;gap:12px}.levelName{font-size:21px;font-weight:950;color:#ffd45c}.levelSub{font-size:10px;color:#89939d;letter-spacing:.8px}.progress{height:8px;border-radius:99px;background:#252c32;margin-top:12px;overflow:hidden}.progress i{display:block;height:100%;width:5%;background:linear-gradient(90deg,#f5bd35,#55ef70)}
 
-        /* --- AI Assistant Card (NEW) --- */
-        .ai-assistant-card {
-            background: linear-gradient(135deg, #11151c 0%, #0f1318 100%);
-            display: flex;
-            flex-direction: column;
-            height: 300px; /* Fixed height for chat */
-        }
-        .ai-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        .ai-title { font-size: 16px; font-weight: 700; color: var(--accent-gold); }
-        .ai-status { font-size: 10px; color: var(--accent-green); display: flex; align-items: center; gap: 4px; }
-        .status-dot { width: 6px; height: 6px; background: var(--accent-green); border-radius: 50%; box-shadow: 0 0 6px var(--accent-green); }
+.mine{margin-top:12px;padding:18px;border-radius:23px;border:1px solid #3c9f4b;background:radial-gradient(circle at 10% 60%,#4ef26b17,transparent 30%),#0b1510}.mineTop{display:flex;justify-content:space-between;gap:10px}.mine h3{margin:0;color:#65ff7a;font-size:20px}.mine p{font-size:12px;color:#8d9891;margin:5px 0}.rate{font-size:24px;font-weight:950}.full{width:100%;margin-top:13px}
 
-        /* Chat Area */
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding-right: 10px;
-            margin-bottom: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .chat-messages::-webkit-scrollbar { width: 4px; }
-        .chat-messages::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 2px; }
+.list{display:grid;gap:9px}.listItem{padding:15px;border:1px solid #2d353d;border-radius:17px;background:linear-gradient(145deg,#13191f,#0b0f13)}.listItem h3{margin:0 0 5px;font-size:15px}.listItem p{margin:0 0 11px;color:#8f99a3;font-size:12px}.row{display:flex;justify-content:space-between;align-items:center;gap:8px}.reward{color:#ffd35c;font-weight:900}
 
-        .message { max-width: 85%; padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 1.4; }
-        .message.ai { align-self: flex-start; background: var(--hover-bg); color: var(--text-primary); border-top-left-radius: 4px; }
-        .message.user { align-self: flex-end; background: var(--accent-gold); color: #11151c; border-top-right-radius: 4px; font-weight: 600; }
+.refBox{padding:18px;border-radius:20px;background:linear-gradient(145deg,#151a20,#0b0f13);border:1px solid #35404a}.refLink{margin-top:12px;padding:12px;border-radius:12px;background:#080b0e;border:1px solid #293139;word-break:break-all;color:#f2c64d;font-size:12px}
+.codeInput{width:100%;padding:13px;border-radius:12px;border:1px solid #343d45;background:#080b0e;color:white;outline:none;margin:10px 0}.codeInput:focus{border-color:#f5bd35}
 
-        /* Chat Input */
-        .ai-input-area { display: flex; gap: 10px; }
-        .ai-input {
-            flex: 1;
-            background: var(--bg-color);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 12px;
-            border-radius: 10px;
-            font-family: inherit; font-size: 13px;
-        }
-        .ai-input:focus { outline: none; border-color: var(--accent-gold); }
-        .ai-send-btn {
-            background: var(--accent-gold);
-            color: #11151c;
-            border: none;
-            padding: 0 20px;
-            border-radius: 10px;
-            font-weight: 700; cursor: pointer;
-            transition: opacity 0.2s;
-        }
-        .ai-send-btn:active { opacity: 0.8; }
+.bottom{position:fixed;z-index:50;bottom:9px;left:50%;transform:translateX(-50%);width:min(738px,calc(100% - 20px));height:64px;border-radius:22px;background:#11161bf2;backdrop-filter:blur(16px);border:1px solid #303941;display:grid;grid-template-columns:repeat(4,1fr)}
+.nav{border:0;background:none;color:#8c969f;font-size:10px;cursor:pointer}.nav .svg{margin:0 auto 3px}.nav.active{color:#65ff7a}
 
+.loading{position:fixed;inset:0;background:#050709;z-index:100;display:grid;place-items:center}.loader{text-align:center}.loaderLogo{margin:auto;width:74px;height:74px}.spin{width:33px;height:33px;border:3px solid #282f36;border-top-color:#f5bd35;border-radius:50%;animation:sp 1s linear infinite;margin:15px auto}@keyframes sp{to{transform:rotate(360deg)}}
+.error{max-width:320px;padding:22px;border:1px solid #633c3c;border-radius:20px;background:#151012;text-align:center}.error h3{margin:0 0 8px}.error p{color:#a9a1a1;font-size:12px;line-height:1.5}
 
-        /* --- Existing Card Styles (Adapted) --- */
-        .total-balance-card {
-            background: linear-gradient(135deg, #1a212b 0%, #0d1116 100%);
-            display: flex; justify-content: space-between; align-items: flex-start;
-        }
-        .balance-left { display: flex; flex-direction: column; gap: 8px; }
-        .label { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; }
-        .balance-value { font-size: 34px; font-weight: 800; }
-        .sub-value { font-size: 12px; color: var(--text-secondary); }
-        .claim-btn {
-            background: transparent; border: 1px solid var(--text-secondary);
-            color: var(--text-secondary); padding: 6px 12px;
-            border-radius: 8px; font-size: 10px; cursor: pointer;
-        }
-        .claim-btn:hover { background: var(--hover-bg); color: var(--text-primary); border-color: var(--text-primary); }
-        .balance-art { width: 80px; height: 80px; }
+.modal{position:fixed;inset:0;background:#000b;z-index:70;display:flex;align-items:flex-end}.sheet{width:min(760px,100%);max-height:85vh;overflow:auto;background:#11171c;border:1px solid #343d45;border-radius:24px 24px 0 0;padding:19px}.sheet h2{margin:0 0 10px}.close{float:right;width:36px;height:36px;border:1px solid #3a4249;background:#1a2026;color:#fff;border-radius:11px}.toast{position:fixed;z-index:90;left:50%;bottom:84px;transform:translateX(-50%);padding:11px 15px;background:#171d23;border:1px solid #3c454d;border-radius:13px;font-size:12px;max-width:90%;text-align:center}
 
-        .unlocked-card {
-            background: linear-gradient(135deg, #1f2a20 0%, #11170f 100%);
-            display: flex; justify-content: space-between; align-items: center;
-            border: 1px solid var(--accent-green);
-        }
-        .unlocked-text h2 { font-size: 16px; color: var(--accent-green); margin-bottom: 4px; }
-        .unlocked-text p { font-size: 11px; color: var(--text-secondary); max-width: 180px; margin-bottom: 10px; }
-        .claim-bonus-btn {
-            background: var(--accent-gold); color: #050a0e; border: none;
-            padding: 8px 16px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer;
-        }
-        .gift-box { width: 70px; height: 70px; }
-
-        /* --- Overview Grid --- */
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 0 4px; }
-        .section-title { font-size: 17px; font-weight: 700; }
-        .view-all { font-size: 13px; color: var(--accent-gold); text-decoration: none; }
-        .overview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .overview-card { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
-        .overview-card .value { font-size: 18px; font-weight: 700; color: var(--accent-green); }
-        .overview-card .label { font-size: 11px; color: var(--text-secondary); }
-        .card-icon { width: 40px; height: 40px; align-self: flex-end; }
-        .progress-bar { height: 4px; background: var(--bg-color); border-radius: 2px; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--accent-green); width: 90%; }
-
-        /* --- Quick Actions --- */
-        .actions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .action-card {
-            padding: 14px; display: flex; flex-direction: column; gap: 10px;
-            align-items: center; text-align: center; justify-content: space-between; cursor: pointer;
-            height: 110px;
-        }
-        .action-card:hover { background-color: var(--hover-bg); }
-        .action-card .label { font-size: 10px; color: var(--text-primary); font-weight: 600; margin-top: auto; }
-        .action-icon { width: 40px; height: 40px; }
-
-        /* --- Farming CTA --- */
-        .farming-cta {
-            background: linear-gradient(90deg, #1a212b 0%, #11151c 100%);
-            display: flex; justify-content: space-between; align-items: center;
-            border: 1px solid var(--accent-green);
-        }
-        .farming-left { display: flex; align-items: center; gap: 12px; }
-        .target-icon { width: 40px; height: 40px; }
-        .farming-text h3 { font-size: 16px; color: var(--accent-green); font-weight: 700; }
-        .farming-text p { font-size: 10px; color: var(--text-secondary); margin-top: 2px; }
-        .view-tasks-btn {
-            background: transparent; border: 1px solid var(--accent-green);
-            color: var(--accent-green); padding: 8px 16px;
-            border-radius: 10px; font-size: 11px; font-weight: 700; cursor: pointer;
-        }
-        .view-tasks-btn:hover { background: var(--accent-green); color: #050a0e; }
-
-        /* --- Bottom Navigation --- */
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%;
-            background: rgba(5, 10, 14, 0.95); /* Slightly transparent bg-color */
-            backdrop-filter: blur(10px);
-            border-top: 1px solid var(--border-color);
-            display: flex; justify-content: space-around; align-items: center;
-            height: 65px; z-index: 1000;
-        }
-        .nav-item {
-            display: flex; flex-direction: column; align-items: center; gap: 6px;
-            color: var(--text-secondary); text-decoration: none; font-size: 10px;
-            width: 60px; opacity: 0.7;
-        }
-        .nav-item.active { color: var(--accent-gold); opacity: 1; font-weight: 600; }
-        .nav-icon { width: 22px; height: 22px; }
-
-        /* --- Media Queries for very small screens --- */
-        @media (max-width: 360px) {
-            .brand-text { font-size: 16px; }
-            .balance-value { font-size: 28px; }
-            .ai-assistant-card { height: 250px; }
-        }
-    </style>
+@media(max-width:430px){.app{padding:7px 9px 92px}.balance{font-size:37px}.banner{min-height:165px}.banner h2{font-size:22px}.coin3d{width:92px}.hero{padding:17px}.grid{gap:7px}}
+</style>
 </head>
 <body>
 
-    <div class="container">
+<!-- Inline SVG icon library: no emoji UI icons -->
+<svg style="display:none">
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5v9a1.5 1.5 0 0 1-1.5 1.5h-5v-6h-5v6h-5A1.5 1.5 0 0 1 3 19.5z" fill="currentColor"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M5 5h14v14H5z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 9h8M8 13h8M8 17h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+<symbol id="i-bolt" viewBox="0 0 24 24"><path d="m13 2-9 12h7l-1 8 9-12h-7z" fill="currentColor"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17" cy="9" r="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 20c0-3.5 2.6-5 6-5s6 1.5 6 5M15 15c3.5-.3 6 1.2 6 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+<symbol id="i-gift" viewBox="0 0 24 24"><path d="M3 10h18v11H3zM2 7h20v3H2zM12 7v14M12 7c-5 0-6-5-3-5 2 0 3 2 3 5Zm0 0c5 0 6-5 3-5-2 0-3 2-3 5Z" fill="none" stroke="currentColor" stroke-width="1.7"/></symbol>
+<symbol id="i-code" viewBox="0 0 24 24"><path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-rocket" viewBox="0 0 24 24"><path d="M14 5c3-3 6-3 6-3s0 3-3 6l-5 5-4-4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m8 13-3 3M7 17l-2 3M11 16l-2 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+</svg>
 
-        <!-- HEADER -->
-        <header class="header">
-            <div class="header-left">
-                <img src="https://img.icons8.com/fluency/96/panda.png" alt="Panda Protocol" class="panda-logo">
-                <div class="brand-text">PANDA<br>PROTOCOL</div>
-            </div>
-            <div class="header-right">
-                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="profile-pic">
-                <button class="connect-wallet">CONNECT WALLET<br>💎 TON.8dd.../TON</button>
-            </div>
-        </header>
+<div id="loading" class="loading">
+  <div class="loader">
+    <div class="logo3d loaderLogo"><i></i></div>
+    <b>PANDA <span style="color:#f5bd35">EARN</span></b>
+    <div class="spin"></div>
+    <small style="color:#747e88">Loading your Telegram account...</small>
+  </div>
+</div>
 
-        <!-- AI ASSISTANT CARD (NEW - Replaces Allocation) -->
-        <div class="card ai-assistant-card">
-            <div class="ai-header">
-                <span class="ai-title">Panda AI Assistant</span>
-                <div class="ai-status"><span class="status-dot"></span>ONLINE</div>
-            </div>
-            <div class="chat-messages" id="chatMessages">
-                <!-- Initial AI Message -->
-                <div class="message ai">Hello! Main Panda Protocol ka AI assistant hoon. Main aapki kaise madad kar sakta hoon? (Jaise: Balance check karein, Tasks batayein, ya Referral status dekhein).</div>
-            </div>
-            <div class="ai-input-area">
-                <input type="text" class="ai-input" id="aiInput" placeholder="Poochein jaise: 'Total earned kitna hai?'...">
-                <button class="ai-send-btn" id="aiSendBtn">Bheje</button>
-            </div>
-        </div>
+<main class="app">
+<header class="top">
+  <div class="brand"><div class="logo3d"><i></i></div><div><h1>Panda <span>Earn</span></h1><small>PANDA COINS</small></div></div>
+  <div class="topRight"><img id="avatar" class="avatar" alt="profile"><button class="iconBtn" onclick="openMenu()" aria-label="Menu"><svg class="svg"><use href="#i-menu"/></svg></button></div>
+</header>
 
-        <!-- TOTAL BALANCE CARD -->
-        <div class="card total-balance-card">
-            <div class="balance-left">
-                <span class="label">TOTAL BALANCE</span>
-                <div class="balance-value">125,000 <span style="color: var(--accent-gold); font-size: 24px;">$PANDA</span></div>
-                <span class="label" style="font-size: 10px; margin-bottom: 6px;">AIRDROP POINTS</span>
-                <button class="claim-btn">CLAIM NOW<br><span style="font-size
+<!-- HOME -->
+<section id="homeView" class="view active">
+  <section class="hero">
+    <div class="heroTop">
+      <div><div class="eyebrow">TOTAL PANDA COINS</div><div id="balance" class="balance">0</div><div id="userName" class="userName">Loading...</div></div>
+      <div class="coin3d"><div class="coin c1"></div><div class="coin c2"></div><div class="coin c3"></div></div>
+    </div>
+    <div class="actions"><button class="btn gold" onclick="convertUSD()">Convert USD</button><button class="btn dark" onclick="withdraw()">Withdrawal</button></div>
+  </section>
+
+  <section id="welcomeBanner" class="banner">
+    <div class="copy"><div class="label">EARLY PANDA ADOPTER</div><h2>WELCOME BONUS<br>UNLOCKED</h2><p>Claim your one-time 1,000 Panda Coins reward.</p><button id="welcomeBtn" class="btn gold" onclick="claimWelcome()">Claim 1,000 Coins</button></div>
+    <div class="bannerArt"><div class="coinStack"><i></i><i></i><i></i></div><div class="pandaSuit"><div class="pandaHead"><span class="eye l"></span><span class="eye r"></span><span class="nose"></span></div><div class="suitBadge">P</div></div></div>
+  </section>
+
+  <section id="airdropBanner" class="banner hidden">
+    <div class="copy"><div class="label">PAN​DA COINS</div><h2>AIRDROP SOON<br>LAUNCH</h2><p>Keep earning Panda Coins and complete available tasks.</p><button class="btn gold" onclick="showView('tasks')">Earn Panda Coins Now</button></div>
+    <div class="bannerArt"><div class="coinStack"><i></i><i></i><i></i></div><div class="pandaSuit"><div class="pandaHead"><span class="eye l"></span><span class="eye r"></span><span class="nose"></span></div><div class="suitBadge">P</div></div></div>
+  </section>
+
+  <div class="sectionHead"><h2>Overview</h2><span class="muted">Live account</span></div>
+  <section class="grid">
+    <div class="card"><label>Total Earned</label><strong id="totalEarned" class="greenText">0</strong></div>
+    <div class="card"><label>Referrals</label><strong id="referrals" class="blueText">0</strong></div>
+    <div class="card"><label>Tasks Completed</label><strong id="tasksCompleted" class="purpleText">0</strong></div>
+    <div class="card"><label>Available Balance</label><strong id="walletBalance" class="goldText">0</strong></div>
+  </section>
+
+  <section class="level">
+    <div class="levelRow"><div><div class="levelSub">ACCOUNT LEVEL</div><div id="levelName" class="levelName">Bronze</div></div><div style="text-align:right"><div class="levelSub">MAX COINS / HOUR</div><b id="maxRate">2,400</b></div></div>
+    <div class="progress"><i id="levelProgress"></i></div>
+  </section>
+
+  <section class="mine">
+    <div class="mineTop"><div><h3>Start Earning</h3><p>Use Panda Coins to increase your earning power.</p></div><div style="text-align:right"><div class="levelSub">COINS / HOUR</div><div id="rate" class="rate">100</div></div></div>
+    <button class="btn green full" onclick="showView('earn')">Open Earning Center</button>
+    <div class="muted" style="text-align:center;margin-top:9px">Earning is calculated server-side after the mining system is enabled.</div>
+  </section>
+
+  <div class="sectionHead"><h2>Start Earning</h2><span class="muted">Explore</span></div>
+  <section class="grid">
+    <div class="card" onclick="showView('referrals')"><svg class="svg" style="width:30px;height:30px;color:#65b7ff"><use href="#i-users"/></svg><strong style="font-size:15px;margin-top:12px">Refer Friends</strong></div>
+    <div class="card" onclick="showView('tasks')"><svg class="svg" style="width:30px;height:30px;color:#bf84ff"><use href="#i-list"/></svg><strong style="font-size:15px;margin-top:12px">Complete Task</strong></div>
+    <div class="card" onclick="dailyBonus()"><svg class="svg" style="width:30px;height:30px;color:#ffd35c"><use href="#i-gift"/></svg><strong style="font-size:15px;margin-top:12px">Daily Bonus</strong></div>
+    <div class="card" onclick="cipher()"><svg class="svg" style="width:30px;height:30px;color:#62e5ff"><use href="#i-code"/></svg><strong style="font-size:15px;margin-top:12px">Daily Cipher</strong></div>
+    <div class="card" onclick="launchpool()"><svg class="svg" style="width:30px;height:30px;color:#62ff77"><use href="#i-rocket"/></svg><strong style="font-size:15px;margin-top:12px">Launchpool</strong></div>
+    <div class="card" onclick="levels()"><strong style="font-size:15px;margin-top:0">All Levels</strong><div class="muted" style="margin-top:10px">Bronze to God</div></div>
+  </section>
+</section>
+
+<!-- TASKS -->
+<section id="tasksView" class="view">
+  <div class="sectionHead"><h2>Tasks</h2><span class="muted">Available now</span></div>
+  <div id="taskList" class="list"><div class="listItem"><p>Loading tasks...</p></div></div>
+</section>
+
+<!-- EARN -->
+<section id="earnView" class="view">
+  <div class="sectionHead"><h2>Earning Center</h2><span class="muted">Your level</span></div>
+  <section class="mine">
+    <div class="levelSub">CURRENT RATE</div><div id="earnRateBig" class="balance" style="font-size:38px">100 / hour</div>
+    <p>Invest 1 Panda Coin to buy 1 second of earning power. The actual purchase and 20-minute activity accounting must be processed by the secure server function before coins are credited.</p>
+    <button class="btn green full onclickSafe" onclick="showMiningInfo()">View Earning Rules</button>
+  </section>
+  <section class="level" style="margin-top:12px"><div class="levelSub">CURRENT LEVEL</div><div id="earnLevel" class="levelName">Bronze</div><div class="muted" style="margin-top:8px">Bronze limit: 2,400 coins/hour</div></section>
+</section>
+
+<!-- REFERRALS -->
+<section id="referralsView" class="view">
+  <div class="sectionHead"><h2>Referrals</h2><span class="muted">1,500 coins / qualified referral</span></div>
+  <div class="refBox"><div class="levelSub">YOUR REFERRAL LINK</div><div id="refLink" class="refLink">Loading...</div><div class="actions"><button class="btn gold" onclick="copyReferral()">Copy Link</button><button class="btn dark" onclick="shareReferral()">Share</button></div></div>
+  <section class="card" style="margin-top:10px"><label>Total Referrals</label><strong id="refBig" class="blueText">0</strong></section>
+</section>
+</main>
+
+<nav class="bottom">
+<button id="navHome" class="nav active" onclick="showView('home')"><svg class="svg"><use href="#i-home"/></svg>Home</button>
+<button id="navTasks" class="nav" onclick="showView('tasks')"><svg class="svg"><use href="#i-list"/></svg>Tasks</button>
+<button id="navEarn" class="nav" onclick="showView('earn')"><svg class="svg"><use href="#i-bolt"/></svg>Earn</button>
+<button id="navRef" class="nav" onclick="showView('referrals')"><svg class="svg"><use href="#i-users"/></svg>Referrals</button>
+</nav>
+
+<div id="modal" class="modal hidden" onclick="if(event.target===this)closeModal()"><div class="sheet"><button class="close" onclick="closeModal()">×</button><h2 id="modalTitle">Panda Earn</h2><div id="modalBody"></div></div></div>
+
+<script>
+const SUPABASE_URL="https://myzsqddvwvoaiainktdh.supabase.co";
+const SUPABASE_KEY="sb_publishable_JN2sZWzesbmhI2ivloEZlA_jP6s324f";
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const tg=window.Telegram?.WebApp;
+
+let telegramUser=null,pandaUser=null,welcomeTask=null;
+
+function initTelegram(){
+  if(!tg || !tg.initDataUnsafe || !tg.initDataUnsafe.user){
+    throw new Error("Telegram user was not detected. Open Panda Earn from the Telegram Mini App.");
+  }
+  tg.ready();tg.expand();
+  telegramUser=tg.initDataUnsafe.user;
+  const username=telegramUser.username?("@"+telegramUser.username):(telegramUser.first_name||"Telegram User");
+  document.getElementById("userName").textContent=username;
+  document.getElementById("avatar").src=telegramUser.photo_url||avatarFallback(telegramUser.first_name||"P");
+}
+function avatarFallback(name){
+  const letter=(name||"P").trim().charAt(0).toUpperCase();
+  return "data:image/svg+xml;charset=UTF-8,"+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="#151b21"/><circle cx="50" cy="50" r="42" fill="#f5bd35"/><text x="50" y="62" text-anchor="middle" font-size="42" font-family="Arial" font-weight="700" fill="#151515">${letter}</text></svg>`);
+}
+function fmt(n){return Number(n||0).toLocaleString("en-IN")}
+function escapeHtml(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+
+async function loadUser(){
+  const id=Number(telegramUser.id);
+  let r=await sb.from("panda_users").select("*").eq("telegram_id",id).maybeSingle();
+  if(r.error)throw r.error;
+  if(!r.data){
+    const ins=await sb.from("panda_users").insert({
+      telegram_id:id,username:telegramUser.username||null,first_name:telegramUser.first_name||"Telegram User",
+      balance:0,referrals:0,tasks_completed:0,total_earned:0
+    }).select("*").single();
+    if(ins.error)throw ins.error;
+    pandaUser=ins.data;
+  }else{
+    pandaUser=r.data;
+    const needs=(pandaUser.username||null)!==(telegramUser.username||null)||(pandaUser.first_name||"")!==(telegramUser.first_name||"");
+    if(needs){
+      const up=await sb.from("panda_users").update({username:telegramUser.username||null,first_name:telegramUser.first_name||"Telegram User"}).eq("id",pandaUser.id).select("*").single();
+      if(up.error)throw up.error;
+      pandaUser=up.data;
+    }
+  }
+  render();
+}
+function levelFor(balance){
+  const b=Number(balance||0);
+  if(b>=1000000)return["God",500000];if(b>=500000)return["Apex",250000];if(b>=250000)return["Mythic",100000];
+  if(b>=100000)return["Master",50000];if(b>=50000)return["Diamond",25000];if(b>=25000)return["Platinum",13000];
+  if(b>=10000)return["Gold",7000];if(b>=5000)return["Silver",4000];return["Bronze",2400];
+}
+function render(){
+  const b=Number(pandaUser.balance||0),l=levelFor(b);
+  ["balance","walletBalance"].forEach(id=>document.getElementById(id).textContent=fmt(b));
+  document.getElementById("totalEarned").textContent=fmt(pandaUser.total_earned);
+  document.getElementById("referrals").textContent=fmt(pandaUser.referrals);
+  document.getElementById("refBig").textContent=fmt(pandaUser.referrals);
+  document.getElementById("tasksCompleted").textContent=fmt(pandaUser.tasks_completed);
+  document.getElementById("levelName").textContent=l[0];document.getElementById("earnLevel").textContent=l[0];
+  document.getElementById("maxRate").textContent=fmt(l[1]);document.getElementById("levelProgress").style.width=Math.min(100,Math.max(5,b/l[1]*100))+"%";
+  document.getElementById("earnRateBig").textContent=(100).toLocaleString("en-IN")+" / hour";
+  const ref="https://t.me/PandaEarnBot?start=ref_"+telegramUser.id;
+  document.getElementById("refLink").textContent=ref;
+}
+
+async function getWelcomeTask(){
+  const r=await sb.from("panda_tasks").select("id,title,reward,is_active").eq("is_active",true).ilike("title","%welcome%").limit(1).maybeSingle();
+  if(r.error)throw r.error;
+  welcomeTask=r.data||null;return welcomeTask;
+}
+async function checkWelcome(){
+  const t=await getWelcomeTask();
+  if(!t){
+    document.getElementById("welcomeBanner").classList.remove("hidden");
+    document.getElementById("welcomeBtn").textContent="Welcome task not configured";
+    document.getElementById("welcomeBtn").disabled=true;
+    return;
+  }
+  const r=await sb.from("panda_task_completions").select("id").eq("user_id",pandaUser.id).eq("task_id",t.id).maybeSingle();
+  if(r.error)throw r.error;
+  const done=!!r.data;
+  document.getElementById("welcomeBanner").classList.toggle("hidden",done);
+  document.getElementById("airdropBanner").classList.toggle("hidden",!done);
+  document.getElementById("welcomeBtn").disabled=false;
+  document.getElementById("welcomeBtn").textContent="Claim "+fmt(t.reward)+" Coins";
+}
+async function claimWelcome(){
+  const btn=document.getElementById("welcomeBtn");btn.disabled=true;btn.textContent="Claiming...";
+  try{
+    const t=await getWelcomeTask();
+    if(!t)throw new Error("Create an active panda_tasks row titled Welcome Bonus with reward 1000 first.");
+    const exists=await sb.from("panda_task_completions").select("id").eq("user_id",pandaUser.id).eq("task_id",t.id).maybeSingle();
+    if(exists.error)throw exists.error;
+    if(exists.data){await checkWelcome();toast("Welcome Bonus already claimed.");return;}
+    const r=await sb.from("panda_task_completions").insert({user_id:pandaUser.id,task_id:t.id,reward:Number(t.reward)}).select("*").single();
+    if(r.error)throw r.error;
+    await loadUser();await checkWelcome();toast("Welcome Bonus credited to your real balance.");
+  }catch(e){console.error(e);toast(e.message||String(e));btn.disabled=false}
+}
+async function loadTasks(){
+  const box=document.getElementById("taskList");
+  const r=await sb.from("panda_tasks").select("id,title,reward,is_active").eq("is_active",true).order("title");
+  if(r.error){box.innerHTML=`<div class="listItem"><p>${escapeHtml(r.error.message)}</p></div>`;return}
+  if(!r.data.length){box.innerHTML='<div class="listItem"><h3>No active tasks</h3><p>Admin has not published a task yet.</p></div>';return}
+  box.innerHTML="";
+  for(const t of r.data){
+    const done=await sb.from("panda_task_completions").select("id").eq("user_id",pandaUser.id).eq("task_id",t.id).maybeSingle();
+    const item=document.createElement("div");item.className="listItem";
+    item.innerHTML=`<div class="row"><div><h3>${escapeHtml(t.title)}</h3><p>Complete this Panda Earn task.</p></div><div class="reward">+${fmt(t.reward)}</div></div>
+      <button class="btn ${done.data?"dark":"gold"}" style="width:100%" ${done.data?"disabled":""} onclick="claimTask('${t.id}')">${done.data?"Completed":"Complete Task"}</button>`;
+    box.appendChild(item);
+  }
+}
+async function claimTask(taskId){
+  const t=await sb.from("panda_tasks").select("id,title,reward,is_active").eq("id",taskId).maybeSingle();
+  if(t.error)throwShow(t.error);if(!t.data)return;
+  if(t.data.title.toLowerCase().includes("welcome"))return claimWelcome();
+  toast("Task verification must be performed by the Telegram bot before reward crediting.");
+}
+function throwShow(e){console.error(e);toast(e.message||String(e))}
+
+function showView(name){
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  const map={home:"homeView",tasks:"tasksView",earn:"earnView",referrals:"referralsView"};
+  document.getElementById(map[name]).classList.add("active");
+  document.querySelectorAll(".nav").forEach(v=>v.classList.remove("active"));
+  const nav={home:"navHome",tasks:"navTasks",earn:"navEarn",referrals:"navRef"};
+  document.getElementById(nav[name]).classList.add("active");
+  if(name==="tasks")loadTasks();
+}
+function convertUSD(){openSheet("Convert USD","<p>USD conversion is not enabled yet. The conversion rate and withdrawal ledger should be added server-side before real money operations.</p>")}
+function withdraw(){openSheet("Withdrawal","<p>Withdrawal is locked until Panda Coins are converted to USD.</p>")}
+function dailyBonus(){openSheet("Daily Bonus","<p>The 30-day daily bonus needs its own claim table and secure server function. I have not added fake balance crediting here.</p>")}
+function cipher(){openSheet("Daily Cipher","<p>Daily Cipher needs an admin code table and secure server verification. No balance is changed by this screen.</p><input id="cipherInput" class="codeInput" placeholder="Enter today's code"><button class="btn gold full" onclick="toast('Cipher verification will be connected after the cipher table is added.')">Verify Code</button>")}
+function launchpool(){openSheet("Launchpool","<p>Panda Coins airdrop launch is coming soon.</p>")}
+function levels(){openSheet("Account Levels","<p>Bronze — 2,400/hour</p><p>Silver — 4,000/hour</p><p>Gold — 7,000/hour</p><p>Platinum — 13,000/hour</p><p>Diamond — 25,000/hour</p><p>Master — 50,000/hour</p><p>Mythic — 100,000/hour</p><p>Apex — 250,000/hour</p><p>God — 500,000/hour</p>")}
+function showMiningInfo(){openSheet("Earning Rules","<p>Bronze starts at 100 coins/hour. Your planned system can increase the hourly rate by investing coins, with a 20-minute inactivity stop.</p><p>Real earning credit must be handled by a secure server function so users cannot edit their balance from the browser.</p>")}
+function openMenu(){openSheet("Account","<p><b>"+escapeHtml(telegramUser.first_name||"Telegram User")+"</b></p><p>"+escapeHtml(telegramUser.username?"@"+telegramUser.username:"Telegram ID: "+telegramUser.id)+"</p><p style='color:#8d979f'>Account ID: "+escapeHtml(pandaUser.id)+"</p>")}
+function openSheet(title,body){document.getElementById("modalTitle").textContent=title;document.getElementById("modalBody").innerHTML=body;document.getElementById("modal").classList.remove("hidden")}
+function closeModal(){document.getElementById("modal").classList.add("hidden")}
+function toast(msg){const x=document.createElement("div");x.className="toast";x.textContent=msg;document.body.appendChild(x);setTimeout(()=>x.remove(),3200)}
+function copyReferral(){navigator.clipboard?.writeText(document.getElementById("refLink").textContent).then(()=>toast("Referral link copied")).catch(()=>toast(document.getElementById("refLink").textContent))}
+function shareReferral(){const u=document.getElementById("refLink").textContent;const text="Join Panda Earn and earn Panda Coins.";if(tg?.openTelegramLink)tg.openTelegramLink("https://t.me/share/url?url="+encodeURIComponent(u)+"&text="+encodeURIComponent(text));else toast(u)}
+
+async function boot(){
+  try{
+    initTelegram();
+    await loadUser();
+    await checkWelcome();
+    document.getElementById("loading").classList.add("hidden");
+  }catch(e){
+    console.error(e);
+    document.getElementById("loading").innerHTML=`<div class="error"><div class="logo3d" style="margin:0 auto 12px"><i></i></div><h3>Unable to load account</h3><p>${escapeHtml(e.message||String(e))}</p><button class="btn gold" onclick="location.reload()">Retry</button></div>`;
+  }
+}
+boot();
+</script>
+</body>
+</html>
