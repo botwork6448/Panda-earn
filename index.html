@@ -1,352 +1,501 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Panda Earn</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+:root{
+  --bg:#05070a;--panel:#0e1218;--panel2:#111720;--line:rgba(255,255,255,.10);
+  --gold:#f7c84b;--gold2:#ffdf7b;--green:#61ef7b;--muted:#8d98a8;--white:#f7f9fc;
+}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-:root{--bg:#050709;--panel:#10151a;--panel2:#0b1015;--line:#293139;--gold:#f5bd35;--gold2:#ffe58a;--green:#55ef70;--muted:#8b959f}
-html,body{margin:0;background:var(--bg);color:#fff;font-family:Inter,system-ui,Arial,sans-serif}
-body{min-height:100vh}
+html,body{margin:0;background:var(--bg);color:var(--white);font-family:Inter,Arial,sans-serif;min-height:100%;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:
+ radial-gradient(circle at 80% 10%,rgba(247,200,75,.08),transparent 28%),
+ radial-gradient(circle at 10% 70%,rgba(66,255,119,.05),transparent 30%)}
 button{font:inherit}
+.app{width:100%;max-width:720px;margin:auto;padding:14px 14px 92px}
 .hidden{display:none!important}
-.app{width:100%;max-width:760px;margin:auto;padding:10px 11px 94px}
-.top{height:62px;display:flex;align-items:center;justify-content:space-between}
-.brand{display:flex;align-items:center;gap:9px}
-.logo3d{width:47px;height:47px;border-radius:15px;background:linear-gradient(145deg,#f7f7f7,#737980 38%,#171b20 40%,#050607 76%);position:relative;box-shadow:inset -5px -6px 10px #000,0 0 18px #f4bd3528}
-.logo3d:before,.logo3d:after{content:"";position:absolute;background:#050607;border-radius:50%;width:12px;height:16px;top:11px}
-.logo3d:before{left:8px;transform:rotate(25deg)}.logo3d:after{right:8px;transform:rotate(-25deg)}
-.logo3d i{position:absolute;left:16px;right:16px;bottom:8px;height:10px;border-radius:50%;background:#171a1d}
-.brand h1{margin:0;font-size:21px;font-weight:900;letter-spacing:-.6px}.brand h1 span{color:var(--gold)}
-.brand small{display:block;color:#707a84;font-size:8px;letter-spacing:1.6px;margin-top:2px}
-.topRight{display:flex;align-items:center;gap:8px}
-.avatar{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);background:#171c21}
-.iconBtn{width:43px;height:43px;border-radius:14px;border:1px solid #343c44;background:#11161b;color:#e7eaed;display:grid;place-items:center;cursor:pointer}
-.svg{width:22px;height:22px;display:block}
 
-.view{display:none}.view.active{display:block}
-.hero{margin-top:7px;padding:19px;border:1px solid #765a1e;border-radius:25px;background:
-radial-gradient(circle at 85% 35%,#f6bd3516,transparent 28%),linear-gradient(145deg,#141a20,#080b0f 62%,#151109);box-shadow:0 18px 45px #0009;overflow:hidden}
-.heroTop{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.eyebrow{font-size:11px;color:#9aa4ad;letter-spacing:1.4px}.balance{font-size:42px;font-weight:950;color:#ffd45c;text-shadow:0 0 18px #f5bd3538;margin:5px 0}
-.userName{font-size:14px;color:#d1d7dc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px}
-.coin3d{width:112px;height:92px;position:relative;flex:none}
-.coin{position:absolute;width:47px;height:47px;border-radius:50%;background:radial-gradient(circle at 30% 28%,#fff1a5,#e4a820 40%,#825209 74%,#2c1b05);border:3px solid #ffd765;box-shadow:inset -5px -6px 7px #3b2307,0 9px 15px #0008}
-.coin:after{content:"P";position:absolute;inset:0;display:grid;place-items:center;color:#6d4305;font-size:25px;font-weight:950}
-.c1{left:3px;bottom:5px}.c2{left:38px;top:5px;transform:rotate(12deg)}.c3{right:1px;bottom:1px;transform:rotate(-12deg)}
-.actions{display:flex;gap:8px;margin-top:14px}.btn{border:0;border-radius:12px;padding:11px 14px;font-weight:850;cursor:pointer}
-.gold{background:linear-gradient(135deg,#ffe994,#f5bd35,#b97b0c);color:#15120a}.dark{background:#11171c;color:#e9edf0;border:1px solid #394149}.green{background:linear-gradient(135deg,#a4ff9e,#3de468);color:#07120a}
-.btn:disabled{opacity:.55}
+/* loading */
+.loader{position:fixed;z-index:50;inset:0;background:#05070a;display:flex;align-items:center;justify-content:center}
+.loaderbox{text-align:center;width:280px}
+.logo3d{width:92px;height:92px;margin:auto;border-radius:28px;background:
+ linear-gradient(145deg,#eef2f5 0 28%,#151b22 29% 100%);
+ box-shadow:0 0 35px rgba(247,200,75,.18),inset -12px -12px 25px #0008;
+ position:relative}
+.logo3d:before,.logo3d:after{content:"";position:absolute;top:23px;width:20px;height:27px;border-radius:50%;background:#05070a}
+.logo3d:before{left:18px}.logo3d:after{right:18px}
+.logoeye{position:absolute;left:36px;top:52px;width:20px;height:10px;border-radius:50%;background:#05070a}
+.brandmark{margin-top:10px;font-size:20px;font-weight:900;font-style:italic;letter-spacing:.5px}
+.brandmark span{color:var(--gold)}
+.spinner{width:58px;height:58px;border:5px solid #26303d;border-top-color:var(--gold);border-right-color:var(--gold);border-radius:50%;margin:28px auto 20px;animation:spin 1s linear infinite}
+.loadingtxt{color:#8e98a6;font-size:14px}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-.banner{margin-top:13px;min-height:168px;padding:20px;border-radius:23px;border:1px solid #70551d;position:relative;overflow:hidden;background:
-radial-gradient(circle at 14% 70%,#49ed6a18,transparent 26%),linear-gradient(115deg,#14240f,#0b120d 55%,#23180a)}
-.banner .copy{position:relative;z-index:2;max-width:68%}.banner .label{font-size:12px;letter-spacing:1px;color:#f4d26d}.banner h2{margin:4px 0;font-size:25px;line-height:1.05}.banner p{font-size:12px;line-height:1.45;color:#aab2b8;margin:8px 0 14px}
-.bannerArt{position:absolute;right:-5px;bottom:-5px;width:190px;height:155px}
-.pandaSuit{position:absolute;right:17px;bottom:8px;width:91px;height:112px;border-radius:44px 44px 25px 25px;background:linear-gradient(145deg,#141a20,#050608);box-shadow:inset -8px -9px 14px #000,0 10px 20px #0008}
-.pandaHead{position:absolute;right:22px;bottom:91px;width:78px;height:69px;border-radius:50%;background:linear-gradient(145deg,#f2f2f2,#8d9499 54%,#24282b);box-shadow:inset -7px -7px 10px #0005}
-.eye{position:absolute;width:15px;height:24px;background:#07090a;border-radius:60%;top:22px}.eye.l{left:17px;transform:rotate(28deg)}.eye.r{right:17px;transform:rotate(-28deg)}
-.nose{position:absolute;width:12px;height:8px;border-radius:50%;background:#080a0b;left:33px;top:39px}
-.suitBadge{position:absolute;left:30px;top:48px;width:30px;height:30px;border-radius:50%;background:radial-gradient(circle,#ffe178,#b97b0a);display:grid;place-items:center;font-weight:900;color:#4b2d04}
-.coinStack{position:absolute;right:104px;bottom:8px;width:62px;height:58px}.coinStack i{position:absolute;width:54px;height:16px;border-radius:50%;background:linear-gradient(#ffe28a,#bd8010);border:2px solid #f5c64d;box-shadow:0 5px 0 #704607}.coinStack i:nth-child(1){bottom:0}.coinStack i:nth-child(2){bottom:13px}.coinStack i:nth-child(3){bottom:26px}
+/* header */
+.header{display:flex;align-items:center;gap:11px;padding:6px 2px 14px}
+.brandIcon{width:45px;height:45px;border-radius:14px;background:linear-gradient(145deg,#dfe5e8,#10151c);box-shadow:0 0 20px #f7c84b22;position:relative;flex:none}
+.brandIcon:before,.brandIcon:after{content:"";position:absolute;top:10px;width:11px;height:15px;background:#080a0d;border-radius:50%}
+.brandIcon:before{left:9px}.brandIcon:after{right:9px}
+.brandName{font-weight:900;font-size:21px;letter-spacing:-.5px}.brandName span{color:var(--gold)}
+.headerSpace{flex:1}
+.avatar{width:43px;height:43px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);background:#171d25}
+.menuBtn{width:43px;height:43px;border:1px solid var(--line);border-radius:13px;background:#10151c;color:white;display:grid;place-items:center}
+.menuIcon{width:20px;height:14px;border-top:2px solid #fff;border-bottom:2px solid #fff;position:relative}
+.menuIcon:after{content:"";position:absolute;left:0;right:0;top:5px;border-top:2px solid #fff}
 
-.sectionHead{display:flex;justify-content:space-between;align-items:center;margin:19px 7px 9px}.sectionHead h2{font-size:20px;margin:0}.muted{color:var(--muted);font-size:11px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.card{padding:14px;min-height:105px;border-radius:18px;background:linear-gradient(145deg,#13191f,#0a0e12);border:1px solid #2a3239}
-.card label{font-size:12px;color:#9ca5ad}.card strong{display:block;margin-top:8px;font-size:23px}.greenText{color:var(--green)}.blueText{color:#60b5ff}.goldText{color:#ffbd38}.purpleText{color:#bd84ff}
+/* user */
+.userline{color:var(--muted);font-size:12px;margin:0 2px 10px}.userline b{color:#e8edf4}
 
-.level{margin-top:10px;padding:16px;border-radius:20px;border:1px solid #6b531f;background:linear-gradient(135deg,#17140c,#0d1115)}.levelRow{display:flex;justify-content:space-between;gap:12px}.levelName{font-size:21px;font-weight:950;color:#ffd45c}.levelSub{font-size:10px;color:#89939d;letter-spacing:.8px}.progress{height:8px;border-radius:99px;background:#252c32;margin-top:12px;overflow:hidden}.progress i{display:block;height:100%;width:5%;background:linear-gradient(90deg,#f5bd35,#55ef70)}
+/* hero banner */
+.banner{position:relative;overflow:hidden;border:1px solid #b58a2c88;border-radius:24px;min-height:205px;padding:24px 20px;margin-bottom:13px;
+background:
+ radial-gradient(circle at 82% 40%,#f5c23b1c,transparent 30%),
+ linear-gradient(135deg,#10151b,#07090d 65%,#11100b)}
+.banner:after{content:"";position:absolute;inset:0;background-image:linear-gradient(115deg,transparent 35%,#ffffff05 35.5%,transparent 36%);background-size:42px 42px;pointer-events:none}
+.bannerText{position:relative;z-index:2;width:62%}
+.eyebrow{font-size:11px;letter-spacing:2px;color:var(--gold);font-weight:800}
+.banner h1{font-size:25px;line-height:1.05;margin:8px 0}
+.banner p{color:#aeb7c3;font-size:12px;line-height:1.45;margin:0}
+.pandaHero{position:absolute;right:-2px;bottom:-8px;width:49%;height:100%;display:flex;align-items:flex-end;justify-content:center}
+.pandaBody{width:125px;height:145px;border-radius:50px 50px 30px 30px;background:linear-gradient(145deg,#26303a,#05070a 70%);position:relative;box-shadow:inset 15px 10px 20px #ffffff10,0 15px 30px #000}
+.pandaHead{position:absolute;width:105px;height:94px;left:10px;top:-62px;border-radius:50%;background:linear-gradient(145deg,#f4f6f7,#737b83 58%,#11161c);box-shadow:inset -9px -9px 15px #0008}
+.pandaHead:before,.pandaHead:after{content:"";position:absolute;top:28px;width:25px;height:34px;background:#101419;border-radius:50%;transform:rotate(35deg)}
+.pandaHead:before{left:13px}.pandaHead:after{right:13px;transform:rotate(-35deg)}
+.pandaFace{position:absolute;left:39px;top:42px;width:27px;height:17px;border-radius:50%;background:#05070a}
+.coin{position:absolute;width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff2a1,#f2bb32 48%,#9a6510);border:2px solid #ffdf73;box-shadow:0 4px 15px #f7c84b55}
+.coin:after{content:"P";position:absolute;inset:0;display:grid;place-items:center;color:#704500;font-weight:900;font-size:17px}
+.c1{right:27%;top:28px}.c2{right:7%;bottom:35px;width:28px;height:28px}.c3{right:37%;bottom:18px;width:23px;height:23px}.c4{right:4%;top:55px;width:19px;height:19px}
 
-.mine{margin-top:12px;padding:18px;border-radius:23px;border:1px solid #3c9f4b;background:radial-gradient(circle at 10% 60%,#4ef26b17,transparent 30%),#0b1510}.mineTop{display:flex;justify-content:space-between;gap:10px}.mine h3{margin:0;color:#65ff7a;font-size:20px}.mine p{font-size:12px;color:#8d9891;margin:5px 0}.rate{font-size:24px;font-weight:950}.full{width:100%;margin-top:13px}
+/* balance */
+.balanceCard{border:1px solid var(--line);border-radius:22px;background:linear-gradient(145deg,#10161d,#0a0d12);padding:20px;margin-bottom:13px}
+.balanceTop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.label{font-size:11px;color:#8f99a7;letter-spacing:1.4px}.balance{font-size:37px;font-weight:900;margin-top:5px;letter-spacing:-1.5px}.coinword{color:var(--gold)}
+.actionrow{display:flex;gap:8px;margin-top:16px}
+.btn{border:1px solid #8e6a21;border-radius:12px;background:linear-gradient(135deg,#f7d76d,#c98c1c);color:#111;font-weight:900;padding:12px 13px;flex:1}
+.btn.secondary{background:#141a21;color:#f0f3f7;border-color:var(--line)}
+.btn:disabled{opacity:.5}
 
-.list{display:grid;gap:9px}.listItem{padding:15px;border:1px solid #2d353d;border-radius:17px;background:linear-gradient(145deg,#13191f,#0b0f13)}.listItem h3{margin:0 0 5px;font-size:15px}.listItem p{margin:0 0 11px;color:#8f99a3;font-size:12px}.row{display:flex;justify-content:space-between;align-items:center;gap:8px}.reward{color:#ffd35c;font-weight:900}
+/* cards */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.stat{border:1px solid var(--line);border-radius:18px;padding:15px;background:#0d1218;min-height:100px}
+.statTitle{color:#909aa8;font-size:12px}.statVal{font-size:25px;font-weight:900;margin-top:9px}.gold{color:var(--gold)}.green{color:var(--green)}
 
-.refBox{padding:18px;border-radius:20px;background:linear-gradient(145deg,#151a20,#0b0f13);border:1px solid #35404a}.refLink{margin-top:12px;padding:12px;border-radius:12px;background:#080b0e;border:1px solid #293139;word-break:break-all;color:#f2c64d;font-size:12px}
-.codeInput{width:100%;padding:13px;border-radius:12px;border:1px solid #343d45;background:#080b0e;color:white;outline:none;margin:10px 0}.codeInput:focus{border-color:#f5bd35}
+.sectionTitle{font-size:18px;font-weight:900;margin:18px 2px 10px}
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.actionCard{min-height:112px;border:1px solid var(--line);border-radius:17px;background:linear-gradient(145deg,#121820,#0b0f14);padding:13px;text-align:left;color:white}
+.svgIcon{width:38px;height:38px;margin-bottom:8px}.actionCard b{font-size:12px;line-height:1.25;display:block}
+.greenPanel{border:1px solid #5dff76;border-radius:20px;background:linear-gradient(100deg,#0d1712,#0a100d);box-shadow:0 0 25px #49ff6418;padding:16px;margin-top:13px;display:flex;align-items:center;gap:12px}
+.greenPanel .big{font-size:18px;font-weight:900;color:#5cff74}.greenPanel p{margin:3px 0 0;color:#9ca8a8;font-size:11px}
+.greenPanel button{margin-left:auto;flex:none}
 
-.bottom{position:fixed;z-index:50;bottom:9px;left:50%;transform:translateX(-50%);width:min(738px,calc(100% - 20px));height:64px;border-radius:22px;background:#11161bf2;backdrop-filter:blur(16px);border:1px solid #303941;display:grid;grid-template-columns:repeat(4,1fr)}
-.nav{border:0;background:none;color:#8c969f;font-size:10px;cursor:pointer}.nav .svg{margin:0 auto 3px}.nav.active{color:#65ff7a}
-
-.loading{position:fixed;inset:0;background:#050709;z-index:100;display:grid;place-items:center}.loader{text-align:center}.loaderLogo{margin:auto;width:74px;height:74px}.spin{width:33px;height:33px;border:3px solid #282f36;border-top-color:#f5bd35;border-radius:50%;animation:sp 1s linear infinite;margin:15px auto}@keyframes sp{to{transform:rotate(360deg)}}
-.error{max-width:320px;padding:22px;border:1px solid #633c3c;border-radius:20px;background:#151012;text-align:center}.error h3{margin:0 0 8px}.error p{color:#a9a1a1;font-size:12px;line-height:1.5}
-
-.modal{position:fixed;inset:0;background:#000b;z-index:70;display:flex;align-items:flex-end}.sheet{width:min(760px,100%);max-height:85vh;overflow:auto;background:#11171c;border:1px solid #343d45;border-radius:24px 24px 0 0;padding:19px}.sheet h2{margin:0 0 10px}.close{float:right;width:36px;height:36px;border:1px solid #3a4249;background:#1a2026;color:#fff;border-radius:11px}.toast{position:fixed;z-index:90;left:50%;bottom:84px;transform:translateX(-50%);padding:11px 15px;background:#171d23;border:1px solid #3c454d;border-radius:13px;font-size:12px;max-width:90%;text-align:center}
-
-@media(max-width:430px){.app{padding:7px 9px 92px}.balance{font-size:37px}.banner{min-height:165px}.banner h2{font-size:22px}.coin3d{width:92px}.hero{padding:17px}.grid{gap:7px}}
+/* pages */
+.page{display:none}.page.active{display:block}
+.back{border:0;background:none;color:#aeb7c3;padding:8px 0;font-size:13px}
+.task{border:1px solid var(--line);background:#0d1218;border-radius:18px;padding:15px;margin-bottom:9px;display:flex;gap:12px;align-items:center}
+.taskMain{flex:1}.taskTitle{font-weight:800}.taskReward{font-size:12px;color:var(--gold);margin-top:5px}.task button{width:105px}
+.empty{border:1px dashed #39414c;border-radius:18px;padding:25px;text-align:center;color:#8993a1;font-size:13px}
+.level{border:1px solid #80601d;background:linear-gradient(135deg,#16130c,#0e1115);border-radius:20px;padding:18px}
+.levelName{font-size:26px;font-weight:900;color:var(--gold)}
+.levelbar{height:8px;background:#252b33;border-radius:99px;overflow:hidden;margin-top:12px}.levelbar i{display:block;width:14%;height:100%;background:linear-gradient(90deg,#e0a928,#ffe27c)}
+.modal{position:fixed;inset:0;background:#000b;z-index:30;display:none;align-items:flex-end}.modal.open{display:flex}
+.sheet{width:100%;max-width:720px;margin:auto;background:#10151c;border:1px solid var(--line);border-radius:25px 25px 0 0;padding:20px}
+.sheet h2{margin:0 0 8px}.sheet p{color:#99a3b0;font-size:13px;line-height:1.5}
+.close{float:right;border:0;background:#1b222b;color:#fff;border-radius:10px;padding:8px 11px}
+.nav{position:fixed;z-index:20;bottom:0;left:0;right:0;background:#090c11ee;backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:9px max(10px,calc((100vw - 720px)/2 + 10px)) 10px;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.nav button{border:0;background:none;color:#7f8997;font-size:10px;padding:6px}.nav button.active{color:#65ef7b}.nav svg{display:block;margin:auto auto 3px;width:22px;height:22px}
+.toast{position:fixed;z-index:60;left:50%;bottom:78px;transform:translateX(-50%) translateY(15px);opacity:0;background:#171d25;border:1px solid var(--line);padding:11px 14px;border-radius:12px;font-size:12px;transition:.2s;max-width:90%;text-align:center}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:390px){.banner h1{font-size:21px}.actions{grid-template-columns:1fr 1fr}.balance{font-size:32px}}
 </style>
 </head>
+
 <body>
 
-<!-- Inline SVG icon library: no emoji UI icons -->
-<svg style="display:none">
-<symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5v9a1.5 1.5 0 0 1-1.5 1.5h-5v-6h-5v6h-5A1.5 1.5 0 0 1 3 19.5z" fill="currentColor"/></symbol>
-<symbol id="i-list" viewBox="0 0 24 24"><path d="M5 5h14v14H5z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 9h8M8 13h8M8 17h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
-<symbol id="i-bolt" viewBox="0 0 24 24"><path d="m13 2-9 12h7l-1 8 9-12h-7z" fill="currentColor"/></symbol>
-<symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17" cy="9" r="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 20c0-3.5 2.6-5 6-5s6 1.5 6 5M15 15c3.5-.3 6 1.2 6 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
-<symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
-<symbol id="i-gift" viewBox="0 0 24 24"><path d="M3 10h18v11H3zM2 7h20v3H2zM12 7v14M12 7c-5 0-6-5-3-5 2 0 3 2 3 5Zm0 0c5 0 6-5 3-5-2 0-3 2-3 5Z" fill="none" stroke="currentColor" stroke-width="1.7"/></symbol>
-<symbol id="i-code" viewBox="0 0 24 24"><path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-<symbol id="i-rocket" viewBox="0 0 24 24"><path d="M14 5c3-3 6-3 6-3s0 3-3 6l-5 5-4-4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m8 13-3 3M7 17l-2 3M11 16l-2 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
-</svg>
-
-<div id="loading" class="loading">
-  <div class="loader">
-    <div class="logo3d loaderLogo"><i></i></div>
-    <b>PANDA <span style="color:#f5bd35">EARN</span></b>
-    <div class="spin"></div>
-    <small style="color:#747e88">Loading your Telegram account...</small>
+<div id="loader" class="loader">
+  <div class="loaderbox">
+    <div class="logo3d"><div class="logoeye"></div></div>
+    <div class="brandmark">PANDA <span>EARN</span></div>
+    <div class="spinner"></div>
+    <div id="loadingText" class="loadingtxt">Connecting to your Telegram account...</div>
   </div>
 </div>
 
-<main class="app">
-<header class="top">
-  <div class="brand"><div class="logo3d"><i></i></div><div><h1>Panda <span>Earn</span></h1><small>PANDA COINS</small></div></div>
-  <div class="topRight"><img id="avatar" class="avatar" alt="profile"><button class="iconBtn" onclick="openMenu()" aria-label="Menu"><svg class="svg"><use href="#i-menu"/></svg></button></div>
+<div class="app hidden" id="app">
+
+<header class="header">
+  <div class="brandIcon"></div>
+  <div class="brandName">PANDA <span>EARN</span></div>
+  <div class="headerSpace"></div>
+  <img id="avatar" class="avatar" alt="Profile">
+  <button class="menuBtn" onclick="openMenu()" aria-label="Menu"><span class="menuIcon"></span></button>
 </header>
 
-<!-- HOME -->
-<section id="homeView" class="view active">
-  <section class="hero">
-    <div class="heroTop">
-      <div><div class="eyebrow">TOTAL PANDA COINS</div><div id="balance" class="balance">0</div><div id="userName" class="userName">Loading...</div></div>
-      <div class="coin3d"><div class="coin c1"></div><div class="coin c2"></div><div class="coin c3"></div></div>
+<div class="userline">Account: <b id="username">@loading</b></div>
+
+<main>
+<section id="homePage" class="page active">
+  <div class="banner">
+    <div class="bannerText">
+      <div class="eyebrow">PANDA COIN • AIRDROP</div>
+      <h1>PANDA COIN<br>AIRDROP SOON</h1>
+      <p>Earn Panda Coins now and prepare your balance for the upcoming launch.</p>
     </div>
-    <div class="actions"><button class="btn gold" onclick="convertUSD()">Convert USD</button><button class="btn dark" onclick="withdraw()">Withdrawal</button></div>
-  </section>
+    <div class="pandaHero">
+      <div class="pandaBody"><div class="pandaHead"><div class="pandaFace"></div></div></div>
+      <i class="coin c1"></i><i class="coin c2"></i><i class="coin c3"></i><i class="coin c4"></i>
+    </div>
+  </div>
 
-  <section id="welcomeBanner" class="banner">
-    <div class="copy"><div class="label">EARLY PANDA ADOPTER</div><h2>WELCOME BONUS<br>UNLOCKED</h2><p>Claim your one-time 1,000 Panda Coins reward.</p><button id="welcomeBtn" class="btn gold" onclick="claimWelcome()">Claim 1,000 Coins</button></div>
-    <div class="bannerArt"><div class="coinStack"><i></i><i></i><i></i></div><div class="pandaSuit"><div class="pandaHead"><span class="eye l"></span><span class="eye r"></span><span class="nose"></span></div><div class="suitBadge">P</div></div></div>
-  </section>
+  <div class="balanceCard">
+    <div class="balanceTop">
+      <div>
+        <div class="label">PANDA COINS BALANCE</div>
+        <div id="balance" class="balance">0 <span class="coinword">P</span></div>
+      </div>
+      <div class="label" id="levelSmall">BRONZE</div>
+    </div>
+    <div class="actionrow">
+      <button class="btn secondary" onclick="convertUsd()">Convert USD</button>
+      <button class="btn secondary" onclick="withdraw()">Withdrawal</button>
+    </div>
+  </div>
 
-  <section id="airdropBanner" class="banner hidden">
-    <div class="copy"><div class="label">PAN​DA COINS</div><h2>AIRDROP SOON<br>LAUNCH</h2><p>Keep earning Panda Coins and complete available tasks.</p><button class="btn gold" onclick="showView('tasks')">Earn Panda Coins Now</button></div>
-    <div class="bannerArt"><div class="coinStack"><i></i><i></i><i></i></div><div class="pandaSuit"><div class="pandaHead"><span class="eye l"></span><span class="eye r"></span><span class="nose"></span></div><div class="suitBadge">P</div></div></div>
-  </section>
+  <div id="welcomeCard" class="banner" style="min-height:145px">
+    <div class="bannerText" style="width:67%">
+      <div class="eyebrow">NEW ACCOUNT REWARD</div>
+      <h1 style="font-size:22px">WELCOME BONUS</h1>
+      <p>Claim your one-time 1,000 Panda Coins reward.</p>
+      <button id="welcomeBtn" class="btn" style="margin-top:12px;width:100%" onclick="claimWelcome()">Claim 1,000</button>
+    </div>
+    <div class="pandaHero"><div class="pandaBody" style="transform:scale(.72)"><div class="pandaHead"><div class="pandaFace"></div></div></div><i class="coin c1"></i><i class="coin c3"></i></div>
+  </div>
 
-  <div class="sectionHead"><h2>Overview</h2><span class="muted">Live account</span></div>
-  <section class="grid">
-    <div class="card"><label>Total Earned</label><strong id="totalEarned" class="greenText">0</strong></div>
-    <div class="card"><label>Referrals</label><strong id="referrals" class="blueText">0</strong></div>
-    <div class="card"><label>Tasks Completed</label><strong id="tasksCompleted" class="purpleText">0</strong></div>
-    <div class="card"><label>Available Balance</label><strong id="walletBalance" class="goldText">0</strong></div>
-  </section>
+  <div class="grid">
+    <div class="stat"><div class="statTitle">TOTAL EARNED</div><div id="earned" class="statVal green">0 P</div></div>
+    <div class="stat"><div class="statTitle">REFERRALS</div><div id="referrals" class="statVal">0</div></div>
+    <div class="stat"><div class="statTitle">TASKS COMPLETED</div><div id="tasksCompleted" class="statVal">0</div></div>
+    <div class="stat"><div class="statTitle">AVAILABLE</div><div id="available" class="statVal gold">0 P</div></div>
+  </div>
 
-  <section class="level">
-    <div class="levelRow"><div><div class="levelSub">ACCOUNT LEVEL</div><div id="levelName" class="levelName">Bronze</div></div><div style="text-align:right"><div class="levelSub">MAX COINS / HOUR</div><b id="maxRate">2,400</b></div></div>
-    <div class="progress"><i id="levelProgress"></i></div>
-  </section>
+  <div class="sectionTitle">Start Earning</div>
+  <div class="actions">
+    <button class="actionCard" onclick="showPage('referrals')">
+      <svg class="svgIcon" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="13" r="7" stroke="#e4b83f" stroke-width="3"/><circle cx="10" cy="22" r="5" stroke="#e4b83f" stroke-width="3"/><circle cx="38" cy="22" r="5" stroke="#e4b83f" stroke-width="3"/><path d="M12 39c1-8 6-12 12-12s11 4 12 12M3 39c.5-5 3-8 7-9M45 39c-.5-5-3-8-7-9" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>
+      <b>Refer Friends</b>
+    </button>
+    <button class="actionCard" onclick="showPage('tasks')">
+      <svg class="svgIcon" viewBox="0 0 48 48" fill="none"><rect x="11" y="7" width="26" height="34" rx="4" stroke="#68ef7d" stroke-width="3"/><path d="M17 17h14M17 24h14M17 31h8" stroke="#fff" stroke-width="3" stroke-linecap="round"/><path d="M30 29l3 3 6-7" stroke="#68ef7d" stroke-width="3" stroke-linecap="round"/></svg>
+      <b>Complete Task</b>
+    </button>
+    <button class="actionCard" onclick="dailyBonus()">
+      <svg class="svgIcon" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="18" stroke="#f7c84b" stroke-width="3"/><path d="M24 13v12l8 5" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>
+      <b>Daily Bonus</b>
+    </button>
+    <button class="actionCard" onclick="cipher()">
+      <svg class="svgIcon" viewBox="0 0 48 48" fill="none"><rect x="8" y="12" width="32" height="25" rx="5" stroke="#8e9cff" stroke-width="3"/><path d="M15 21h4m5 0h4m5 0h2M15 29h8m5 0h5" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>
+      <b>Daily Cipher</b>
+    </button>
+    <button class="actionCard" onclick="launchpool()">
+      <svg class="svgIcon" viewBox="0 0 48 48" fill="none"><path d="M8 35h32M12 35V24l12-13 12 13v11" stroke="#62d7ff" stroke-width="3"/><path d="M20 35V26h8v9M24 8v7M19 12h10" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>
+      <b>Launchpool</b>
+    </button>
+    <button class="actionCard" onclick="showPage('level')">
+      <svg class="svgIcon" viewBox="0 0 48 48" fill="none"><path d="M24 6l5 10 11 1-8 8 3 11-11-6-11 6 3-11-8-8 11-1 5-10z" stroke="#f7c84b" stroke-width="3" stroke-linejoin="round"/></svg>
+      <b>Account Level</b>
+    </button>
+  </div>
 
-  <section class="mine">
-    <div class="mineTop"><div><h3>Start Earning</h3><p>Use Panda Coins to increase your earning power.</p></div><div style="text-align:right"><div class="levelSub">COINS / HOUR</div><div id="rate" class="rate">100</div></div></div>
-    <button class="btn green full" onclick="showView('earn')">Open Earning Center</button>
-    <div class="muted" style="text-align:center;margin-top:9px">Earning is calculated server-side after the mining system is enabled.</div>
-  </section>
-
-  <div class="sectionHead"><h2>Start Earning</h2><span class="muted">Explore</span></div>
-  <section class="grid">
-    <div class="card" onclick="showView('referrals')"><svg class="svg" style="width:30px;height:30px;color:#65b7ff"><use href="#i-users"/></svg><strong style="font-size:15px;margin-top:12px">Refer Friends</strong></div>
-    <div class="card" onclick="showView('tasks')"><svg class="svg" style="width:30px;height:30px;color:#bf84ff"><use href="#i-list"/></svg><strong style="font-size:15px;margin-top:12px">Complete Task</strong></div>
-    <div class="card" onclick="dailyBonus()"><svg class="svg" style="width:30px;height:30px;color:#ffd35c"><use href="#i-gift"/></svg><strong style="font-size:15px;margin-top:12px">Daily Bonus</strong></div>
-    <div class="card" onclick="cipher()"><svg class="svg" style="width:30px;height:30px;color:#62e5ff"><use href="#i-code"/></svg><strong style="font-size:15px;margin-top:12px">Daily Cipher</strong></div>
-    <div class="card" onclick="launchpool()"><svg class="svg" style="width:30px;height:30px;color:#62ff77"><use href="#i-rocket"/></svg><strong style="font-size:15px;margin-top:12px">Launchpool</strong></div>
-    <div class="card" onclick="levels()"><strong style="font-size:15px;margin-top:0">All Levels</strong><div class="muted" style="margin-top:10px">Bronze to God</div></div>
-  </section>
+  <div class="greenPanel">
+    <svg width="50" height="50" viewBox="0 0 50 50" fill="none"><circle cx="25" cy="25" r="20" stroke="#63ef78" stroke-width="3"/><path d="M25 13v24M17 22l8-9 8 9M16 35h18" stroke="#63ef78" stroke-width="3" stroke-linecap="round"/></svg>
+    <div><div class="big">Start Farming</div><p>Complete available tasks and grow your Panda Coin balance.</p></div>
+    <button class="btn" onclick="showPage('tasks')" style="padding:10px">Tasks</button>
+  </div>
 </section>
 
-<!-- TASKS -->
-<section id="tasksView" class="view">
-  <div class="sectionHead"><h2>Tasks</h2><span class="muted">Available now</span></div>
-  <div id="taskList" class="list"><div class="listItem"><p>Loading tasks...</p></div></div>
+<section id="tasksPage" class="page">
+  <button class="back" onclick="showPage('home')">← Home</button>
+  <div class="sectionTitle">Available Tasks</div>
+  <div id="taskList"><div class="empty">Loading tasks...</div></div>
 </section>
 
-<!-- EARN -->
-<section id="earnView" class="view">
-  <div class="sectionHead"><h2>Earning Center</h2><span class="muted">Your level</span></div>
-  <section class="mine">
-    <div class="levelSub">CURRENT RATE</div><div id="earnRateBig" class="balance" style="font-size:38px">100 / hour</div>
-    <p>Invest 1 Panda Coin to buy 1 second of earning power. The actual purchase and 20-minute activity accounting must be processed by the secure server function before coins are credited.</p>
-    <button class="btn green full onclickSafe" onclick="showMiningInfo()">View Earning Rules</button>
-  </section>
-  <section class="level" style="margin-top:12px"><div class="levelSub">CURRENT LEVEL</div><div id="earnLevel" class="levelName">Bronze</div><div class="muted" style="margin-top:8px">Bronze limit: 2,400 coins/hour</div></section>
+<section id="referralsPage" class="page">
+  <button class="back" onclick="showPage('home')">← Home</button>
+  <div class="sectionTitle">Refer Friends</div>
+  <div class="balanceCard">
+    <div class="label">YOUR REFERRAL REWARD</div>
+    <div class="balance">1,500 <span class="coinword">P</span></div>
+    <p style="color:#909aa8;font-size:12px">Invite a new user through your Telegram referral link. Rewards will be recorded by the bot/backend.</p>
+    <button class="btn" onclick="shareReferral()">Share Referral</button>
+  </div>
+  <div class="empty">Referral counting and rewards are controlled by the Telegram bot/backend.</div>
 </section>
 
-<!-- REFERRALS -->
-<section id="referralsView" class="view">
-  <div class="sectionHead"><h2>Referrals</h2><span class="muted">1,500 coins / qualified referral</span></div>
-  <div class="refBox"><div class="levelSub">YOUR REFERRAL LINK</div><div id="refLink" class="refLink">Loading...</div><div class="actions"><button class="btn gold" onclick="copyReferral()">Copy Link</button><button class="btn dark" onclick="shareReferral()">Share</button></div></div>
-  <section class="card" style="margin-top:10px"><label>Total Referrals</label><strong id="refBig" class="blueText">0</strong></section>
+<section id="levelPage" class="page">
+  <button class="back" onclick="showPage('home')">← Home</button>
+  <div class="sectionTitle">Account Level</div>
+  <div class="level">
+    <div class="label">CURRENT LEVEL</div>
+    <div id="levelName" class="levelName">BRONZE</div>
+    <div class="levelbar"><i></i></div>
+    <p style="color:#9ca5b2;font-size:12px;line-height:1.5">Your level determines the maximum farming rate. Level progression can be connected to your verified earnings system later.</p>
+  </div>
 </section>
 </main>
+</div>
 
-<nav class="bottom">
-<button id="navHome" class="nav active" onclick="showView('home')"><svg class="svg"><use href="#i-home"/></svg>Home</button>
-<button id="navTasks" class="nav" onclick="showView('tasks')"><svg class="svg"><use href="#i-list"/></svg>Tasks</button>
-<button id="navEarn" class="nav" onclick="showView('earn')"><svg class="svg"><use href="#i-bolt"/></svg>Earn</button>
-<button id="navRef" class="nav" onclick="showView('referrals')"><svg class="svg"><use href="#i-users"/></svg>Referrals</button>
+<nav class="nav hidden" id="nav">
+  <button onclick="showPage('home')" data-page="home" class="active">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M3 11l9-8 9 8v9H5v-9z" stroke="currentColor" stroke-width="2"/><path d="M9 20v-6h6v6" stroke="currentColor" stroke-width="2"/></svg>Home
+  </button>
+  <button onclick="showPage('tasks')" data-page="tasks">
+    <svg viewBox="0 0 24 24" fill="none"><rect x="5" y="3" width="14" height="18" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="2"/></svg>Tasks
+  </button>
+  <button onclick="showPage('referrals')" data-page="referrals">
+    <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="7" r="3" stroke="currentColor" stroke-width="2"/><path d="M5 21c.5-5 3-7 7-7s6.5 2 7 7M4 12a3 3 0 0 0-2 3M20 12a3 3 0 0 1 2 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Referrals
+  </button>
+  <button onclick="showPage('level')" data-page="level">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M12 3l3 6 6 .8-4.5 4.5 1 6.2-5.5-3-5.5 3 1-6.2L3 9.8 9 9l3-6z" stroke="currentColor" stroke-width="2"/></svg>Level
+  </button>
 </nav>
 
-<div id="modal" class="modal hidden" onclick="if(event.target===this)closeModal()"><div class="sheet"><button class="close" onclick="closeModal()">×</button><h2 id="modalTitle">Panda Earn</h2><div id="modalBody"></div></div></div>
+<div id="modal" class="modal" onclick="if(event.target===this)closeModal()">
+  <div class="sheet">
+    <button class="close" onclick="closeModal()">Close</button>
+    <h2 id="modalTitle">Panda Earn</h2>
+    <p id="modalText"></p>
+    <button id="modalAction" class="btn hidden" style="width:100%" onclick="closeModal()">OK</button>
+  </div>
+</div>
+<div id="toast" class="toast"></div>
 
 <script>
-const SUPABASE_URL="https://myzsqddvwvoaiainktdh.supabase.co";
-const SUPABASE_KEY="sb_publishable_JN2sZWzesbmhI2ivloEZlA_jP6s324f";
-const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-const tg=window.Telegram?.WebApp;
+/* =========================
+   PANDA EARN CONFIG
+========================= */
+const SUPABASE_URL = "https://myzsqddvwvoaiainktdh.supabase.co";
+const SUPABASE_KEY = "sb_publishable_JN2sZWzesbmhI2ivloEZlA_jP6s324f";
+const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let telegramUser=null,pandaUser=null,welcomeTask=null;
+const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+let tgUser = null;
+let pandaUser = null;
+let activeTasks = [];
+let welcomeTask = null;
 
-function initTelegram(){
-  if(!tg || !tg.initDataUnsafe || !tg.initDataUnsafe.user){
-    throw new Error("Telegram user was not detected. Open Panda Earn from the Telegram Mini App.");
-  }
-  tg.ready();tg.expand();
-  telegramUser=tg.initDataUnsafe.user;
-  const username=telegramUser.username?("@"+telegramUser.username):(telegramUser.first_name||"Telegram User");
-  document.getElementById("userName").textContent=username;
-  document.getElementById("avatar").src=telegramUser.photo_url||avatarFallback(telegramUser.first_name||"P");
+/* Helpers */
+function money(n){return Number(n||0).toLocaleString("en-IN",{maximumFractionDigits:2});}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
+function toast(msg){
+  const t=document.getElementById("toast"); t.textContent=msg;t.classList.add("show");
+  clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.classList.remove("show"),2800);
 }
-function avatarFallback(name){
-  const letter=(name||"P").trim().charAt(0).toUpperCase();
-  return "data:image/svg+xml;charset=UTF-8,"+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="#151b21"/><circle cx="50" cy="50" r="42" fill="#f5bd35"/><text x="50" y="62" text-anchor="middle" font-size="42" font-family="Arial" font-weight="700" fill="#151515">${letter}</text></svg>`);
+function setLoading(msg){document.getElementById("loadingText").textContent=msg;}
+function showModal(title,text,action=false){
+  document.getElementById("modalTitle").textContent=title;
+  document.getElementById("modalText").textContent=text;
+  document.getElementById("modalAction").classList.toggle("hidden",!action);
+  document.getElementById("modal").classList.add("open");
 }
-function fmt(n){return Number(n||0).toLocaleString("en-IN")}
-function escapeHtml(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function closeModal(){document.getElementById("modal").classList.remove("open");}
 
-async function loadUser(){
-  const id=Number(telegramUser.id);
-  let r=await sb.from("panda_users").select("*").eq("telegram_id",id).maybeSingle();
-  if(r.error)throw r.error;
-  if(!r.data){
-    const ins=await sb.from("panda_users").insert({
-      telegram_id:id,username:telegramUser.username||null,first_name:telegramUser.first_name||"Telegram User",
-      balance:0,referrals:0,tasks_completed:0,total_earned:0
-    }).select("*").single();
-    if(ins.error)throw ins.error;
-    pandaUser=ins.data;
-  }else{
-    pandaUser=r.data;
-    const needs=(pandaUser.username||null)!==(telegramUser.username||null)||(pandaUser.first_name||"")!==(telegramUser.first_name||"");
-    if(needs){
-      const up=await sb.from("panda_users").update({username:telegramUser.username||null,first_name:telegramUser.first_name||"Telegram User"}).eq("id",pandaUser.id).select("*").single();
-      if(up.error)throw up.error;
-      pandaUser=up.data;
-    }
-  }
-  render();
-}
-function levelFor(balance){
-  const b=Number(balance||0);
-  if(b>=1000000)return["God",500000];if(b>=500000)return["Apex",250000];if(b>=250000)return["Mythic",100000];
-  if(b>=100000)return["Master",50000];if(b>=50000)return["Diamond",25000];if(b>=25000)return["Platinum",13000];
-  if(b>=10000)return["Gold",7000];if(b>=5000)return["Silver",4000];return["Bronze",2400];
-}
-function render(){
-  const b=Number(pandaUser.balance||0),l=levelFor(b);
-  ["balance","walletBalance"].forEach(id=>document.getElementById(id).textContent=fmt(b));
-  document.getElementById("totalEarned").textContent=fmt(pandaUser.total_earned);
-  document.getElementById("referrals").textContent=fmt(pandaUser.referrals);
-  document.getElementById("refBig").textContent=fmt(pandaUser.referrals);
-  document.getElementById("tasksCompleted").textContent=fmt(pandaUser.tasks_completed);
-  document.getElementById("levelName").textContent=l[0];document.getElementById("earnLevel").textContent=l[0];
-  document.getElementById("maxRate").textContent=fmt(l[1]);document.getElementById("levelProgress").style.width=Math.min(100,Math.max(5,b/l[1]*100))+"%";
-  document.getElementById("earnRateBig").textContent=(100).toLocaleString("en-IN")+" / hour";
-  const ref="https://t.me/PandaEarnBot?start=ref_"+telegramUser.id;
-  document.getElementById("refLink").textContent=ref;
-}
-
-async function getWelcomeTask(){
-  const r=await sb.from("panda_tasks").select("id,title,reward,is_active").eq("is_active",true).ilike("title","%welcome%").limit(1).maybeSingle();
-  if(r.error)throw r.error;
-  welcomeTask=r.data||null;return welcomeTask;
-}
-async function checkWelcome(){
-  const t=await getWelcomeTask();
-  if(!t){
-    document.getElementById("welcomeBanner").classList.remove("hidden");
-    document.getElementById("welcomeBtn").textContent="Welcome task not configured";
-    document.getElementById("welcomeBtn").disabled=true;
-    return;
-  }
-  const r=await sb.from("panda_task_completions").select("id").eq("user_id",pandaUser.id).eq("task_id",t.id).maybeSingle();
-  if(r.error)throw r.error;
-  const done=!!r.data;
-  document.getElementById("welcomeBanner").classList.toggle("hidden",done);
-  document.getElementById("airdropBanner").classList.toggle("hidden",!done);
-  document.getElementById("welcomeBtn").disabled=false;
-  document.getElementById("welcomeBtn").textContent="Claim "+fmt(t.reward)+" Coins";
-}
-async function claimWelcome(){
-  const btn=document.getElementById("welcomeBtn");btn.disabled=true;btn.textContent="Claiming...";
-  try{
-    const t=await getWelcomeTask();
-    if(!t)throw new Error("Create an active panda_tasks row titled Welcome Bonus with reward 1000 first.");
-    const exists=await sb.from("panda_task_completions").select("id").eq("user_id",pandaUser.id).eq("task_id",t.id).maybeSingle();
-    if(exists.error)throw exists.error;
-    if(exists.data){await checkWelcome();toast("Welcome Bonus already claimed.");return;}
-    const r=await sb.from("panda_task_completions").insert({user_id:pandaUser.id,task_id:t.id,reward:Number(t.reward)}).select("*").single();
-    if(r.error)throw r.error;
-    await loadUser();await checkWelcome();toast("Welcome Bonus credited to your real balance.");
-  }catch(e){console.error(e);toast(e.message||String(e));btn.disabled=false}
-}
-async function loadTasks(){
-  const box=document.getElementById("taskList");
-  const r=await sb.from("panda_tasks").select("id,title,reward,is_active").eq("is_active",true).order("title");
-  if(r.error){box.innerHTML=`<div class="listItem"><p>${escapeHtml(r.error.message)}</p></div>`;return}
-  if(!r.data.length){box.innerHTML='<div class="listItem"><h3>No active tasks</h3><p>Admin has not published a task yet.</p></div>';return}
-  box.innerHTML="";
-  for(const t of r.data){
-    const done=await sb.from("panda_task_completions").select("id").eq("user_id",pandaUser.id).eq("task_id",t.id).maybeSingle();
-    const item=document.createElement("div");item.className="listItem";
-    item.innerHTML=`<div class="row"><div><h3>${escapeHtml(t.title)}</h3><p>Complete this Panda Earn task.</p></div><div class="reward">+${fmt(t.reward)}</div></div>
-      <button class="btn ${done.data?"dark":"gold"}" style="width:100%" ${done.data?"disabled":""} onclick="claimTask('${t.id}')">${done.data?"Completed":"Complete Task"}</button>`;
-    box.appendChild(item);
-  }
-}
-async function claimTask(taskId){
-  const t=await sb.from("panda_tasks").select("id,title,reward,is_active").eq("id",taskId).maybeSingle();
-  if(t.error)throwShow(t.error);if(!t.data)return;
-  if(t.data.title.toLowerCase().includes("welcome"))return claimWelcome();
-  toast("Task verification must be performed by the Telegram bot before reward crediting.");
-}
-function throwShow(e){console.error(e);toast(e.message||String(e))}
-
-function showView(name){
-  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
-  const map={home:"homeView",tasks:"tasksView",earn:"earnView",referrals:"referralsView"};
-  document.getElementById(map[name]).classList.add("active");
-  document.querySelectorAll(".nav").forEach(v=>v.classList.remove("active"));
-  const nav={home:"navHome",tasks:"navTasks",earn:"navEarn",referrals:"navRef"};
-  document.getElementById(nav[name]).classList.add("active");
-  if(name==="tasks")loadTasks();
-}
-function convertUSD(){openSheet("Convert USD","<p>USD conversion is not enabled yet. The conversion rate and withdrawal ledger should be added server-side before real money operations.</p>")}
-function withdraw(){openSheet("Withdrawal","<p>Withdrawal is locked until Panda Coins are converted to USD.</p>")}
-function dailyBonus(){openSheet("Daily Bonus","<p>The 30-day daily bonus needs its own claim table and secure server function. I have not added fake balance crediting here.</p>")}
-function cipher(){openSheet("Daily Cipher","<p>Daily Cipher needs an admin code table and secure server verification. No balance is changed by this screen.</p><input id="cipherInput" class="codeInput" placeholder="Enter today's code"><button class="btn gold full" onclick="toast('Cipher verification will be connected after the cipher table is added.')">Verify Code</button>")}
-function launchpool(){openSheet("Launchpool","<p>Panda Coins airdrop launch is coming soon.</p>")}
-function levels(){openSheet("Account Levels","<p>Bronze — 2,400/hour</p><p>Silver — 4,000/hour</p><p>Gold — 7,000/hour</p><p>Platinum — 13,000/hour</p><p>Diamond — 25,000/hour</p><p>Master — 50,000/hour</p><p>Mythic — 100,000/hour</p><p>Apex — 250,000/hour</p><p>God — 500,000/hour</p>")}
-function showMiningInfo(){openSheet("Earning Rules","<p>Bronze starts at 100 coins/hour. Your planned system can increase the hourly rate by investing coins, with a 20-minute inactivity stop.</p><p>Real earning credit must be handled by a secure server function so users cannot edit their balance from the browser.</p>")}
-function openMenu(){openSheet("Account","<p><b>"+escapeHtml(telegramUser.first_name||"Telegram User")+"</b></p><p>"+escapeHtml(telegramUser.username?"@"+telegramUser.username:"Telegram ID: "+telegramUser.id)+"</p><p style='color:#8d979f'>Account ID: "+escapeHtml(pandaUser.id)+"</p>")}
-function openSheet(title,body){document.getElementById("modalTitle").textContent=title;document.getElementById("modalBody").innerHTML=body;document.getElementById("modal").classList.remove("hidden")}
-function closeModal(){document.getElementById("modal").classList.add("hidden")}
-function toast(msg){const x=document.createElement("div");x.className="toast";x.textContent=msg;document.body.appendChild(x);setTimeout(()=>x.remove(),3200)}
-function copyReferral(){navigator.clipboard?.writeText(document.getElementById("refLink").textContent).then(()=>toast("Referral link copied")).catch(()=>toast(document.getElementById("refLink").textContent))}
-function shareReferral(){const u=document.getElementById("refLink").textContent;const text="Join Panda Earn and earn Panda Coins.";if(tg?.openTelegramLink)tg.openTelegramLink("https://t.me/share/url?url="+encodeURIComponent(u)+"&text="+encodeURIComponent(text));else toast(u)}
-
+/* Telegram identity: NEVER invent a user */
 async function boot(){
   try{
-    initTelegram();
-    await loadUser();
-    await checkWelcome();
-    document.getElementById("loading").classList.add("hidden");
-  }catch(e){
-    console.error(e);
-    document.getElementById("loading").innerHTML=`<div class="error"><div class="logo3d" style="margin:0 auto 12px"><i></i></div><h3>Unable to load account</h3><p>${escapeHtml(e.message||String(e))}</p><button class="btn gold" onclick="location.reload()">Retry</button></div>`;
+    if(!tg || !tg.initDataUnsafe || !tg.initDataUnsafe.user){
+      throw new Error("Open this Mini App from Telegram so the real Telegram account can be detected.");
+    }
+
+    tg.ready(); tg.expand();
+    tgUser=tg.initDataUnsafe.user;
+
+    setLoading("Loading your Panda Earn account...");
+    await loadPandaUser();
+
+    setLoading("Loading tasks...");
+    await loadTasks();
+
+    renderUser();
+    document.getElementById("loader").classList.add("hidden");
+    document.getElementById("app").classList.remove("hidden");
+    document.getElementById("nav").classList.remove("hidden");
+    showPage("home");
+  }catch(err){
+    console.error(err);
+    setLoading("Unable to load your Telegram account.");
+    document.querySelector(".spinner").style.display="none";
+    document.querySelector(".loadingtxt").innerHTML =
+      '<span style="color:#ff7f7f">'+esc(err.message||"Unknown error")+
+      '</span><br><br><button class="btn" onclick="location.reload()">Retry</button>';
   }
 }
+
+async function loadPandaUser(){
+  const {data,error}=await client.from("panda_users")
+    .select("id,telegram_id,username,first_name,balance,referrals,tasks_completed,created_at,total_earned")
+    .eq("telegram_id",tgUser.id)
+    .maybeSingle();
+
+  if(error) throw new Error("Database connection failed: "+error.message);
+
+  if(!data){
+    /* Create only the real Telegram user. */
+    const {data:created,error:createError}=await client.from("panda_users")
+      .insert({
+        telegram_id:tgUser.id,
+        username:tgUser.username||null,
+        first_name:tgUser.first_name||"Telegram User",
+        balance:0,
+        referrals:0,
+        tasks_completed:0,
+        total_earned:0
+      })
+      .select("id,telegram_id,username,first_name,balance,referrals,tasks_completed,created_at,total_earned")
+      .single();
+
+    if(createError) throw new Error("Account creation failed: "+createError.message);
+    pandaUser=created;
+  }else{
+    pandaUser=data;
+    /* Keep profile information current without touching money fields. */
+    const changed =
+      (data.username||null)!==(tgUser.username||null) ||
+      (data.first_name||"")!==(tgUser.first_name||"");
+    if(changed){
+      const {data:updated,error:updateError}=await client.from("panda_users")
+        .update({username:tgUser.username||null,first_name:tgUser.first_name||"Telegram User"})
+        .eq("id",data.id)
+        .select("id,telegram_id,username,first_name,balance,referrals,tasks_completed,created_at,total_earned")
+        .single();
+      if(!updateError && updated) pandaUser=updated;
+    }
+  }
+}
+
+async function refreshUser(){
+  const {data,error}=await client.from("panda_users")
+    .select("id,telegram_id,username,first_name,balance,referrals,tasks_completed,created_at,total_earned")
+    .eq("id",pandaUser.id).single();
+  if(error) throw error;
+  pandaUser=data;renderUser();
+}
+
+function renderUser(){
+  const uname=tgUser.username ? "@"+tgUser.username : (tgUser.first_name||"Telegram User");
+  document.getElementById("username").textContent=uname;
+  document.getElementById("balance").innerHTML=money(pandaUser.balance)+" <span class='coinword'>P</span>";
+  document.getElementById("earned").textContent=money(pandaUser.total_earned)+" P";
+  document.getElementById("referrals").textContent=money(pandaUser.referrals);
+  document.getElementById("tasksCompleted").textContent=money(pandaUser.tasks_completed);
+  document.getElementById("available").textContent=money(pandaUser.balance)+" P";
+
+  const photo=tgUser.photo_url;
+  if(photo) document.getElementById("avatar").src=photo;
+  else document.getElementById("avatar").src="data:image/svg+xml,"+encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" rx="50" fill="#171d25"/><circle cx="50" cy="38" r="17" fill="#f7c84b"/><path d="M20 86c5-22 55-22 60 0" fill="#f7c84b"/></svg>'
+  );
+}
+
+/* Tasks */
+async function loadTasks(){
+  const {data,error}=await client.from("panda_tasks")
+    .select("id,title,reward,is_active")
+    .eq("is_active",true)
+    .order("title",{ascending:true});
+  if(error) throw new Error("Task loading failed: "+error.message);
+  activeTasks=data||[];
+  welcomeTask=activeTasks.find(t=>/welcome/i.test(t.title))||null;
+  renderTasks();
+  await renderWelcomeState();
+}
+
+async function completedTaskIds(){
+  const {data,error}=await client.from("panda_task_completions")
+    .select("task_id")
+    .eq("user_id",pandaUser.id);
+  if(error) throw error;
+  return new Set((data||[]).map(x=>x.task_id));
+}
+
+async function renderTasks(){
+  const box=document.getElementById("taskList");
+  try{
+    const done=await completedTaskIds();
+    if(!activeTasks.length){box.innerHTML='<div class="empty">No active tasks available right now.</div>';return;}
+    box.innerHTML=activeTasks.map(t=>{
+      const isDone=done.has(t.id);
+      return `<div class="task">
+        <div class="taskMain"><div class="taskTitle">${esc(t.title)}</div><div class="taskReward">Reward: ${money(t.reward)} Panda Coins</div></div>
+        <button class="btn ${isDone?'secondary':''}" ${isDone?'disabled':''} onclick="completeTask('${t.id}')">${isDone?'Completed':'Claim'}</button>
+      </div>`;
+    }).join("");
+  }catch(e){box.innerHTML='<div class="empty">Unable to load task status.</div>';console.error(e);}
+}
+
+async function renderWelcomeState(){
+  const card=document.getElementById("welcomeCard");
+  if(!card)return;
+  if(!welcomeTask){card.classList.remove("hidden");return;}
+  const done=await completedTaskIds();
+  if(done.has(welcomeTask.id)) card.classList.add("hidden");
+  else{
+    document.getElementById("welcomeBtn").textContent="Claim "+money(welcomeTask.reward);
+    card.classList.remove("hidden");
+  }
+}
+
+async function completeTask(taskId){
+  const task=activeTasks.find(t=>t.id===taskId); if(!task)return;
+  try{
+    const {error}=await client.from("panda_task_completions").insert({
+      user_id:pandaUser.id,task_id:task.id,reward:Number(task.reward)
+    });
+    if(error){
+      if(error.code==="23505") toast("This task is already completed.");
+      else toast("Task claim failed: "+error.message);
+      return;
+    }
+    await refreshUser();
+    await loadTasks();
+    toast("Reward added to your Panda Coin balance.");
+  }catch(e){toast("Unable to complete task.");console.error(e);}
+}
+
+async function claimWelcome(){
+  if(!welcomeTask){toast("Welcome Bonus task is not configured in Supabase.");return;}
+  const btn=document.getElementById("welcomeBtn");btn.disabled=true;btn.textContent="CLAIMING...";
+  await completeTask(welcomeTask.id);
+  btn.disabled=false;
+  await renderWelcomeState();
+}
+
+/* Navigation */
+function showPage(page){
+  document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+  const el=document.getElementById(page+"Page"); if(el)el.classList.add("active");
+  document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===page));
+  if(page==="tasks")loadTasks();
+}
+function openMenu(){
+  showModal("Panda Earn","Your account is securely linked to the Telegram ID shown in your account. No demo user or demo balance is used.");
+}
+
+/* Other modules — intentionally no fake balance */
+function convertUsd(){showModal("Convert to USD","USD conversion is not enabled yet. Your Panda Coin balance remains unchanged.");}
+function withdraw(){showModal("Withdrawal","Withdrawal is locked until Panda Coins are converted to USD.");}
+function dailyBonus(){showModal("Daily Bonus","Daily check-in rewards will be connected to the secure backend next. No fake coins are added.");}
+function cipher(){showModal("Daily Cipher","Enter today's verified cipher here once the bot/backend cipher system is connected. No coins are added by this screen.");}
+function launchpool(){showModal("Launchpool","Launchpool is coming soon.");}
+function shareReferral(){
+  const link = "https://t.me/share/url?url="+encodeURIComponent("https://t.me/YourPandaBot?start=ref_"+tgUser.id)+"&text="+encodeURIComponent("Join Panda Earn and start earning Panda Coins.");
+  if(tg && tg.openTelegramLink) tg.openTelegramLink(link);
+  else window.open(link,"_blank");
+}
+
 boot();
 </script>
 </body>
