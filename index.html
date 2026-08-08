@@ -1,284 +1,260 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Panda Earn</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-:root{--bg:#030807;--card:#0d1715;--line:#ffffff18;--muted:#9ca8a3;--green:#58ef82;--gold:#e7bd57}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 20% 0,#16422e44,transparent 32%),#030807;color:#f7f8f5;font-family:Arial,system-ui,sans-serif}
-button{font:inherit}.app{max-width:720px;margin:auto;padding:10px 12px 90px}.header{height:65px;display:flex;align-items:center;justify-content:space-between}
-.brand{display:flex;align-items:center;gap:9px}.panda-logo{width:52px;height:52px;border-radius:18px;display:grid;place-items:center;font-size:34px;background:radial-gradient(circle at 35% 25%,#fff,#aab3ae 35%,#26302d 70%);box-shadow:0 8px 25px #000}
-.brand b{font-size:21px}.brand b span{color:var(--gold)}.brand small{display:block;color:#89958f;font-size:9px;letter-spacing:1px;margin-top:3px}
-.user{display:flex;align-items:center;gap:8px}.avatar{width:44px;height:44px;border:2px solid var(--gold);border-radius:50%;object-fit:cover;background:#111}.menu{width:44px;height:44px;border-radius:13px;border:1px solid var(--line);background:#101917;color:#fff;font-size:22px}
-.card{border:1px solid var(--line);border-radius:23px;background:linear-gradient(145deg,#12201c,#09100f);box-shadow:0 15px 45px #0008,inset 0 1px #fff2;overflow:hidden}
-.hero{min-height:205px;padding:21px;position:relative}.hero:after{content:"";position:absolute;right:-65px;top:-65px;width:230px;height:230px;border:1px solid #ffffff16;border-radius:50%;box-shadow:0 0 0 30px #ffffff06,0 0 0 60px #ffffff03}
-.label{font-size:11px;letter-spacing:1.5px;color:#9ba7a2}.balance{font-size:42px;font-weight:900;margin:8px 0}.balance span{color:var(--gold);font-size:18px}.sub{font-size:11px;color:#98a39f}.hero-art{position:absolute;right:15px;bottom:10px;font-size:70px;filter:drop-shadow(0 14px 10px #000);transform:rotate(-5deg)}
-.actions{display:flex;gap:8px;margin-top:18px}.btn{border:1px solid var(--line);border-radius:12px;background:#131d1a;color:#fff;padding:11px 14px;font-weight:800;cursor:pointer}.gold{background:linear-gradient(135deg,#fff0a4,#d6a53a);color:#16130b;border-color:#f3d266}.green{background:linear-gradient(135deg,#7aff9a,#2ab65a);color:#031008;border-color:#7cff9c}
-.banner{margin-top:14px;min-height:155px;padding:18px 135px 17px 19px;position:relative;background:linear-gradient(120deg,#173128,#0d1714 55%,#211c0f);border-color:#d5b44e66}.banner h2{font-size:22px;line-height:1.05;margin:6px 0;color:#f3dfa0}.banner p{font-size:11px;color:#bbc5c0;line-height:1.4}.gift{position:absolute;right:17px;top:30px;font-size:68px;filter:drop-shadow(0 14px 10px #000)}
-.head{display:flex;justify-content:space-between;align-items:center;margin:19px 8px 9px}.head h2{margin:0;font-size:20px}.head span{font-size:11px;color:#98a39e}.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.stat{padding:14px;min-height:105px}.stat small{color:#a4afa9;font-size:12px}.stat b{display:block;font-size:23px;margin-top:9px}.g{color:var(--green)}.y{color:var(--gold)}.b{color:#56b9ff}.p{color:#b58cff}
-.quick{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.quick button{min-height:112px;text-align:left;padding:11px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,#14201d,#09100f);color:#fff;cursor:pointer}.ico{font-size:32px;display:block;margin-bottom:8px}.quick strong{font-size:12px}.quick small{display:block;color:#8e9a95;margin-top:4px;font-size:9px}
-.earn{margin-top:14px;padding:18px;border:1px solid #58ef8266;border-radius:22px;background:linear-gradient(110deg,#0b2416,#09120f);box-shadow:0 0 30px #58ef8212}.rate{font-size:29px;font-weight:900;color:var(--green)}.rate small{font-size:11px;color:#a0aca6}.row{display:flex;justify-content:space-between;align-items:center}.progress{height:7px;background:#ffffff0b;border-radius:99px;overflow:hidden;margin:12px 0}.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,#3dd86e,#e3ef72)}
-.level{margin-top:14px;padding:16px}.levelname{font-size:21px;font-weight:900}.leveldesc{font-size:10px;color:#909d97;margin-top:4px}
-.bottom{position:fixed;bottom:9px;left:50%;transform:translateX(-50%);width:min(calc(100% - 18px),700px);display:grid;grid-template-columns:repeat(4,1fr);padding:6px;border:1px solid var(--line);border-radius:21px;background:#0d1615ee;backdrop-filter:blur(16px);z-index:20}.nav{border:0;background:none;color:#8d9993;padding:8px;border-radius:15px;font-size:10px}.nav.active{color:var(--green);background:#ffffff08}.nav div{font-size:19px}
-.loading{position:fixed;inset:0;background:#030807;z-index:100;display:flex;align-items:center;justify-content:center;flex-direction:column}.spin{width:52px;height:52px;border:4px solid #ffffff12;border-top-color:var(--green);border-radius:50%;animation:s 1s linear infinite}@keyframes s{to{transform:rotate(360deg)}}
-.modal{display:none;position:fixed;inset:0;background:#000b;z-index:50;align-items:flex-end}.sheet{width:min(100%,720px);background:#101a18;border-radius:23px 23px 0 0;border:1px solid var(--line);padding:20px;max-height:75vh;overflow:auto}.close{float:right;border:0;background:#ffffff0d;color:#fff;border-radius:10px;padding:7px}.sheet h3{margin:0 0 7px}.sheet p{color:#a0aaa5;font-size:12px;line-height:1.5}
-.toast{position:fixed;top:12px;left:50%;transform:translate(-50%,-20px);opacity:0;background:#14201d;border:1px solid #ffffff20;border-radius:13px;padding:11px 14px;font-size:11px;z-index:200;transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}
-@media(max-width:480px){.app{padding-left:9px;padding-right:9px}.balance{font-size:38px}.hero-art{font-size:60px}.quick button{min-height:103px;padding:9px}.banner{padding-right:120px}.banner h2{font-size:19px}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Panda Protocol AI</title>
+    <style>
+        /* --- CSS Styles --- */
+        :root {
+            --bg-color: #050a0e;
+            --card-bg: #11151c;
+            --text-primary: #e0e6ed;
+            --text-secondary: #8d98aa;
+            --accent-gold: #f3ba2f;
+            --accent-green: #2dde7b;
+            --border-color: rgba(255, 255, 255, 0.06);
+            --hover-bg: rgba(255, 255, 255, 0.03);
+            --font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: var(--font-family);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px;
+            padding-bottom: 80px; /* Space for bottom nav */
+            overflow-x: hidden;
+        }
+
+        .container { width: 100%; max-width: 520px; }
+
+        /* --- Header --- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 0 4px;
+        }
+        .header-left { display: flex; align-items: center; gap: 10px; }
+        .panda-logo { width: 48px; height: 48px; }
+        .brand-text { font-size: 18px; font-weight: 700; line-height: 1.2; }
+        .header-right { display: flex; align-items: center; gap: 10px; }
+        .profile-pic { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--accent-gold); }
+        .connect-wallet {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px; font-weight: 600; cursor: pointer;
+        }
+
+        /* --- Cards --- */
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        /* --- AI Assistant Card (NEW) --- */
+        .ai-assistant-card {
+            background: linear-gradient(135deg, #11151c 0%, #0f1318 100%);
+            display: flex;
+            flex-direction: column;
+            height: 300px; /* Fixed height for chat */
+        }
+        .ai-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .ai-title { font-size: 16px; font-weight: 700; color: var(--accent-gold); }
+        .ai-status { font-size: 10px; color: var(--accent-green); display: flex; align-items: center; gap: 4px; }
+        .status-dot { width: 6px; height: 6px; background: var(--accent-green); border-radius: 50%; box-shadow: 0 0 6px var(--accent-green); }
+
+        /* Chat Area */
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .chat-messages::-webkit-scrollbar { width: 4px; }
+        .chat-messages::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 2px; }
+
+        .message { max-width: 85%; padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 1.4; }
+        .message.ai { align-self: flex-start; background: var(--hover-bg); color: var(--text-primary); border-top-left-radius: 4px; }
+        .message.user { align-self: flex-end; background: var(--accent-gold); color: #11151c; border-top-right-radius: 4px; font-weight: 600; }
+
+        /* Chat Input */
+        .ai-input-area { display: flex; gap: 10px; }
+        .ai-input {
+            flex: 1;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 12px;
+            border-radius: 10px;
+            font-family: inherit; font-size: 13px;
+        }
+        .ai-input:focus { outline: none; border-color: var(--accent-gold); }
+        .ai-send-btn {
+            background: var(--accent-gold);
+            color: #11151c;
+            border: none;
+            padding: 0 20px;
+            border-radius: 10px;
+            font-weight: 700; cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .ai-send-btn:active { opacity: 0.8; }
+
+
+        /* --- Existing Card Styles (Adapted) --- */
+        .total-balance-card {
+            background: linear-gradient(135deg, #1a212b 0%, #0d1116 100%);
+            display: flex; justify-content: space-between; align-items: flex-start;
+        }
+        .balance-left { display: flex; flex-direction: column; gap: 8px; }
+        .label { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; }
+        .balance-value { font-size: 34px; font-weight: 800; }
+        .sub-value { font-size: 12px; color: var(--text-secondary); }
+        .claim-btn {
+            background: transparent; border: 1px solid var(--text-secondary);
+            color: var(--text-secondary); padding: 6px 12px;
+            border-radius: 8px; font-size: 10px; cursor: pointer;
+        }
+        .claim-btn:hover { background: var(--hover-bg); color: var(--text-primary); border-color: var(--text-primary); }
+        .balance-art { width: 80px; height: 80px; }
+
+        .unlocked-card {
+            background: linear-gradient(135deg, #1f2a20 0%, #11170f 100%);
+            display: flex; justify-content: space-between; align-items: center;
+            border: 1px solid var(--accent-green);
+        }
+        .unlocked-text h2 { font-size: 16px; color: var(--accent-green); margin-bottom: 4px; }
+        .unlocked-text p { font-size: 11px; color: var(--text-secondary); max-width: 180px; margin-bottom: 10px; }
+        .claim-bonus-btn {
+            background: var(--accent-gold); color: #050a0e; border: none;
+            padding: 8px 16px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer;
+        }
+        .gift-box { width: 70px; height: 70px; }
+
+        /* --- Overview Grid --- */
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 0 4px; }
+        .section-title { font-size: 17px; font-weight: 700; }
+        .view-all { font-size: 13px; color: var(--accent-gold); text-decoration: none; }
+        .overview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .overview-card { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+        .overview-card .value { font-size: 18px; font-weight: 700; color: var(--accent-green); }
+        .overview-card .label { font-size: 11px; color: var(--text-secondary); }
+        .card-icon { width: 40px; height: 40px; align-self: flex-end; }
+        .progress-bar { height: 4px; background: var(--bg-color); border-radius: 2px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--accent-green); width: 90%; }
+
+        /* --- Quick Actions --- */
+        .actions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .action-card {
+            padding: 14px; display: flex; flex-direction: column; gap: 10px;
+            align-items: center; text-align: center; justify-content: space-between; cursor: pointer;
+            height: 110px;
+        }
+        .action-card:hover { background-color: var(--hover-bg); }
+        .action-card .label { font-size: 10px; color: var(--text-primary); font-weight: 600; margin-top: auto; }
+        .action-icon { width: 40px; height: 40px; }
+
+        /* --- Farming CTA --- */
+        .farming-cta {
+            background: linear-gradient(90deg, #1a212b 0%, #11151c 100%);
+            display: flex; justify-content: space-between; align-items: center;
+            border: 1px solid var(--accent-green);
+        }
+        .farming-left { display: flex; align-items: center; gap: 12px; }
+        .target-icon { width: 40px; height: 40px; }
+        .farming-text h3 { font-size: 16px; color: var(--accent-green); font-weight: 700; }
+        .farming-text p { font-size: 10px; color: var(--text-secondary); margin-top: 2px; }
+        .view-tasks-btn {
+            background: transparent; border: 1px solid var(--accent-green);
+            color: var(--accent-green); padding: 8px 16px;
+            border-radius: 10px; font-size: 11px; font-weight: 700; cursor: pointer;
+        }
+        .view-tasks-btn:hover { background: var(--accent-green); color: #050a0e; }
+
+        /* --- Bottom Navigation --- */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: rgba(5, 10, 14, 0.95); /* Slightly transparent bg-color */
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            display: flex; justify-content: space-around; align-items: center;
+            height: 65px; z-index: 1000;
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; gap: 6px;
+            color: var(--text-secondary); text-decoration: none; font-size: 10px;
+            width: 60px; opacity: 0.7;
+        }
+        .nav-item.active { color: var(--accent-gold); opacity: 1; font-weight: 600; }
+        .nav-icon { width: 22px; height: 22px; }
+
+        /* --- Media Queries for very small screens --- */
+        @media (max-width: 360px) {
+            .brand-text { font-size: 16px; }
+            .balance-value { font-size: 28px; }
+            .ai-assistant-card { height: 250px; }
+        }
+    </style>
 </head>
 <body>
 
-<div id="loading" class="loading">
-  <div style="font-size:55px">🐼</div>
-  <div class="spin" style="margin-top:15px"></div>
-  <div style="color:#8e9a95;font-size:11px;margin-top:12px">Loading Panda Earn...</div>
-</div>
-<div id="toast" class="toast"></div>
+    <div class="container">
 
-<main class="app">
-<header class="header">
-  <div class="brand">
-    <div class="panda-logo">🐼</div>
-    <div><b>Panda <span>Earn</span></b><small>PANDA COINS ECOSYSTEM</small></div>
-  </div>
-  <div class="user">
-    <img id="avatar" class="avatar" alt="profile">
-    <button class="menu" onclick="openBox('menu')">☰</button>
-  </div>
-</header>
+        <!-- HEADER -->
+        <header class="header">
+            <div class="header-left">
+                <img src="https://img.icons8.com/fluency/96/panda.png" alt="Panda Protocol" class="panda-logo">
+                <div class="brand-text">PANDA<br>PROTOCOL</div>
+            </div>
+            <div class="header-right">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="profile-pic">
+                <button class="connect-wallet">CONNECT WALLET<br>💎 TON.8dd.../TON</button>
+            </div>
+        </header>
 
-<section class="card hero">
-  <div class="label">TOTAL PANDA COINS</div>
-  <div class="balance"><span id="balance">0</span> <span>🪙</span></div>
-  <div class="sub">@<b id="username">loading</b> · <b id="levelMini">BRONZE</b></div>
-  <div class="actions">
-    <button class="btn gold" onclick="openBox('convert')">Convert USD</button>
-    <button class="btn" onclick="openBox('withdraw')">Withdrawal</button>
-  </div>
-  <div class="hero-art">🐼🪙</div>
-</section>
+        <!-- AI ASSISTANT CARD (NEW - Replaces Allocation) -->
+        <div class="card ai-assistant-card">
+            <div class="ai-header">
+                <span class="ai-title">Panda AI Assistant</span>
+                <div class="ai-status"><span class="status-dot"></span>ONLINE</div>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <!-- Initial AI Message -->
+                <div class="message ai">Hello! Main Panda Protocol ka AI assistant hoon. Main aapki kaise madad kar sakta hoon? (Jaise: Balance check karein, Tasks batayein, ya Referral status dekhein).</div>
+            </div>
+            <div class="ai-input-area">
+                <input type="text" class="ai-input" id="aiInput" placeholder="Poochein jaise: 'Total earned kitna hai?'...">
+                <button class="ai-send-btn" id="aiSendBtn">Bheje</button>
+            </div>
+        </div>
 
-<section id="welcome" class="card banner">
-  <div class="label">EARLY EARNER BONUS</div>
-  <h2>WELCOME BONUS<br>1,000 🪙</h2>
-  <p>Claim once and use your Panda Coins to increase your earning rate.</p>
-  <button id="welcomeBtn" class="btn gold" onclick="claimWelcome()">🎁 Claim Welcome Bonus</button>
-  <div class="gift">🎁</div>
-</section>
-
-<div class="head"><h2>Overview</h2><span>Live account</span></div>
-<section class="grid">
-  <div class="card stat"><small>Total Earned</small><b class="g"><span id="totalEarned">0</span> 🪙</b></div>
-  <div class="card stat"><small>Referrals</small><b class="b" id="referrals">0</b></div>
-  <div class="card stat"><small>Tasks Completed</small><b class="p" id="tasks">0</b></div>
-  <div class="card stat"><small>Available Wallet</small><b class="y"><span id="wallet">0</span> 🪙</b></div>
-</section>
-
-<div class="head"><h2>Quick Actions</h2><span>Earn more</span></div>
-<section class="quick">
-  <button onclick="openBox('ref')"><span class="ico">🤝</span><strong>Refer Friends</strong><small>+1,500 🪙 / referral</small></button>
-  <button onclick="openBox('task')"><span class="ico">🎯</span><strong>Complete Task</strong><small>Channel join</small></button>
-  <button onclick="openBox('daily')"><span class="ico">🎁</span><strong>Daily Bonus</strong><small>30 day check-in</small></button>
-  <button onclick="openBox('cipher')"><span class="ico">🔐</span><strong>Daily Cipher</strong><small>100–10K 🪙</small></button>
-  <button onclick="openBox('launch')"><span class="ico">🚀</span><strong>Launchpool</strong><small>Coming soon</small></button>
-  <button onclick="openBox('level')"><span class="ico">🏆</span><strong>My Level</strong><small id="levelAction">Bronze</small></button>
-</section>
-
-<section class="earn">
-  <div class="row">
-    <div><div class="label">START EARNING</div><div class="rate"><span id="rate">100</span> <small>🪙 / HOUR</small></div></div>
-    <div style="font-size:46px;filter:drop-shadow(0 10px 8px #000)">🐼</div>
-  </div>
-  <div class="progress"><i id="rateProgress"></i></div>
-  <div class="row" style="font-size:10px;color:#9aa59f">
-    <span>Invested: <b id="invested">0</b> 🪙</span>
-    <button class="btn green" onclick="openBox('invest')">Invest Coins</button>
-  </div>
-  <div style="margin-top:10px;font-size:10px;color:#8e9a94">Session: <b id="session">00:00</b> · Session earned: <b id="sessionEarned">0.00</b> 🪙</div>
-  <button class="btn green" style="width:100%;margin-top:11px" onclick="claimMining()">CLAIM EARNINGS</button>
-</section>
-
-<section class="card level">
-  <div class="row">
-    <div>
-      <div class="label">ACCOUNT LEVEL</div>
-      <div class="levelname" id="level">🥉 Bronze</div>
-      <div class="leveldesc" id="levelDesc">Maximum 2,400 🪙 / hour</div>
-    </div>
-    <div style="font-size:38px">🏆</div>
-  </div>
-  <div class="progress"><i id="levelProgress"></i></div>
-  <div class="row" style="font-size:9px;color:#8e9a94"><span id="levelRate">100 / 2,400 🪙/h</span><span id="nextLevel">Next: Silver</span></div>
-</section>
-</main>
-
-<nav class="bottom">
-<button class="nav active" onclick="scrollTo({top:0,behavior:'smooth'})"><div>⌂</div>Home</button>
-<button class="nav" onclick="openBox('task')"><div>🎯</div>Tasks</button>
-<button class="nav" onclick="openBox('invest')"><div>⚡</div>Earning</button>
-<button class="nav" onclick="openBox('ref')"><div>👥</div>Friends</button>
-</nav>
-
-<div id="modal" class="modal" onclick="if(event.target===this)closeBox()">
-  <div class="sheet">
-    <button class="close" onclick="closeBox()">✕</button>
-    <h3 id="boxTitle">Panda Earn</h3>
-    <p id="boxText"></p>
-    <div id="boxBody"></div>
-  </div>
-</div>
-
-<script>
-const SUPABASE_URL="https://myzsqddvwvoaiainktdh.supabase.co";
-const SUPABASE_KEY="sb_publishable_JN2sZWzesbmhI2ivloEZlA_jP6s324f";
-const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-
-const tg=window.Telegram?.WebApp;
-if(tg){tg.ready();tg.expand();}
-const telegramUser=tg?.initDataUnsafe?.user||null;
-
-let account=null;
-let rate=100;
-let started=Date.now();
-
-const LEVELS=[
- ["Bronze","🥉",2400],["Silver","🥈",4000],["Gold","🥇",7000],
- ["Platinum","💠",13000],["Diamond","💎",25000],["Master","👑",50000],
- ["Mythic","🔥",100000],["Apex","⚡",250000],["God","🌟",500000]
-];
-
-function toast(x){let t=document.getElementById("toast");t.textContent=x;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2300)}
-function fmt(x){return Number(x||0).toLocaleString(undefined,{maximumFractionDigits:2})}
-function esc(x){return String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-
-async function loadAccount(){
-  if(!telegramUser){toast("Open this page inside Telegram Mini App");return}
-  let {data,error}=await sb.from("panda_users").select("*").eq("telegram_id",telegramUser.id).maybeSingle();
-  if(error)throw error;
-
-  if(!data){
-    const r=await sb.from("panda_users").insert({
-      telegram_id:telegramUser.id,
-      username:telegramUser.username||null,
-      first_name:telegramUser.first_name||"User",
-      balance:0,referrals:0,tasks_completed:0,total_earned:0
-    }).select("*").single();
-    if(r.error)throw r.error;
-    data=r.data;
-  }
-  account=data;
-  render();
-}
-
-function render(){
-  document.getElementById("username").textContent=account.username||account.first_name||"user";
-  document.getElementById("balance").textContent=fmt(account.balance);
-  document.getElementById("wallet").textContent=fmt(account.balance);
-  document.getElementById("totalEarned").textContent=fmt(account.total_earned);
-  document.getElementById("referrals").textContent=account.referrals||0;
-  document.getElementById("tasks").textContent=account.tasks_completed||0;
-
-  if(telegramUser?.photo_url)document.getElementById("avatar").src=telegramUser.photo_url;
-  else document.getElementById("avatar").src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><rect width='100' height='100' fill='#13201c'/><text x='50' y='67' text-anchor='middle' font-size='50'>🐼</text></svg>");
-
-  setLevel();
-}
-
-function setLevel(){
-  let i=0;
-  for(let n=0;n<LEVELS.length;n++){if(rate>=LEVELS[n][2]&&n<LEVELS.length-1)i=n+1}
-  const l=LEVELS[i];
-  document.getElementById("level").textContent=l[1]+" "+l[0];
-  document.getElementById("levelMini").textContent=l[0].toUpperCase();
-  document.getElementById("levelAction").textContent=l[0];
-  document.getElementById("levelDesc").textContent="Maximum "+fmt(l[2])+" 🪙 / hour";
-  document.getElementById("levelRate").textContent=fmt(rate)+" / "+fmt(l[2])+" 🪙/h";
-  document.getElementById("levelProgress").style.width=Math.min(100,rate/l[2]*100)+"%";
-  document.getElementById("rateProgress").style.width=Math.min(100,rate/l[2]*100)+"%";
-  document.getElementById("nextLevel").textContent=i<LEVELS.length-1?"Next: "+LEVELS[i+1][0]:"MAX LEVEL";
-}
-
-async function claimWelcome(){
-  const btn=document.getElementById("welcomeBtn");
-  btn.disabled=true;btn.textContent="Checking...";
-  try{
-    /* IMPORTANT:
-       Create one active panda_tasks row with title WELCOME_BONUS
-       and reward 1000. The existing trigger then applies the real reward.
-    */
-    const q=await sb.from("panda_tasks").select("id,reward,is_active")
-      .eq("title","WELCOME_BONUS").eq("is_active",true).maybeSingle();
-    if(q.error)throw q.error;
-    if(!q.data){
-      toast("WELCOME_BONUS task not found in Supabase");
-      return;
-    }
-
-    const r=await sb.from("panda_task_completions").insert({
-      user_id:account.id,task_id:q.data.id,reward:q.data.reward
-    });
-
-    if(r.error){
-      if(r.error.code==="23505")toast("Welcome bonus already claimed");
-      else throw r.error;
-      return;
-    }
-
-    toast("+1,000 Panda Coins added!");
-    await loadAccount();
-    document.getElementById("welcome").style.display="none";
-  }catch(e){console.error(e);toast(e.message||"Claim failed")}
-  finally{btn.disabled=false;btn.textContent="🎁 Claim Welcome Bonus"}
-}
-
-function openBox(type){
-  const data={
-    convert:["Convert USD","Panda Coins → USD conversion is disabled for this test. Airdrop launch soon.","<button class='btn gold' onclick='closeBox()'>OK</button>"],
-    withdraw:["Withdrawal","Please convert Panda Coins to USD first. Withdrawal will be enabled after the conversion system is launched.","<button class='btn' onclick='closeBox()'>OK</button>"],
-    ref:["Refer Friends","Planned reward: 1,500 Panda Coins for each successful referral.","<button class='btn green' onclick='toast(\"Referral backend will be connected next\")'>COPY REFERRAL</button>"],
-    task:["Complete Task","Active tasks are loaded from panda_tasks. Your first task can be a channel-join task.","<button class='btn green' onclick='loadTasks()'>LOAD TASKS</button>"],
-    daily:["Daily Bonus","The 30-day UI is ready, but real daily claims need their secure database table/function. This button intentionally does not fake coins.","<button class='btn' onclick='toast(\"Daily bonus backend not enabled yet\")'>TEST</button>"],
-    cipher:["Daily Cipher","Cipher rewards must be checked server-side so users cannot edit the reward.","<input id='cipher' placeholder='Enter today’s code' style='width:100%;padding:12px;margin:8px 0;background:#09100f;border:1px solid #ffffff18;border-radius:12px;color:#fff'><button class='btn green' onclick='toast(\"Cipher backend not enabled yet\")'>VERIFY</button>"],
-    launch:["Launchpool","Panda Launchpool — coming soon.","<button class='btn' onclick='closeBox()'>COMING SOON</button>"],
-    level:["Account Level","Bronze 2.4K · Silver 4K · Gold 7K · Platinum 13K · Diamond 25K · Master 50K · Mythic 100K · Apex 250K · God 500K 🪙/hour.",""],
-    invest:["Invest Coins","Investment will be enabled only after the secure earning/coins-hour database function is added. This test does not fake a balance change.","<button class='btn' onclick='toast(\"Investment backend not enabled yet\")'>TEST</button>"],
-    menu:["Panda Earn","Profile: @"+esc(account?.username||"user"),"<button class='btn' onclick='closeBox()'>CLOSE</button>"]
-  };
-  let d=data[type]||data.menu;
-  document.getElementById("boxTitle").textContent=d[0];
-  document.getElementById("boxText").textContent=d[1];
-  document.getElementById("boxBody").innerHTML=d[2];
-  document.getElementById("modal").style.display="flex";
-}
-function closeBox(){document.getElementById("modal").style.display="none"}
-
-async function loadTasks(){
-  try{
-    const q=await sb.from("panda_tasks").select("id,title,reward,is_active").eq("is_active",true);
-    if(q.error)throw q.error;
-    document.getElementById("boxBody").innerHTML=(q.data||[]).map(t=>
-      `<div style="padding:12px 0;border-bottom:1px solid #ffffff10"><b>${esc(t.title)}</b><br><small style="color:#9ca8a3">${fmt(t.reward)} 🪙</small></div>`
-    ).join("")||"<p>No active tasks.</p>";
-  }catch(e){toast(e.message||"Task load failed")}
-}
-
-function claimMining(){
-  toast("Earning claim is not enabled yet — no fake coins are added.");
-}
-
-setInterval(()=>{
-  const sec=Math.floor((Date.now()-started)/1000);
-  document.getElementById("session").textContent=String(Math.floor(sec/60)).padStart(2,"0")+":"+String(sec%60).padStart(2,"0");
-  document.getElementById("sessionEarned").textContent=fmt(sec*rate/3600);
-},1000);
-
-(async()=>{
-  try{await loadAccount()}
-  catch(e){console.error(e);toast("Database connection failed: "+(e.message||""))}
-  finally{setTimeout(()=>document.getElementById("loading").style.display="none",800)}
-})();
-</script>
-</body>
-</html>
+        <!-- TOTAL BALANCE CARD -->
+        <div class="card total-balance-card">
+            <div class="balance-left">
+                <span class="label">TOTAL BALANCE</span>
+                <div class="balance-value">125,000 <span style="color: var(--accent-gold); font-size: 24px;">$PANDA</span></div>
+                <span class="label" style="font-size: 10px; margin-bottom: 6px;">AIRDROP POINTS</span>
+                <button class="claim-btn">CLAIM NOW<br><span style="font-size
